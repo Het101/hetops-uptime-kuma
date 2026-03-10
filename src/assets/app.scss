@@ -4,6 +4,7 @@
 
 #app {
     font-family:
+        "Plus Jakarta Sans",
         "Twemoji Country Flags",
         BlinkMacSystemFont,
         segoe ui,
@@ -57,9 +58,15 @@ textarea.form-control {
 
     .dark & {
         .list-group-item {
-            background-color: $dark-bg;
+            background-color: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             color: $dark-font-color;
-            border-color: $dark-border-color;
+            border-color: rgba(255, 255, 255, 0.08);
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
         }
     }
 }
@@ -266,7 +273,17 @@ optgroup {
 
     .shadow-box {
         &:not(.alert) {
-            background-color: $dark-bg;
+            background-color: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+            &:hover {
+                border-color: rgba(0, 242, 96, 0.5);
+                box-shadow: inset 0 0 0 1px rgba(0, 242, 96, 0.2), 0 20px 40px rgba(0, 242, 96, 0.15), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            }
         }
     }
 
@@ -309,7 +326,15 @@ optgroup {
     .form-select,
     .form-select:focus {
         color: $dark-font-color;
-        background-color: $dark-bg2;
+        background-color: rgba(255, 255, 255, 0.03);
+        font-family: 'Fira Code', monospace;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        border-color: rgba(0, 242, 96, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
     }
 
     .form-select:disabled {
@@ -319,7 +344,7 @@ optgroup {
 
     .form-control,
     .form-select {
-        border-color: $dark-border-color;
+        border-color: rgba(255, 255, 255, 0.08);
     }
 
     .form-control:disabled,

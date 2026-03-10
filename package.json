@@ -1,10 +1,10 @@
 {
-    "name": "uptime-kuma",
+    "name": "hetops-status",
     "version": "2.2.1",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/louislam/uptime-kuma.git"
+        "url": "https://github.com/HetPatel/hetops-uptime-kuma.git"
     },
     "engines": {
         "node": ">= 20.4.0"
