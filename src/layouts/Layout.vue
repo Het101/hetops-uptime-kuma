@@ -12,125 +12,94 @@
             </div>
         </div>
 
-        <!-- Desktop header -->
-        <header v-if="!$root.isMobile" class="d-flex flex-wrap justify-content-center py-3 mb-3 border-bottom">
-            <router-link
-                to="/dashboard"
-                class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
-            >
-                <object class="bi me-2 ms-4" width="40" height="40" data="/icon.svg" />
-                <span class="fs-4 title">{{ $t("HetOps Status") }}</span>
+        <!-- Desktop Sidebar (HetOps Tools Style) -->
+        <aside v-if="!$root.isMobile" class="hetops-sidebar d-flex flex-column p-4">
+            <!-- Sidebar Logo (Unified SVG standard) -->
+            <router-link to="/dashboard" class="sidebar-logo d-flex flex-column mb-5 text-decoration-none" style="padding: 10px 0;">
+                <div style="display: flex; align-items: center; justify-content: flex-start;">
+                    <img src="/icon.svg" style="width: 160px; height: auto; display: block;" alt="HetOps Logo" />
+                    <span style="color: #6b7280; font-size: 12px; line-height: 16px; margin-left: 8px; font-family: 'Fira Code', monospace; font-weight: bold; font-style: italic; margin-top: 4px;">STATUS</span>
+                </div>
+                <!-- App Subtitle matching Tools -->
+                <div style="color: #9ca3af; font-size: 10px; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Fira Code', monospace; font-style: normal; font-weight: normal;">HANDY TOOLS FOR DEVOPS</div>
             </router-link>
 
-            <a
-                v-if="hasNewVersion"
-                target="_blank"
-                href="https://github.com/louislam/uptime-kuma/releases"
-                class="btn btn-primary me-3"
-            >
-                <font-awesome-icon icon="arrow-alt-circle-up" />
-                {{ $t("New Update") }}
-            </a>
-
-            <ul class="nav nav-pills">
-                <li v-if="$root.loggedIn" class="nav-item me-2">
-                    <router-link to="/manage-status-page" class="nav-link">
-                        <font-awesome-icon icon="stream" />
-                        {{ $t("Status Pages") }}
-                    </router-link>
-                </li>
-                <li v-if="$root.loggedIn" class="nav-item me-2">
-                    <router-link to="/dashboard" class="nav-link">
-                        <font-awesome-icon icon="tachometer-alt" />
+            <!-- Sidebar Navigation -->
+            <ul class="nav nav-pills flex-column mb-auto gap-3">
+                <li v-if="$root.loggedIn" class="nav-item">
+                    <router-link to="/dashboard" class="nav-link d-flex align-items-center gap-3">
+                        <font-awesome-icon icon="tachometer-alt" class="sidebar-icon" />
                         {{ $t("Dashboard") }}
                     </router-link>
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item">
-                    <div class="dropdown dropdown-profile-pic">
-                        <div class="nav-link" data-bs-toggle="dropdown">
-                            <div class="profile-pic">{{ $root.usernameFirstChar }}</div>
-                            <font-awesome-icon icon="angle-down" />
-                        </div>
-
-                        <!-- Header's Dropdown Menu -->
-                        <ul class="dropdown-menu">
-                            <!-- Username -->
-                            <li>
-                                <i18n-t
-                                    v-if="$root.username != null"
-                                    tag="span"
-                                    keypath="signedInDisp"
-                                    class="dropdown-item-text"
-                                >
-                                    <strong>{{ $root.username }}</strong>
-                                </i18n-t>
-                                <span v-if="$root.username == null" class="dropdown-item-text">
-                                    {{ $t("signedInDispDisabled") }}
-                                </span>
-                            </li>
-
-                            <li><hr class="dropdown-divider" /></li>
-
-                            <!-- Functions -->
-                            <li>
-                                <router-link
-                                    to="/maintenance"
-                                    class="dropdown-item"
-                                    :class="{ active: $route.path.includes('manage-maintenance') }"
-                                >
-                                    <font-awesome-icon icon="wrench" />
-                                    {{ $t("Maintenance") }}
-                                </router-link>
-                            </li>
-
-                            <li>
-                                <router-link
-                                    to="/settings/general"
-                                    class="dropdown-item"
-                                    :class="{ active: $route.path.includes('settings') }"
-                                >
-                                    <font-awesome-icon icon="cog" />
-                                    {{ $t("Settings") }}
-                                </router-link>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="https://github.com/louislam/uptime-kuma/wiki"
-                                    class="dropdown-item"
-                                    target="_blank"
-                                >
-                                    <font-awesome-icon icon="info-circle" />
-                                    {{ $t("Help") }}
-                                </a>
-                            </li>
-
-                            <li v-if="$root.loggedIn && $root.socket.token !== 'autoLogin'">
-                                <button class="dropdown-item" @click="$root.logout">
-                                    <font-awesome-icon icon="sign-out-alt" />
-                                    {{ $t("Logout") }}
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                    <router-link to="/manage-status-page" class="nav-link d-flex align-items-center gap-3">
+                        <font-awesome-icon icon="stream" class="sidebar-icon" />
+                        {{ $t("Status Pages") }}
+                    </router-link>
+                </li>
+                <li v-if="$root.loggedIn" class="nav-item">
+                    <router-link to="/maintenance" class="nav-link d-flex align-items-center gap-3" :class="{ active: $route.path.includes('manage-maintenance') }">
+                        <font-awesome-icon icon="wrench" class="sidebar-icon" />
+                        {{ $t("Maintenance") }}
+                    </router-link>
+                </li>
+                <li v-if="$root.loggedIn" class="nav-item">
+                    <router-link to="/settings/general" class="nav-link d-flex align-items-center gap-3" :class="{ active: $route.path.includes('settings') }">
+                        <font-awesome-icon icon="cog" class="sidebar-icon" />
+                        {{ $t("Settings") }}
+                    </router-link>
                 </li>
             </ul>
-        </header>
 
-        <!-- Mobile header -->
-        <header v-else class="d-flex flex-wrap justify-content-center pt-2 pb-2 mb-3">
+            <!-- Sidebar Footer (Profile / Logout) -->
+            <div v-if="$root.loggedIn" class="dropdown dropdown-profile-pic mt-5 pt-3 border-top border-secondary">
+                <div class="nav-link d-flex align-items-center gap-3" data-bs-toggle="dropdown" style="cursor: pointer;">
+                    <div class="profile-pic">{{ $root.usernameFirstChar }}</div>
+                    <div class="d-flex flex-column text-start">
+                        <strong v-if="$root.username != null" style="font-size: 14px; line-height: 1;">{{ $root.username }}</strong>
+                        <span style="font-size: 11px; color: #a0a0a0; margin-top: 4px;">Admin</span>
+                    </div>
+                </div>
+
+                <ul class="dropdown-menu shadow">
+                    <li>
+                        <a href="https://github.com/louislam/uptime-kuma/wiki" class="dropdown-item" target="_blank">
+                            <font-awesome-icon icon="info-circle" /> {{ $t("Help") }}
+                        </a>
+                    </li>
+                    <li v-if="$root.socket.token !== 'autoLogin'">
+                        <button class="dropdown-item text-danger" @click="$root.logout">
+                            <font-awesome-icon icon="sign-out-alt" /> {{ $t("Logout") }}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            
+            <a v-if="hasNewVersion" target="_blank" href="https://github.com/louislam/uptime-kuma/releases" class="btn btn-primary mt-3 w-100 btn-sm">
+                <font-awesome-icon icon="arrow-alt-circle-up" /> {{ $t("New Update") }}
+            </a>
+        </aside>
+
+        <!-- Mobile header (Unified SVG standard) -->
+        <header v-else class="d-flex flex-wrap justify-content-center pt-3 pb-3 mb-3 border-bottom shadow-sm" style="background: rgba(10,10,10,0.8); backdrop-filter: blur(10px);">
             <router-link to="/dashboard" class="d-flex align-items-center text-dark text-decoration-none">
-                <object class="bi" width="40" height="40" data="/icon.svg" />
-                <span class="fs-4 title ms-2">HetOps Status</span>
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <img src="/icon.svg" style="width: 160px; height: auto; display: block;" alt="HetOps Logo" />
+                    <span style="color: #6b7280; font-size: 12px; line-height: 16px; margin-left: 8px; font-family: 'Fira Code', monospace; font-weight: bold; font-style: italic; margin-top: 4px;">STATUS</span>
+                </div>
             </router-link>
         </header>
 
-        <main>
-            <router-view v-if="$root.loggedIn" />
-            <Login v-if="!$root.loggedIn && $root.allowLoginDialog" />
+        <!-- Main Content Area -->
+        <main class="hetops-main-content">
+            <div class="container-fluid py-4" style="max-width: 1400px;">
+                <router-view v-if="$root.loggedIn" />
+                <Login v-if="!$root.loggedIn && $root.allowLoginDialog" />
+            </div>
         </main>
 
-        <!-- Mobile Only -->
+        <!-- Mobile Only Bottom Nav -->
         <div v-if="$root.isMobile" style="width: 100%; height: calc(60px + env(safe-area-inset-bottom))" />
         <nav v-if="$root.isMobile && $root.loggedIn" class="bottom-nav">
             <router-link to="/dashboard" class="nav-link">
@@ -162,6 +131,22 @@
         >
             <font-awesome-icon icon="times" />
         </button>
+
+        <!-- HetOps Global Footer -->
+        <footer v-if="!$root.isMobile" class="hetops-footer">
+            <div class="footer-left">
+                <span class="footer-badge normal-badge"><font-awesome-icon icon="terminal" /> NORMAL</span>
+                <span class="footer-text hidden-sm">hetops/uptime-kuma</span>
+                <span class="footer-text branch-text"><font-awesome-icon icon="code-branch" /> main</span>
+                <span class="footer-text warning-text"><font-awesome-icon icon="exclamation-circle" /> 0</span>
+            </div>
+            <div class="footer-right">
+                <span class="footer-text hidden-sm font-bold" id="kuma-footer-time">00:00:00</span>
+                <span class="footer-text success-text"><font-awesome-icon icon="check-circle" /> ALL_SYSTEMS_OPTIMAL</span>
+                <span class="footer-text hidden-lg">UTF-8</span>
+                <span class="footer-text hidden-lg">Prettier</span>
+            </div>
+        </footer>
     </div>
 </template>
 
@@ -219,6 +204,14 @@ export default {
         if (this.toastContainer != null) {
             this.toastContainerObserver.observe(this.toastContainer, { childList: true });
         }
+
+        // Clock logic for Footer
+        setInterval(() => {
+            const timeElement = document.getElementById("kuma-footer-time");
+            if (timeElement) {
+                timeElement.innerText = new Date().toLocaleTimeString();
+            }
+        }, 1000);
     },
 
     beforeUnmount() {
@@ -241,18 +234,25 @@ export default {
 @import "../assets/vars.scss";
 
 .nav-link {
+    position: relative;
     &:hover {
-        background-color: $primary;
-        color: #fff;
+        background-color: transparent;
+        color: $primary;
 
         .dark & {
-            background-color: $primary;
-            color: #000;
+            background-color: transparent;
+            color: $primary;
         }
 
         &.active {
-            background-color: $highlight;
+            background-color: transparent;
         }
+    }
+
+    &.active {
+        color: $primary !important;
+        position: relative;
+        background-color: transparent !important;
     }
 
     &.status-page {
@@ -395,12 +395,136 @@ main {
 }
 
 .dark {
-    header {
-        background-color: $dark-header-bg;
-        border-bottom-color: $dark-header-bg !important;
+    // The Left Sidebar Pattern
+    .hetops-sidebar {
+        width: 280px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #050505; // Deep dark from HetOps Tools
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        z-index: 1050;
+        overflow-y: auto;
+        
+        .sidebar-logo {
+            transition: opacity 0.3s ease;
+            &:hover { opacity: 0.8; }
+        }
 
-        span {
-            color: #f0f6fc;
+        .nav-pills {
+            .nav-item {
+                width: 100%;
+                
+                .nav-link {
+                    color: #8c8c8c;
+                    padding: 12px 20px;
+                    border-radius: 12px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    background: transparent;
+                    
+                    &:hover {
+                        color: #fff;
+                        background: rgba(255, 255, 255, 0.05);
+                    }
+                    
+                    &.active {
+                        color: #00ff41 !important;
+                        background: rgba(0, 255, 65, 0.05) !important;
+                        position: relative;
+                        
+                        // Vertical side indicator
+                        &::before {
+                            content: '';
+                            position: absolute;
+                            left: -16px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            height: 60%;
+                            width: 3px;
+                            background: #00ff41;
+                            border-radius: 0 4px 4px 0;
+                            box-shadow: 0 0 10px #00ff41;
+                        }
+
+                        // Hide old bottom underline
+                        &::after { display: none; }
+                    }
+                    
+                    .sidebar-icon {
+                        width: 18px;
+                        opacity: 0.8;
+                    }
+                }
+            }
+        }
+    }
+    
+    .hetops-main-content {
+        margin-left: 280px; // Offset by precise tools sidebar width
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 26px; // Match HetOps Tools content padding
+        padding-bottom: 50px; // Extra offset for footers
+    }
+
+    .hetops-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #0a0a0a;
+        border-top: 1px solid #333;
+        z-index: 1060;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 16px;
+        font-family: monospace;
+        font-size: 11px;
+        color: #9ca3af;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+
+        svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .footer-left, .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-badge {
+            background-color: #00ff41;
+            color: #000;
+            padding: 2px 8px;
+            font-weight: bold;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-text {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            &.branch-text { color: #60a5fa; }
+            &.warning-text { color: #ffbd2e; }
+            &.success-text { color: #10b981; }
+        }
+
+        @media (max-width: 768px) {
+            .hidden-sm { display: none !important; }
+        }
+        @media (max-width: 1024px) {
+            .hidden-lg { display: none !important; }
         }
     }
 

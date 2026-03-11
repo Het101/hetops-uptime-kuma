@@ -71,6 +71,40 @@
             </div>
         </noscript>
         <div id="app"></div>
+        <script>
+            function createParticles() {
+                const container = document.getElementById('particles-container');
+                if (!container) return;
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'absolute';
+                    particle.style.width = '4px';
+                    particle.style.height = '4px';
+                    particle.style.background = 'rgba(0, 255, 65, 0.3)';
+                    particle.style.borderRadius = '50%';
+                    particle.style.left = Math.random() * 100 + '%';
+                    
+                    // Generate floating animation dynamically
+                    const duration = (15 + Math.random() * 10);
+                    const delay = Math.random() * 20;
+                    
+                    particle.animate([
+                        { transform: 'translateY(0) translateX(0)', opacity: 0 },
+                        { opacity: 1, offset: 0.1 },
+                        { opacity: 1, offset: 0.9 },
+                        { transform: 'translateY(-100vh) translateX(100px)', opacity: 0 }
+                    ], {
+                        duration: duration * 1000,
+                        delay: delay * 1000,
+                        iterations: Infinity
+                    });
+                    
+                    container.appendChild(particle);
+                }
+            }
+            // Run when DOM is ready
+            document.addEventListener("DOMContentLoaded", createParticles);
+        </script>
         <script type="module" src="/src/main.js"></script>
     </body>
 </html>
