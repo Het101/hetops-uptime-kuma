@@ -17,7 +17,7 @@
             <!-- Sidebar Logo (Unified SVG standard) -->
             <router-link to="/dashboard" class="sidebar-logo d-flex flex-column mb-5 text-decoration-none" style="padding: 10px 0;">
                 <div style="display: flex; align-items: center; justify-content: flex-start;">
-                    <img src="/icon.svg" style="width: 160px; height: auto; display: block;" alt="HetOps Logo" />
+                    <img src="/icon.svg" style="width: 140px; height: auto; display: block;" alt="HetOps Logo" />
                     <span style="color: #6b7280; font-size: 12px; line-height: 16px; margin-left: 8px; font-family: 'Fira Code', monospace; font-weight: bold; font-style: italic; margin-top: 4px;">STATUS</span>
                 </div>
                 <!-- App Subtitle matching Tools -->
@@ -85,7 +85,7 @@
         <header v-else class="d-flex flex-wrap justify-content-center pt-3 pb-3 mb-3 border-bottom shadow-sm" style="background: rgba(10,10,10,0.8); backdrop-filter: blur(10px);">
             <router-link to="/dashboard" class="d-flex align-items-center text-dark text-decoration-none">
                 <div style="display: flex; align-items: center; justify-content: center;">
-                    <img src="/icon.svg" style="width: 160px; height: auto; display: block;" alt="HetOps Logo" />
+                    <img src="/icon.svg" style="width: 140px; height: auto; display: block;" alt="HetOps Logo" />
                     <span style="color: #6b7280; font-size: 12px; line-height: 16px; margin-left: 8px; font-family: 'Fira Code', monospace; font-weight: bold; font-style: italic; margin-top: 4px;">STATUS</span>
                 </div>
             </router-link>
