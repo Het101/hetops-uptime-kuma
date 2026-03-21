@@ -142,26 +142,72 @@ export default {
 }
 
 @keyframes status-pulse-green {
-    0% { transform: scale(1); opacity: 0.8; }
-    70% { transform: scale(3); opacity: 0; }
-    100% { transform: scale(1); opacity: 0; }
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    70% {
+        transform: scale(3);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
 }
 
 @keyframes status-pulse-red {
-    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(255, 64, 54, 0.7); }
-    70% { transform: scale(1.5); opacity: 0; box-shadow: 0 0 0 10px rgba(255, 64, 54, 0); }
-    100% { transform: scale(1); opacity: 0; }
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(255, 64, 54, 0.7);
+    }
+
+    70% {
+        transform: scale(1.5);
+        opacity: 0;
+        box-shadow: 0 0 0 10px rgba(255, 64, 54, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
 }
 
 @keyframes status-pulse-yellow {
-    0% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(2); opacity: 0.4; }
-    100% { transform: scale(1); opacity: 0.8; }
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(2);
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
 }
 
 @keyframes status-pulse-blue {
-    0% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(2.5); opacity: 0; }
-    100% { transform: scale(1); opacity: 0; }
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
 }
 </style>

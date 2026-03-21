@@ -36,7 +36,21 @@
                                 />
                             </span>
                             <div class="flex-fill text-truncate" style="min-width: 0">
-                                <div class="text-truncate">{{ monitor.name }}</div>
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <div class="text-truncate name-label">{{ monitor.name }}</div>
+                                    <div v-if="monitor.active && sparklinePoints.length > 1" class="sparkline-container">
+                                        <svg viewBox="0 0 100 30" class="sparkline-svg">
+                                            <path
+                                                :d="sparklinePath"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
+                                    </div>
+                                </div>
                                 <div v-if="monitor.tags.length > 0" class="tags gap-1">
                                     <Tag v-for="tag in monitor.tags" :key="tag" :item="tag" :size="'sm'" />
                                 </div>
@@ -141,6 +155,29 @@ export default {
         };
     },
     computed: {
+        sparklinePoints() {
+            const heartbeats = this.$root.heartbeatList[this.monitor.id] || [];
+            if (heartbeats.length === 0) {
+                return [];
+            }
+            
+            // Get last 20 heartbeats
+            const lastHeartbeats = heartbeats.slice(-20);
+            
+            // Normalize ping values to 0-30 range for SVG viewbox
+            const maxPing = Math.max(...lastHeartbeats.map(h => h.ping || 0), 100);
+            
+            return lastHeartbeats.map((h, i) => ({
+                x: (i / (lastHeartbeats.length - 1)) * 100,
+                y: 30 - ((h.ping || 0) / maxPing) * 25 - 2 // Offset slightly from bottom
+            }));
+        },
+        sparklinePath() {
+            if (this.sparklinePoints.length < 2) {
+                return "";
+            }
+            return `M ${this.sparklinePoints.map(p => `${p.x},${p.y}`).join(" L ")}`;
+        },
         sortedChildMonitorList() {
             let result = Object.values(this.$root.monitorList);
 
@@ -331,6 +368,38 @@ export default {
 .small-padding {
     padding-left: 5px !important;
     padding-right: 5px !important;
+}
+
+.name-label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.sparkline-container {
+    width: 45px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+    color: $primary;
+
+    .dark & {
+        color: $primary;
+    }
+}
+
+.draggable-item:hover .sparkline-container {
+    opacity: 1;
+}
+
+.sparkline-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    
+    path {
+        filter: drop-shadow(0 0 2px rgba(0, 255, 65, 0.2));
+    }
 }
 
 .tags {

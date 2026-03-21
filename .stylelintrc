@@ -12,6 +12,16 @@
         "shorthand-property-no-redundant-values": null,
         "color-hex-length": null,
         "declaration-block-no-redundant-longhand-properties": null,
-        "at-rule-no-unknown": null
+        "at-rule-no-unknown": null,
+        "function-no-unknown": [
+            true,
+            {
+                "ignoreFunctions": [
+                    "darken",
+                    "lighten",
+                    "rgba"
+                ]
+            }
+        ]
     }
 }

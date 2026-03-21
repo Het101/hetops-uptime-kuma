@@ -427,7 +427,9 @@ export default {
                         backgroundColor: (context) => {
                             const chart = context.chart;
                             const { ctx, chartArea } = chart;
-                            if (!chartArea) return null;
+                            if (!chartArea) {
+                                return null;
+                            }
                             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
                             gradient.addColorStop(0, "rgba(0, 255, 65, 0.3)");
                             gradient.addColorStop(1, "rgba(0, 255, 65, 0)");
@@ -579,7 +581,9 @@ export default {
                         backgroundColor: (context) => {
                             const chart = context.chart;
                             const { ctx, chartArea } = chart;
-                            if (!chartArea) return null;
+                            if (!chartArea) {
+                                return null;
+                            }
                             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
                             gradient.addColorStop(0, "rgba(0, 255, 65, 0.4)");
                             gradient.addColorStop(1, "rgba(0, 255, 65, 0)");

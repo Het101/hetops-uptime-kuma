@@ -380,7 +380,6 @@ main {
     overflow-y: auto;
     background: rgba(252, 252, 252, 0.85); // Light mode glass background
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border-right: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
@@ -464,7 +463,6 @@ main {
     width: 100%;
     background-color: rgba(248, 249, 250, 0.85);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid #dee2e6;
     z-index: 1060;
     display: flex;

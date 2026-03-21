@@ -1,12 +1,17 @@
 <template>
     <router-view />
+    <CommandPalette />
 </template>
 
 <script>
 import { setPageLocale } from "./util-frontend";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import CommandPalette from "./components/CommandPalette.vue";
 
-// Particle generator
+/**
+ * Particle generator for the background effect
+ * @returns {void}
+ */
 function createParticles() {
     setTimeout(() => {
         const container = document.getElementById('particles-container');
@@ -40,6 +45,9 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 export default {
+    components: {
+        CommandPalette,
+    },
     created() {
         setPageLocale();
     },

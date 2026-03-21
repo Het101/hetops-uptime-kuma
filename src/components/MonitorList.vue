@@ -622,6 +622,8 @@ export default {
 }
 
 .list-header {
+    position: relative;
+    z-index: 100; // Create stacking context for dropdowns
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding: 15px;
     background: rgba(255, 255, 255, 0.5);

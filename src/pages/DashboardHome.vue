@@ -34,6 +34,8 @@
                 </div>
             </div>
 
+            <InfrastructureMap />
+
             <div class="shadow-box table-wrapper p-4">
                 <div class="mb-3 text-end">
                     <button
@@ -115,6 +117,7 @@ import Status from "../components/Status.vue";
 import Datetime from "../components/Datetime.vue";
 import Pagination from "v-pagination-3";
 import Confirm from "../components/Confirm.vue";
+import InfrastructureMap from "../components/InfrastructureMap.vue";
 
 export default {
     components: {
@@ -122,6 +125,7 @@ export default {
         Status,
         Pagination,
         Confirm,
+        InfrastructureMap,
     },
     props: {
         calculatedHeight: {
@@ -322,7 +326,7 @@ export default {
     text-align: center;
     border-radius: 20px;
     min-height: 140px;
-    
+
     .stat-label {
         font-size: 14px;
         font-weight: 600;

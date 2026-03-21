@@ -245,73 +245,79 @@ export default {
 @import "../assets/vars.scss";
 
 .shadow-box-settings {
-    padding: 20px;
+    padding: 30px;
     min-height: calc(100vh - 155px);
-}
-
-footer {
-    color: $secondary-text;
-    font-size: 13px;
-    margin-top: 20px;
-    padding-bottom: 30px;
-    text-align: center;
+    border-radius: 24px !important;
 }
 
 .settings-menu {
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    padding-right: 20px;
+
+    .dark & {
+        border-right-color: rgba(255, 255, 255, 0.05);
+    }
+
     a {
         text-decoration: none !important;
+        color: inherit;
     }
 
     .menu-item {
-        border-radius: 10px;
-        margin: 0.5em;
-        padding: 0.7em 1em;
+        border-radius: 12px;
+        margin: 4px 0;
+        padding: 12px 16px;
         cursor: pointer;
-        border-left-width: 0;
-        transition: all ease-in-out 0.1s;
+        transition: all $transition-time $easing-smooth;
+        font-weight: 500;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid transparent;
     }
 
     .menu-item:hover {
-        background: $highlight-white;
+        background: rgba(0, 0, 0, 0.03);
+        transform: translateX(4px);
 
         .dark & {
-            background: $dark-header-bg;
+            background: rgba(255, 255, 255, 0.03);
         }
     }
 
-    .active .menu-item {
-        background: $highlight-white;
-        border-left: 4px solid $primary;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
+    .router-link-active .menu-item {
+        background: rgba(0, 255, 65, 0.08);
+        color: $primary;
+        font-weight: 700;
+        border-color: rgba(0, 255, 65, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 255, 65, 0.1);
 
         .dark & {
-            background: $dark-header-bg;
+            background: rgba(0, 255, 65, 0.1);
         }
     }
 }
 
 .settings-content {
+    padding-left: 30px;
+
     .settings-content-header {
-        width: calc(100% + 20px);
-        border-bottom: 1px solid #dee2e6;
-        border-radius: 0 10px 0 0;
-        margin-top: -20px;
-        margin-right: -20px;
-        padding: 12.5px 1em;
-        font-size: 26px;
+        font-family: Inter, sans-serif;
+        font-weight: 800;
+        font-size: 28px;
+        letter-spacing: -0.02em;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
         .dark & {
-            background: $dark-header-bg;
-            border-bottom: 0;
+            border-bottom-color: rgba(255, 255, 255, 0.05);
         }
 
         .mobile & {
-            padding: 15px 0 0 0;
-
-            .dark & {
-                background-color: transparent;
-            }
+            padding: 15px 0;
+            border-bottom: none;
         }
     }
 }
