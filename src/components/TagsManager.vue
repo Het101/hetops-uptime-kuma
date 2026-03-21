@@ -21,7 +21,8 @@
                 {{ $t("Add") }}
             </button>
         </div>
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <teleport to="body">
+<div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -167,6 +168,7 @@
                 </div>
             </div>
         </div>
+    </teleport>
     </div>
 </template>
 

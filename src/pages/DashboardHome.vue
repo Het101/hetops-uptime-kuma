@@ -399,8 +399,10 @@ table {
 
     tr {
         transition: background-color 0.2s ease;
+
         &:hover {
             background-color: rgba(0, 0, 0, 0.02);
+
             .dark & {
                 background-color: rgba(255, 255, 255, 0.02);
             }

@@ -17,7 +17,7 @@
             <div class="mt-1">
                 <div class="form-check">
                     <label>
-                        <input v-model="settings.checkUpdate" type="checkbox" @change="saveSettings()" />
+                        <input v-model="settingsComponent.settings.checkUpdate" type="checkbox" @change="settingsComponent.saveSettings()" />
                         {{ $t("Show update if available") }}
                     </label>
                 </div>
@@ -25,10 +25,10 @@
                 <div class="form-check">
                     <label>
                         <input
-                            v-model="settings.checkBeta"
+                            v-model="settingsComponent.settings.checkBeta"
                             type="checkbox"
-                            :disabled="!settings.checkUpdate"
-                            @change="saveSettings()"
+                            :disabled="!settingsComponent.settings.checkUpdate"
+                            @change="settingsComponent.saveSettings()"
                         />
                         {{ $t("Also check beta release") }}
                     </label>
@@ -46,17 +46,7 @@
 
 <script>
 export default {
-    computed: {
-        settings() {
-            return this.$parent.$parent.$parent.settings;
-        },
-        saveSettings() {
-            return this.$parent.$parent.$parent.saveSettings;
-        },
-        settingsLoaded() {
-            return this.$parent.$parent.$parent.settingsLoaded;
-        },
-    },
+    inject: ["settingsComponent"],
 
     watch: {},
 };

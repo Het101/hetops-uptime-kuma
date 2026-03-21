@@ -1,5 +1,6 @@
 <template>
-    <div ref="modal" class="modal fade" tabindex="-1">
+    <teleport to="body">
+<div ref="modal" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -75,6 +76,7 @@
             </div>
         </div>
     </div>
+    </teleport>
 
     <Confirm
         ref="confirmDelete"

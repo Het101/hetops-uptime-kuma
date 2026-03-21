@@ -56,8 +56,8 @@
             <div v-if="$root.loggedIn" class="dropdown dropdown-profile-pic mt-5 pt-3 border-top border-secondary">
                 <div class="nav-link d-flex align-items-center gap-3" data-bs-toggle="dropdown" style="cursor: pointer;">
                     <div class="profile-pic">{{ $root.usernameFirstChar }}</div>
-                    <div class="d-flex flex-column text-start">
-                        <strong v-if="$root.username != null" style="font-size: 14px; line-height: 1;">{{ $root.username }}</strong>
+                    <div class="d-flex flex-column text-start" style="min-width: 0;">
+                        <strong v-if="$root.username != null" class="username-text" style="font-size: 14px; line-height: 1;">{{ $root.username }}</strong>
                         <span style="font-size: 11px; color: #a0a0a0; margin-top: 4px;">Admin</span>
                     </div>
                 </div>
@@ -366,13 +366,21 @@ main {
         border-radius: 50rem;
         font-weight: bold;
         font-size: 10px;
+        flex-shrink: 0; // Prevent distortion from long flex siblings
+    }
+
+    .username-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px;
     }
 }
 
 // Common structural layout styles
 .hetops-sidebar {
     width: 280px;
-    height: 100vh;
+    height: calc(100vh - 30px);
     position: fixed;
     top: 0;
     left: 0;
@@ -461,10 +469,11 @@ main {
     bottom: 0;
     left: 0;
     width: 100%;
+    height: 30px;
     background-color: rgba(248, 249, 250, 0.85);
     backdrop-filter: blur(20px);
     border-top: 1px solid #dee2e6;
-    z-index: 1060;
+    z-index: 100;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -474,6 +483,11 @@ main {
     color: #6b7280;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (max-width: 767.98px) {
+        left: 0;
+        width: 100%;
+    }
 
     svg {
         width: 12px;

@@ -53,24 +53,14 @@ export default {
         Tag,
     },
 
+    inject: ["settingsComponent"],
+
     data() {
         return {
             processing: false,
             tagsList: null,
             deletingTag: null,
         };
-    },
-
-    computed: {
-        settings() {
-            return this.$parent.$parent.$parent.settings;
-        },
-        saveSettings() {
-            return this.$parent.$parent.$parent.saveSettings;
-        },
-        settingsLoaded() {
-            return this.$parent.$parent.$parent.settingsLoaded;
-        },
     },
 
     mounted() {

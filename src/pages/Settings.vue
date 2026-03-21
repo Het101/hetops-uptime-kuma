@@ -42,8 +42,8 @@
                     </div>
                     <div class="mx-3">
                         <router-view v-slot="{ Component }">
-                            <transition name="slide-fade" appear>
-                                <component :is="Component" />
+                            <transition name="slide-fade" mode="out-in" appear>
+                                <component :is="Component" :key="$route.path" />
                             </transition>
                         </router-view>
                     </div>
@@ -55,8 +55,15 @@
 
 <script>
 import { useRoute } from "vue-router";
+import { computed } from "vue";
 
 export default {
+    provide() {
+        return {
+            settingsComponent: this,
+        };
+    },
+
     data() {
         return {
             show: true,

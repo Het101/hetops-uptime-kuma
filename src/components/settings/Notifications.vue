@@ -60,7 +60,7 @@
             <p>{{ $t("notificationDescription") }}</p>
             <div class="mt-1 mb-3 ps-2 cert-exp-days col-12 col-xl-6">
                 <div
-                    v-for="day in settings.tlsExpiryNotifyDays"
+                    v-for="day in settingsComponent.settings.tlsExpiryNotifyDays"
                     :key="day"
                     class="d-flex align-items-center justify-content-between cert-exp-day-row py-2"
                 >
@@ -86,7 +86,7 @@
                 />
             </div>
             <div>
-                <button class="btn btn-primary" type="button" @click="saveSettings()">
+                <button class="btn btn-primary" type="button" @click="settingsComponent.saveSettings()">
                     {{ $t("Save") }}
                 </button>
             </div>
@@ -98,7 +98,7 @@
             <p>{{ $t("notificationDescription") }}</p>
             <div class="mt-1 mb-3 ps-2 cert-exp-days col-12 col-xl-6">
                 <div
-                    v-for="day in settings.domainExpiryNotifyDays"
+                    v-for="day in settingsComponent.settings.domainExpiryNotifyDays"
                     :key="day"
                     class="d-flex align-items-center justify-content-between cert-exp-day-row py-2"
                 >
@@ -124,7 +124,7 @@
                 />
             </div>
             <div>
-                <button class="btn btn-primary" type="button" @click="saveSettings()">
+                <button class="btn btn-primary" type="button" @click="settingsComponent.saveSettings()">
                     {{ $t("Save") }}
                 </button>
             </div>
@@ -144,6 +144,8 @@ export default {
         ActionInput,
     },
 
+    inject: ["settingsComponent"],
+
     data() {
         return {
             toastSuccessTimeoutSecs: 20,
@@ -154,18 +156,6 @@ export default {
             tlsExpiryNotifInput: null,
             domainExpiryNotifInput: null,
         };
-    },
-
-    computed: {
-        settings() {
-            return this.$parent.$parent.$parent.settings;
-        },
-        saveSettings() {
-            return this.$parent.$parent.$parent.saveSettings;
-        },
-        settingsLoaded() {
-            return this.$parent.$parent.$parent.settingsLoaded;
-        },
     },
 
     watch: {
@@ -195,7 +185,7 @@ export default {
          * @returns {void}
          */
         removeTlsExpiryNotifDay(day) {
-            this.settings.tlsExpiryNotifyDays = this.settings.tlsExpiryNotifyDays.filter((d) => d !== day);
+            this.settingsComponent.settings.tlsExpiryNotifyDays = this.settingsComponent.settings.tlsExpiryNotifyDays.filter((d) => d !== day);
         },
         /**
          * Add a new tls expiry notification day.
@@ -211,9 +201,9 @@ export default {
             if (day != null && day !== "") {
                 const parsedDay = parseInt(day);
                 if (parsedDay != null && !isNaN(parsedDay) && parsedDay > 0) {
-                    if (!this.settings.tlsExpiryNotifyDays.includes(parsedDay)) {
-                        this.settings.tlsExpiryNotifyDays.push(parseInt(day));
-                        this.settings.tlsExpiryNotifyDays.sort((a, b) => a - b);
+                    if (!this.settingsComponent.settings.tlsExpiryNotifyDays.includes(parsedDay)) {
+                        this.settingsComponent.settings.tlsExpiryNotifyDays.push(parseInt(day));
+                        this.settingsComponent.settings.tlsExpiryNotifyDays.sort((a, b) => a - b);
                         this.tlsExpiryNotifInput = null;
                     }
                 }
@@ -225,7 +215,7 @@ export default {
          * @returns {void}
          */
         removeDomainExpiryNotifDay(day) {
-            this.settings.domainExpiryNotifyDays = this.settings.domainExpiryNotifyDays.filter((d) => d !== day);
+            this.settingsComponent.settings.domainExpiryNotifyDays = this.settingsComponent.settings.domainExpiryNotifyDays.filter((d) => d !== day);
         },
         /**
          * Add a new domain expiry notification day.
@@ -241,9 +231,9 @@ export default {
             if (day != null && day !== "") {
                 const parsedDay = parseInt(day);
                 if (parsedDay != null && !isNaN(parsedDay) && parsedDay > 0) {
-                    if (!this.settings.domainExpiryNotifyDays.includes(parsedDay)) {
-                        this.settings.domainExpiryNotifyDays.push(parseInt(day));
-                        this.settings.domainExpiryNotifyDays.sort((a, b) => a - b);
+                    if (!this.settingsComponent.settings.domainExpiryNotifyDays.includes(parsedDay)) {
+                        this.settingsComponent.settings.domainExpiryNotifyDays.push(parseInt(day));
+                        this.settingsComponent.settings.domainExpiryNotifyDays.sort((a, b) => a - b);
                         this.domainExpiryNotifInput = null;
                     }
                 }

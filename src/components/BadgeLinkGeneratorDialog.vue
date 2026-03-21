@@ -1,4 +1,5 @@
 <template>
+    <teleport to="body">
     <div ref="BadgeGeneratorModal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -210,6 +211,7 @@
             </div>
         </div>
     </div>
+    </teleport>
 </template>
 
 <script lang="ts">

@@ -196,3 +196,14 @@ export const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+
+// Global navigation guard: forcibly clean up any stuck Bootstrap modal
+// backdrops before every route change. Without this, navigating away
+// from a settings page while a modal is open (or has been opened) can
+// leave an invisible backdrop in the DOM that blocks all user interaction.
+router.beforeEach(() => {
+    document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+    document.body.classList.remove("modal-open");
+    document.body.style.removeProperty("overflow");
+    document.body.style.removeProperty("padding-right");
+});

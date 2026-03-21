@@ -320,9 +320,9 @@ export default {
         transform: translateZ(5px);
         background: rgba($danger, 0.8);
     }
-}
+    }
 
-@media (max-width: 768px) {
+    @media (max-width: 768px) {
     .isometric-grid {
         gap: 25px;
         grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));

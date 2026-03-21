@@ -80,7 +80,7 @@
 
                     <p class="mt-2">{{ $t("disableCloudflaredNoAuthMsg") }}</p>
 
-                    <div v-if="!settings.disableAuth" class="mt-3">
+                    <div v-if="!settingsComponent.settings.disableAuth" class="mt-3">
                         <label for="current-password2" class="form-label">
                             {{ $t("Current Password") }}
                         </label>
@@ -115,7 +115,7 @@
             <div class="form-check">
                 <input
                     id="trustProxyYes"
-                    v-model="settings.trustProxy"
+                    v-model="settingsComponent.settings.trustProxy"
                     class="form-check-input"
                     type="radio"
                     name="trustProxyYes"
@@ -129,7 +129,7 @@
             <div class="form-check">
                 <input
                     id="trustProxyNo"
-                    v-model="settings.trustProxy"
+                    v-model="settingsComponent.settings.trustProxy"
                     class="form-check-input"
                     type="radio"
                     name="flexRadioDefault"
@@ -147,7 +147,7 @@
         </div>
 
         <div>
-            <button class="btn btn-primary" type="submit" @click="saveSettings()">
+            <button class="btn btn-primary" type="submit" @click="settingsComponent.saveSettings()">
                 {{ $t("Save") }}
             </button>
         </div>
@@ -165,20 +165,10 @@ export default {
         HiddenInput,
         Confirm,
     },
+    inject: ["settingsComponent"],
     data() {
         // See /src/mixins/socket.js
         return this.$root.cloudflared;
-    },
-    computed: {
-        settings() {
-            return this.$parent.$parent.$parent.settings;
-        },
-        saveSettings() {
-            return this.$parent.$parent.$parent.saveSettings;
-        },
-        settingsLoaded() {
-            return this.$parent.$parent.$parent.settingsLoaded;
-        },
     },
     watch: {},
     created() {

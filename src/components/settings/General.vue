@@ -19,7 +19,7 @@
                 <label for="timezone" class="form-label">
                     {{ $t("Server Timezone") }}
                 </label>
-                <select id="timezone" v-model="settings.serverTimezone" class="form-select">
+                <select id="timezone" v-model="settingsComponent.settings.serverTimezone" class="form-select">
                     <option value="UTC">UTC</option>
                     <option v-for="(timezone, index) in timezoneList" :key="index" :value="timezone.value">
                         {{ timezone.name }}
@@ -36,7 +36,7 @@
                 <div class="form-check">
                     <input
                         id="searchEngineIndexYes"
-                        v-model="settings.searchEngineIndex"
+                        v-model="settingsComponent.settings.searchEngineIndex"
                         class="form-check-input"
                         type="radio"
                         name="searchEngineIndex"
@@ -50,7 +50,7 @@
                 <div class="form-check">
                     <input
                         id="searchEngineIndexNo"
-                        v-model="settings.searchEngineIndex"
+                        v-model="settingsComponent.settings.searchEngineIndex"
                         class="form-check-input"
                         type="radio"
                         name="searchEngineIndex"
@@ -70,7 +70,7 @@
                 <div class="form-check">
                     <input
                         id="entryPageDashboard"
-                        v-model="settings.entryPage"
+                        v-model="settingsComponent.settings.entryPage"
                         class="form-check-input"
                         type="radio"
                         name="entryPage"
@@ -85,7 +85,7 @@
                 <div v-for="statusPage in $root.statusPageList" :key="statusPage.id" class="form-check">
                     <input
                         :id="'status-page-' + statusPage.id"
-                        v-model="settings.entryPage"
+                        v-model="settingsComponent.settings.entryPage"
                         class="form-check-input"
                         type="radio"
                         name="entryPage"
@@ -107,7 +107,7 @@
                 <div class="input-group mb-3">
                     <input
                         id="primaryBaseURL"
-                        v-model="settings.primaryBaseURL"
+                        v-model="settingsComponent.settings.primaryBaseURL"
                         class="form-control"
                         name="primaryBaseURL"
                         placeholder="https://"
@@ -127,7 +127,7 @@
                 <label class="form-label" for="steamAPIKey">
                     {{ $t("Steam API Key") }}
                 </label>
-                <HiddenInput id="steamAPIKey" v-model="settings.steamAPIKey" autocomplete="new-password" />
+                <HiddenInput id="steamAPIKey" v-model="settingsComponent.settings.steamAPIKey" autocomplete="new-password" />
                 <i18n-t tag="div" keypath="steamApiKeyDescriptionAt" class="form-text">
                     <template #url>
                         <a href="https://steamcommunity.com/dev" target="_blank">https://steamcommunity.com/dev</a>
@@ -142,7 +142,7 @@
                 </label>
                 <HiddenInput
                     id="globalpingApiToken"
-                    v-model="settings.globalpingApiToken"
+                    v-model="settingsComponent.settings.globalpingApiToken"
                     autocomplete="new-password"
                 />
                 <i18n-t keypath="globalpingApiTokenDescription" tag="div" class="form-text">
@@ -159,7 +159,7 @@
                 <div class="form-check">
                     <input
                         id="nscdEnable"
-                        v-model="settings.nscd"
+                        v-model="settingsComponent.settings.nscd"
                         class="form-check-input"
                         type="radio"
                         name="nscd"
@@ -174,7 +174,7 @@
                 <div class="form-check">
                     <input
                         id="nscdDisable"
-                        v-model="settings.nscd"
+                        v-model="settingsComponent.settings.nscd"
                         class="form-check-input"
                         type="radio"
                         name="nscd"
@@ -196,7 +196,7 @@
                 <div class="input-group mb-3">
                     <input
                         id="primaryBaseURL"
-                        v-model="settings.chromeExecutable"
+                        v-model="settingsComponent.settings.chromeExecutable"
                         class="form-control"
                         name="primaryBaseURL"
                         :placeholder="$t('chromeExecutableAutoDetect')"
@@ -231,6 +231,8 @@ export default {
         HiddenInput,
     },
 
+    inject: ["settingsComponent"],
+
     data() {
         return {
             timezoneList: timezoneList(),
@@ -238,15 +240,6 @@ export default {
     },
 
     computed: {
-        settings() {
-            return this.$parent.$parent.$parent.settings;
-        },
-        saveSettings() {
-            return this.$parent.$parent.$parent.saveSettings;
-        },
-        settingsLoaded() {
-            return this.$parent.$parent.$parent.settingsLoaded;
-        },
         guessTimezone() {
             return dayjs.tz.guess();
         },
@@ -259,21 +252,21 @@ export default {
          */
         saveGeneral() {
             localStorage.timezone = this.$root.userTimezone;
-            this.saveSettings();
+            this.settingsComponent.saveSettings();
         },
         /**
          * Get the base URL of the application
          * @returns {void}
          */
         autoGetPrimaryBaseURL() {
-            this.settings.primaryBaseURL = location.protocol + "//" + location.host;
+            this.settingsComponent.settings.primaryBaseURL = location.protocol + "//" + location.host;
         },
         /**
          * Test the chrome executable
          * @returns {void}
          */
         testChrome() {
-            this.$root.getSocket().emit("testChrome", this.settings.chromeExecutable, (res) => {
+            this.$root.getSocket().emit("testChrome", this.settingsComponent.settings.chromeExecutable, (res) => {
                 this.$root.toastRes(res);
             });
         },

@@ -1,6 +1,8 @@
 <template>
-    <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+    <teleport to="body">
+<form @submit.prevent="submit">
+        
+<div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -152,7 +154,9 @@
                 </div>
             </div>
         </div>
+    
     </form>
+    </teleport>
 
     <Confirm
         ref="confirmDelete"
@@ -509,6 +513,10 @@ export default {
                     console.warn("Modal hide failed:", e);
                 }
             }
+            document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+            document.body.classList.remove("modal-open");
+            document.body.style.removeProperty("overflow");
+            document.body.style.removeProperty("padding-right");
         },
     },
 };

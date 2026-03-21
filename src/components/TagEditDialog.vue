@@ -1,6 +1,8 @@
 <template>
-    <form @submit.prevent="submit">
-        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
+    <teleport to="body">
+<form @submit.prevent="submit">
+    
+<div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -136,7 +138,9 @@
                 </div>
             </div>
         </div>
+    
     </form>
+    </teleport>
 
     <Confirm ref="confirmDelete" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="deleteTag">
         {{ $t("confirmDeleteTagMsg") }}
@@ -249,6 +253,15 @@ export default {
 
     mounted() {
         this.modal = new Modal(this.$refs.modal);
+    },
+    beforeUnmount() {
+        if (this.modal) {
+            this.modal.hide();
+        }
+        document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+        document.body.classList.remove("modal-open");
+        document.body.style.removeProperty("overflow");
+        document.body.style.removeProperty("padding-right");
     },
 
     methods: {
