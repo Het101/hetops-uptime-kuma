@@ -329,12 +329,12 @@ export default {
 
     &.running,
     &.paused {
-        background-color: white !important;
+        background-color: rgba(0, 0, 0, 0.03) !important;
         border: 1px solid #d1d5db;
         color: inherit;
 
         .dark & {
-            background-color: transparent !important;
+            background-color: rgba(255, 255, 255, 0.03) !important;
             border-color: #6b7280;
             color: $dark-font-color;
         }

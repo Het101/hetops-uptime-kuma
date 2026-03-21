@@ -379,100 +379,49 @@ export default {
     padding: 0.3rem 0.6rem;
     min-width: 40px;
     border-radius: 10px;
-    background-color: white;
+    background-color: rgba(0, 0, 0, 0.03);
     border: none;
-    box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
     transition: all ease-in-out 0.15s;
 
     &:hover {
-        background-color: #f8f9fa;
-    }
-
-    &:focus,
-    &:active {
-        box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
-        border: none;
-        outline: none;
+        background-color: rgba(0, 0, 0, 0.05);
     }
 
     .dark & {
-        background-color: $dark-bg;
+        background-color: rgba(255, 255, 255, 0.03);
         color: $dark-font-color;
-        box-shadow: 0 15px 70px rgba(0, 0, 0, 0.3);
 
         &:hover {
-            background-color: $dark-bg2;
+            background-color: rgba(255, 255, 255, 0.05);
         }
-
-        &:focus,
-        &:active {
-            box-shadow: 0 15px 70px rgba(0, 0, 0, 0.3);
-        }
-    }
-}
-
-.sort-arrows {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 0 2px;
-}
-
-.arrow-inactive {
-    color: #aaa;
-    font-size: 0.7rem;
-    opacity: 0.5;
-
-    .dark & {
-        color: #6c757d;
-    }
-}
-
-.arrow-active {
-    color: #4caf50;
-    font-size: 0.8rem;
-
-    .dark & {
-        color: $primary;
     }
 }
 
 .sort-menu {
-    min-width: auto;
-    width: auto;
-    padding: 0.2rem 0;
-    border-radius: 10px;
+    border-radius: 12px;
     border: none;
-    box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-
-    .dark & {
-        background-color: $dark-bg;
-        color: $dark-font-color;
-        border-color: $dark-border-color;
-        box-shadow: 0 15px 70px rgba(0, 0, 0, 0.3);
-    }
+    background: #fff; // Light mode default
 }
 
 .sort-item {
-    padding: 0.4rem 0.8rem;
+    padding: 0.6rem 1rem;
     text-align: left;
     width: 100%;
-    background: none;
+    background: transparent;
     border: none;
     cursor: pointer;
+    color: inherit;
 
     &:hover {
-        background-color: #f8f9fa;
+        background-color: rgba(0, 0, 0, 0.03);
     }
 
     .dark & {
         color: $dark-font-color;
 
         &:hover {
-            background-color: $dark-bg2;
+            background-color: rgba(255, 255, 255, 0.05);
         }
     }
 }

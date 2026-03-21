@@ -377,17 +377,41 @@ export default {
 }
 
 .draggable-item {
-    cursor: grab;
+    cursor: pointer;
     position: relative;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
 
-    /* We don't want the padding change due to the border animated */
-    .item {
-        padding: 12px 15px;
-        transition: none !important;
+    &:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-color: rgba(0, 255, 65, 0.2);
     }
 
-    &.dragging {
-        cursor: grabbing;
+    .dark & {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        
+        &:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0, 255, 65, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    .item {
+        padding: 12px 16px;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    &.disabled {
+        opacity: 0.6;
     }
 }
 

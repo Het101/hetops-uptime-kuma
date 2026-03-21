@@ -338,44 +338,19 @@ main {
 
     .dropdown-menu {
         transition: all 0.2s;
-        padding-left: 0;
-        padding-bottom: 0;
+        padding: 0.5rem 0;
         margin-top: 8px !important;
         border-radius: 16px;
         overflow: hidden;
+        background: transparent; // Rely on global theme or light mode default
 
         .dropdown-divider {
-            margin: 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.4);
-            background-color: transparent;
-        }
-
-        .dropdown-item-text {
-            font-size: 14px;
-            padding-bottom: 0.7rem;
+            margin: 0.5rem 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .dropdown-item {
-            padding: 0.7rem 1rem;
-        }
-
-        .dark & {
-            background-color: $dark-bg;
-            color: $dark-font-color;
-            border-color: $dark-border-color;
-
-            .dropdown-item {
-                color: $dark-font-color;
-
-                &.active {
-                    color: $dark-font-color2;
-                    background-color: $highlight !important;
-                }
-
-                &:hover {
-                    background-color: $dark-bg2;
-                }
-            }
+            padding: 0.6rem 1.2rem;
         }
     }
 
@@ -394,137 +369,192 @@ main {
     }
 }
 
+// Common structural layout styles
+.hetops-sidebar {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    overflow-y: auto;
+    background: #fcfcfc; // Light mode background
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background 0.3s ease, border-color 0.3s ease;
+    
+    .sidebar-logo {
+        transition: opacity 0.3s ease;
+        &:hover { opacity: 0.8; }
+    }
+
+    .nav-pills {
+        .nav-item {
+            width: 100%;
+            
+            .nav-link {
+                color: #555;
+                padding: 12px 20px;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                background: transparent;
+                
+                &:hover {
+                    color: $primary;
+                    background: rgba(0, 0, 0, 0.03);
+                }
+                
+                &.active {
+                    color: $primary !important;
+                    background: rgba(0, 255, 65, 0.05) !important;
+                    position: relative;
+                    
+                    // Vertical side indicator
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        left: -16px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        height: 60%;
+                        width: 3px;
+                        background: $primary;
+                        border-radius: 0 4px 4px 0;
+                        box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+                    }
+
+                    // Hide old bottom underline
+                    &::after { display: none; }
+                }
+                
+                .sidebar-icon {
+                    width: 18px;
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
+}
+
+.hetops-main-content {
+    margin-left: 280px; // Offset by precise tools sidebar width
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 26px; // Match HetOps Tools content padding
+    padding-bottom: 80px; // Extra offset for footers
+    background: #ffffff;
+    transition: background 0.3s ease, margin-left 0.3s ease;
+
+    @media (max-width: 767.98px) {
+        margin-left: 0;
+        padding: 15px;
+        padding-bottom: 100px;
+        min-height: calc(100vh - 80px); // Account for mobile header
+    }
+}
+
+.hetops-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    z-index: 1060;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 16px;
+    font-family: monospace;
+    font-size: 11px;
+    color: #6b7280;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+
+    svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .footer-left, .footer-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .footer-badge {
+        background-color: $primary;
+        color: #000;
+        padding: 2px 8px;
+        font-weight: bold;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .footer-text {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        &.branch-text { color: #2563eb; }
+        &.warning-text { color: #d97706; }
+        &.success-text { color: #059669; }
+    }
+
+    @media (max-width: 768px) {
+        .hidden-sm { display: none !important; }
+    }
+    @media (max-width: 1024px) {
+        .hidden-lg { display: none !important; }
+    }
+}
+
 .dark {
-    // The Left Sidebar Pattern
+    background-color: #020202;
+
+    // Dark overrides for Sidebar
     .hetops-sidebar {
-        width: 280px;
-        height: 100vh;
-        position: fixed;
-        top: 0;
-        left: 0;
         background: #050505; // Deep dark from HetOps Tools
         border-right: 1px solid rgba(255, 255, 255, 0.05);
-        z-index: 1050;
-        overflow-y: auto;
-        
-        .sidebar-logo {
-            transition: opacity 0.3s ease;
-            &:hover { opacity: 0.8; }
-        }
 
-        .nav-pills {
-            .nav-item {
-                width: 100%;
-                
-                .nav-link {
-                    color: #8c8c8c;
-                    padding: 12px 20px;
-                    border-radius: 12px;
-                    font-size: 14px;
-                    font-weight: 500;
-                    transition: all 0.3s ease;
-                    background: transparent;
-                    
-                    &:hover {
-                        color: #fff;
-                        background: rgba(255, 255, 255, 0.05);
-                    }
-                    
-                    &.active {
-                        color: #00ff41 !important;
-                        background: rgba(0, 255, 65, 0.05) !important;
-                        position: relative;
-                        
-                        // Vertical side indicator
-                        &::before {
-                            content: '';
-                            position: absolute;
-                            left: -16px;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            height: 60%;
-                            width: 3px;
-                            background: #00ff41;
-                            border-radius: 0 4px 4px 0;
-                            box-shadow: 0 0 10px #00ff41;
-                        }
+        .nav-pills .nav-item .nav-link {
+            color: #8c8c8c;
+            
+            &:hover {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.05);
+            }
 
-                        // Hide old bottom underline
-                        &::after { display: none; }
-                    }
-                    
-                    .sidebar-icon {
-                        width: 18px;
-                        opacity: 0.8;
-                    }
+            &.active {
+                color: #00ff41 !important;
+                background: rgba(0, 255, 65, 0.05) !important;
+                &::before {
+                    box-shadow: 0 0 10px #00ff41;
                 }
             }
         }
     }
     
+    // Dark overrides for Main Content
     .hetops-main-content {
-        margin-left: 280px; // Offset by precise tools sidebar width
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        padding: 26px; // Match HetOps Tools content padding
-        padding-bottom: 50px; // Extra offset for footers
+        background: #020202;
     }
 
+    // Dark overrides for Footer
     .hetops-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
         background-color: #0a0a0a;
         border-top: 1px solid #333;
-        z-index: 1060;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 4px 16px;
-        font-family: monospace;
-        font-size: 11px;
         color: #9ca3af;
         box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
 
-        svg {
-            width: 12px;
-            height: 12px;
-        }
-
-        .footer-left, .footer-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .footer-badge {
-            background-color: #00ff41;
-            color: #000;
-            padding: 2px 8px;
-            font-weight: bold;
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
         .footer-text {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-
             &.branch-text { color: #60a5fa; }
             &.warning-text { color: #ffbd2e; }
             &.success-text { color: #10b981; }
-        }
-
-        @media (max-width: 768px) {
-            .hidden-sm { display: none !important; }
-        }
-        @media (max-width: 1024px) {
-            .hidden-lg { display: none !important; }
         }
     }
 

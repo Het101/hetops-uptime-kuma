@@ -65,43 +65,12 @@ export default {
     list-style: none;
     height: 0;
     opacity: 0;
-    background: white;
+    background: transparent; // Rely on global theme or light mode default
 
     &.open {
         height: unset;
         visibility: inherit;
         opacity: 1;
-    }
-
-    .dropdown-item {
-        padding: 5px 15px;
-    }
-
-    .dropdown-item:focus {
-        background: $highlight-white;
-
-        .dark & {
-            background: $dark-bg2;
-        }
-    }
-
-    .dark & {
-        background-color: $dark-bg;
-        color: $dark-font-color;
-        border-color: $dark-border-color;
-
-        .dropdown-item {
-            color: $dark-font-color;
-
-            &.active {
-                color: $dark-font-color2;
-                background-color: $highlight !important;
-            }
-
-            &:hover {
-                background-color: $dark-bg2;
-            }
-        }
     }
 }
 

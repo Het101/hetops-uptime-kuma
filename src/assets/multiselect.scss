@@ -52,31 +52,57 @@
 
 .dark {
     .multiselect__tag {
-        color: $dark-font-color2;
+        color: #000;
+        background: $primary !important;
+        font-weight: 600;
+        
+        .multiselect__tag-icon:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
     }
 
     .multiselect__tags {
-        background-color: $dark-bg2;
-        border-color: $dark-border-color;
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #fff;
     }
 
     .multiselect__input,
     .multiselect__single {
-        background-color: $dark-bg2;
-        color: $dark-font-color;
+        background-color: transparent;
+        color: #fff;
     }
 
     .multiselect__content-wrapper {
-        background-color: $dark-bg2;
-        border-color: $dark-border-color;
+        background-color: #0a0a0a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border-radius: 12px;
+        margin-top: 5px;
         z-index: 150;
     }
 
-    .multiselect--above .multiselect__content-wrapper {
-        border-color: $dark-border-color;
+    .multiselect__option {
+        color: #d1d5db;
+        background: transparent;
+
+        &--highlight {
+            background: $primary !important;
+            color: #000 !important;
+            
+            &::after {
+                background: transparent !important;
+            }
+        }
+
+        &--selected {
+            background: rgba(255, 255, 255, 0.05);
+            color: $primary;
+            font-weight: 600;
+        }
     }
 
-    .multiselect__option--selected {
-        background-color: $dark-bg;
+    .multiselect--above .multiselect__content-wrapper {
+        border-color: rgba(255, 255, 255, 0.1);
     }
 }

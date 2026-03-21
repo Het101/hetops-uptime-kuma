@@ -82,15 +82,6 @@ optgroup {
     }
 }
 
-.dark {
-    optgroup {
-        color: #535864;
-        option {
-            color: $dark-font-color;
-        }
-    }
-}
-
 // Scrollbar
 ::-webkit-scrollbar-thumb {
     background: #ccc;
@@ -259,10 +250,27 @@ optgroup {
     }
 }
 
+// Global Body & HTML cleanup for scrolling
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
 // Dark Theme override here
 .dark {
     background-color: #020202;
     color: $dark-font-color;
+    color-scheme: dark; // Tells the browser to use native dark controls
+
+    optgroup {
+        color: #535864;
+    }
+
+    option {
+        background-color: #0a0a0a;
+        color: $dark-font-color;
+    }
 
     mark,
     .mark {
@@ -272,6 +280,44 @@ optgroup {
     &::-webkit-scrollbar-thumb,
     ::-webkit-scrollbar-thumb {
         background: $dark-border-color;
+    }
+
+    // Global Dropdown Styling for Dark Mode
+    .dropdown-menu, .filter-dropdown-menu {
+        background-color: #0a0a0a !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        padding: 0.5rem 0;
+
+        .dropdown-item {
+            color: #d1d5db !important;
+            padding: 0.6rem 1.2rem;
+            transition: all 0.2s ease;
+            background: transparent !important;
+
+            &:hover, &:focus {
+                background-color: rgba(255, 255, 255, 0.05) !important;
+                color: #fff !important;
+            }
+
+            &.active, &:active {
+                background-color: $primary !important;
+                color: #000 !important;
+            }
+
+            &.text-danger {
+                color: #ef4444 !important;
+                &:hover {
+                    background-color: rgba(239, 68, 68, 0.1) !important;
+                }
+            }
+        }
+
+        .dropdown-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+            margin: 0.5rem 0;
+            background-color: transparent !important;
+        }
     }
 
     .shadow-box {
