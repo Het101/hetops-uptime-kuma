@@ -416,9 +416,23 @@ export default {
                         // Line Chart
                         data: pingData,
                         fill: "origin",
-                        tension: 0.2,
-                        borderColor: "#4ABF74",
-                        backgroundColor: "#4ABF7438",
+                        tension: 0.4,
+                        borderColor: "#00ff41",
+                        borderWidth: 3,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: "#00ff41",
+                        pointBorderColor: "#fff",
+                        pointBorderWidth: 2,
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const { ctx, chartArea } = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            gradient.addColorStop(0, "rgba(0, 255, 65, 0.3)");
+                            gradient.addColorStop(1, "rgba(0, 255, 65, 0)");
+                            return gradient;
+                        },
                         yAxisID: "y",
                         label: this.$t("avgPing"),
                     },
@@ -546,9 +560,10 @@ export default {
                         // minimum ping chart
                         data: minPingData,
                         fill: "origin",
-                        tension: 0.2,
+                        tension: 0.4,
                         borderColor: "#126331",
-                        backgroundColor: "#2F9C5914",
+                        borderWidth: 2,
+                        backgroundColor: "rgba(18, 99, 49, 0.1)",
                         yAxisID: "y",
                         label: this.$t("minPing"),
                     },
@@ -556,9 +571,20 @@ export default {
                         // average ping chart
                         data: avgPingData,
                         fill: "origin",
-                        tension: 0.2,
-                        borderColor: "#5CDD8B",
-                        backgroundColor: "#5CDD8B06",
+                        tension: 0.4,
+                        borderColor: "#00ff41",
+                        borderWidth: 3,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const { ctx, chartArea } = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            gradient.addColorStop(0, "rgba(0, 255, 65, 0.4)");
+                            gradient.addColorStop(1, "rgba(0, 255, 65, 0)");
+                            return gradient;
+                        },
                         yAxisID: "y",
                         label: this.$t("avgPing"),
                     },
@@ -566,9 +592,10 @@ export default {
                         // maximum ping chart
                         data: maxPingData,
                         fill: "origin",
-                        tension: 0.2,
+                        tension: 0.4,
                         borderColor: "#21b55a",
-                        backgroundColor: "#1E7A4214",
+                        borderWidth: 2,
+                        backgroundColor: "rgba(33, 181, 90, 0.1)",
                         yAxisID: "y",
                         label: this.$t("maxPing"),
                     },

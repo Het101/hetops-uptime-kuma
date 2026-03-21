@@ -4,6 +4,7 @@
             <!-- Line 1: Checkbox + Status + Tags + Search Bar -->
             <div class="filter-row">
                 <div class="search-wrapper">
+                    <font-awesome-icon icon="search" class="search-main-icon" />
                     <a v-if="searchText != ''" class="search-icon" @click="clearSearchText">
                         <font-awesome-icon icon="times" />
                     </a>
@@ -649,18 +650,43 @@ export default {
 .search-wrapper {
     position: relative;
     flex: 1;
+    display: flex;
+    align-items: center;
     
+    .search-main-icon {
+        position: absolute;
+        left: 15px;
+        color: #9ca3af;
+        pointer-events: none;
+        font-size: 14px;
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 15px;
+        color: #9ca3af;
+        cursor: pointer;
+        z-index: 2;
+        transition: color 0.2s ease;
+        
+        &:hover {
+            color: $primary;
+        }
+    }
+
     .search-input {
         background: rgba(0, 0, 0, 0.03);
         border: 1px solid rgba(0, 0, 0, 0.05);
-        padding-left: 35px;
-        height: 40px;
+        padding-left: 40px;
+        padding-right: 40px;
+        height: 42px;
         font-size: 14px;
+        width: 100%;
         
         &:focus {
             background: transparent;
             border-color: $primary;
-            box-shadow: 0 0 0 4px rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1), 0 0 0 4px rgba(0, 255, 65, 0.05);
         }
 
         .dark & {
@@ -673,18 +699,6 @@ export default {
                 border-color: $primary;
             }
         }
-    }
-
-    &::before {
-        content: '\f002';
-        font-family: 'Font Awesome 5 Free';
-        font-weight: 900;
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #9ca3af;
-        z-index: 1;
     }
 }
 

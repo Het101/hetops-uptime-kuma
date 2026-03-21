@@ -379,17 +379,17 @@ export default {
 .draggable-item {
     cursor: pointer;
     position: relative;
-    margin-bottom: 8px;
-    border-radius: 12px;
+    margin-bottom: 12px;
+    border-radius: 16px;
     background: rgba(255, 255, 255, 0.4);
     border: 1px solid rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    transition: all $transition-time $easing-smooth;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.8);
-        transform: translateX(4px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        border-color: rgba(0, 255, 65, 0.2);
+        background: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+        border-color: rgba(0, 255, 65, 0.3);
     }
 
     .dark & {
@@ -398,13 +398,14 @@ export default {
         
         &:hover {
             background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(0, 255, 65, 0.3);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(0, 255, 65, 0.4);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-3px);
         }
     }
 
     .item {
-        padding: 12px 16px;
+        padding: 14px 20px;
         text-decoration: none;
         color: inherit;
         display: block;

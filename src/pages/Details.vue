@@ -191,88 +191,78 @@
             </div>
 
             <!-- Stats -->
-            <div class="shadow-box big-padding text-center stats">
-                <div class="row">
-                    <div
-                        v-if="monitor.type !== 'group'"
-                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
-                    >
-                        <h4 class="col-4 col-sm-12">{{ pingTitle() }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("Current") }})</p>
-                        <span class="col-4 col-sm-12 num">
-                            <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
-                                <CountUp :value="ping" />
-                            </a>
-                        </span>
-                    </div>
-                    <div
-                        v-if="monitor.type !== 'group'"
-                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
-                    >
-                        <h4 class="col-4 col-sm-12">{{ pingTitle(true) }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
-                        <span class="col-4 col-sm-12 num">
-                            <CountUp :value="avgPing" />
-                        </span>
-                    </div>
+            <div class="stats-grid mb-4">
+                <div v-if="monitor.type !== 'group'" class="stat-card shadow-box">
+                    <h4 class="stat-title">{{ pingTitle() }}</h4>
+                    <p class="stat-label">({{ $t("Current") }})</p>
+                    <span class="num">
+                        <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                            <CountUp :value="ping" />
+                        </a>
+                    </span>
+                </div>
+                
+                <div v-if="monitor.type !== 'group'" class="stat-card shadow-box">
+                    <h4 class="stat-title">{{ pingTitle(true) }}</h4>
+                    <p class="stat-label">({{ $t("hours", 24) }})</p>
+                    <span class="num">
+                        <CountUp :value="avgPing" />
+                    </span>
+                </div>
 
-                    <!-- Uptime (24-hour) -->
-                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
-                        <span class="col-4 col-sm-12 num">
-                            <Uptime :monitor="monitor" type="24" />
-                        </span>
-                    </div>
+                <!-- Uptime (24-hour) -->
+                <div class="stat-card shadow-box">
+                    <h4 class="stat-title">{{ $t("Uptime") }}</h4>
+                    <p class="stat-label">({{ $t("hours", 24) }})</p>
+                    <span class="num">
+                        <Uptime :monitor="monitor" type="24" />
+                    </span>
+                </div>
 
-                    <!-- Uptime (30-day) -->
-                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("days", 30) }})</p>
-                        <span class="col-4 col-sm-12 num">
-                            <Uptime :monitor="monitor" type="720" />
-                        </span>
-                    </div>
+                <!-- Uptime (30-day) -->
+                <div class="stat-card shadow-box">
+                    <h4 class="stat-title">{{ $t("Uptime") }}</h4>
+                    <p class="stat-label">({{ $t("days", 30) }})</p>
+                    <span class="num">
+                        <Uptime :monitor="monitor" type="720" />
+                    </span>
+                </div>
 
-                    <!-- Uptime (1-year) -->
-                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("years", 1) }})</p>
-                        <span class="col-4 col-sm-12 num">
-                            <Uptime :monitor="monitor" type="1y" />
-                        </span>
-                    </div>
+                <!-- Uptime (1-year) -->
+                <div class="stat-card shadow-box">
+                    <h4 class="stat-title">{{ $t("Uptime") }}</h4>
+                    <p class="stat-label">({{ $t("years", 1) }})</p>
+                    <span class="num">
+                        <Uptime :monitor="monitor" type="1y" />
+                    </span>
+                </div>
 
-                    <div v-if="tlsInfo" class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("Cert Exp.") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">
-                            (
-                            <Datetime :value="tlsInfo.certInfo.validTo" date-only />
-                            )
-                        </p>
-                        <span class="col-4 col-sm-12 num">
-                            <a href="#" @click.prevent="toggleCertInfoBox = !toggleCertInfoBox">
-                                {{ $t("days", tlsInfo.certInfo.daysRemaining) }}
-                            </a>
-                            <font-awesome-icon
-                                v-if="tlsInfo.hostnameMatchMonitorUrl === false"
-                                class="cert-info-warn"
-                                icon="exclamation-triangle"
-                                :title="$t('certHostnameMismatch')"
-                            />
-                        </span>
-                    </div>
-                    <div v-if="domainInfo" class="col-12 col-sm col row d-flex align-items-center d-sm-block">
-                        <h4 class="col-4 col-sm-12">{{ $t("labelDomainExpiry") }}</h4>
-                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">
-                            (
-                            <Datetime :value="domainInfo.expiresOn" date-only />
-                            )
-                        </p>
-                        <span class="col-4 col-sm-12 num">
-                            {{ $t("days", domainInfo.daysRemaining) }}
-                        </span>
-                    </div>
+                <div v-if="tlsInfo" class="stat-card shadow-box">
+                    <h4 class="stat-title">{{ $t("Cert Exp.") }}</h4>
+                    <p class="stat-label">
+                        (<Datetime :value="tlsInfo.certInfo.validTo" date-only />)
+                    </p>
+                    <span class="num">
+                        <a href="#" @click.prevent="toggleCertInfoBox = !toggleCertInfoBox">
+                            {{ $t("days", tlsInfo.certInfo.daysRemaining) }}
+                        </a>
+                        <font-awesome-icon
+                            v-if="tlsInfo.hostnameMatchMonitorUrl === false"
+                            class="cert-info-warn"
+                            icon="exclamation-triangle"
+                            :title="$t('certHostnameMismatch')"
+                        />
+                    </span>
+                </div>
+
+                <div v-if="domainInfo" class="stat-card shadow-box">
+                    <h4 class="stat-title">{{ $t("labelDomainExpiry") }}</h4>
+                    <p class="stat-label">
+                        (<Datetime :value="domainInfo.expiresOn" date-only />)
+                    </p>
+                    <span class="num">
+                        {{ $t("days", domainInfo.daysRemaining) }}
+                    </span>
                 </div>
             </div>
 
@@ -936,28 +926,75 @@ table {
     }
 }
 
-.stats p {
-    font-size: 13px;
-    color: $secondary-text;
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-top: 25px;
 }
 
-.stats {
-    padding: 10px;
+.stat-card {
+    padding: 16px !important;
+    margin-top: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 16px;
+    transition: all $transition-time $easing-smooth;
 
-    .col {
-        margin: 20px 0;
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: $premium-shadow-light;
+        border-color: rgba(0, 255, 65, 0.2);
+
+        .dark & {
+            box-shadow: $premium-shadow-dark;
+            border-color: rgba(0, 255, 65, 0.3);
+        }
+    }
+
+    .stat-title {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        margin-bottom: 4px;
+    }
+
+    .stat-label {
+        font-size: 11px !important;
+        color: $secondary-text !important;
+        margin-bottom: 8px !important;
+    }
+
+    .num {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1;
+        color: inherit;
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.2s ease;
+            &:hover { color: $primary; }
+        }
     }
 }
 
 @media (max-width: 550px) {
-    .stats {
-        .col {
-            margin: 10px 0 !important;
-        }
-
-        h4 {
-            font-size: 1.1rem;
-        }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 12px !important;
+        .num { font-size: 20px; }
     }
 }
 

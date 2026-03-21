@@ -5,38 +5,36 @@
                 {{ $t("Quick Stats") }}
             </h1>
 
-            <div class="shadow-box big-padding text-center mb-3">
-                <div class="row">
-                    <div class="col">
-                        <h3>{{ $t("Up") }}</h3>
-                        <span class="num" :class="$root.stats.up === 0 && 'text-secondary'">
-                            {{ $root.stats.up }}
-                        </span>
+            <div class="stats-container mb-4">
+                <div class="stat-card glass-card shadow-box">
+                    <div class="stat-label">{{ $t("Up") }}</div>
+                    <div class="num up-num" :class="$root.stats.up === 0 && 'text-secondary'">
+                        {{ $root.stats.up }}
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("Down") }}</h3>
-                        <span class="num" :class="$root.stats.down > 0 ? 'text-danger' : 'text-secondary'">
-                            {{ $root.stats.down }}
-                        </span>
+                </div>
+                <div class="stat-card glass-card shadow-box">
+                    <div class="stat-label">{{ $t("Down") }}</div>
+                    <div class="num text-danger">
+                        {{ $root.stats.down }}
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("Maintenance") }}</h3>
-                        <span class="num" :class="$root.stats.maintenance > 0 ? 'text-maintenance' : 'text-secondary'">
-                            {{ $root.stats.maintenance }}
-                        </span>
+                </div>
+                <div class="stat-card glass-card shadow-box">
+                    <div class="stat-label">{{ $t("Maintenance") }}</div>
+                    <div class="num text-maintenance">
+                        {{ $root.stats.maintenance }}
                     </div>
-                    <div class="col">
-                        <h3>{{ $t("Unknown") }}</h3>
-                        <span class="num text-secondary">{{ $root.stats.unknown }}</span>
-                    </div>
-                    <div class="col">
-                        <h3>{{ $t("pauseDashboardHome") }}</h3>
-                        <span class="num text-secondary">{{ $root.stats.pause }}</span>
-                    </div>
+                </div>
+                <div class="stat-card glass-card shadow-box">
+                    <div class="stat-label">{{ $t("Unknown") }}</div>
+                    <div class="num text-secondary">{{ $root.stats.unknown }}</div>
+                </div>
+                <div class="stat-card glass-card shadow-box">
+                    <div class="stat-label">{{ $t("Pause") }}</div>
+                    <div class="num text-secondary">{{ $root.stats.pause }}</div>
                 </div>
             </div>
 
-            <div class="shadow-box table-shadow-box table-wrapper">
+            <div class="shadow-box table-wrapper p-4">
                 <div class="mb-3 text-end">
                     <button
                         class="btn btn-sm btn-outline-danger"
@@ -308,22 +306,101 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/vars";
 
-.num {
-    font-size: 30px;
-    color: $primary;
-    font-weight: bold;
-    display: block;
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    width: 100%;
 }
 
-.shadow-box {
-    padding: 20px;
+.stat-card {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 20px;
+    min-height: 140px;
+    
+    .stat-label {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+
+    .num {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 42px;
+        line-height: 1;
+        font-weight: 700;
+        
+        &.up-num {
+            color: $primary;
+            text-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+        }
+    }
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: $premium-shadow-light;
+        border-color: rgba(0, 255, 65, 0.2);
+
+        .dark & {
+            box-shadow: $premium-shadow-dark;
+            border-color: rgba(0, 255, 65, 0.3);
+        }
+    }
+}
+
+.table-wrapper {
+    border-radius: 20px;
 }
 
 table {
     font-size: 14px;
+    
+    thead th {
+        color: #6b7280;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.05em;
+        padding: 16px 12px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+        .dark & {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    tbody td {
+        padding: 16px 12px;
+        vertical-align: middle;
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            
+            &:hover {
+                color: $primary;
+            }
+        }
+    }
 
     tr {
-        transition: all ease-in-out 0.2ms;
+        transition: background-color 0.2s ease;
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+            .dark & {
+                background-color: rgba(255, 255, 255, 0.02);
+            }
+        }
     }
 
     @media (max-width: 550px) {
@@ -342,9 +419,5 @@ table {
     .name-column {
         min-width: 200px;
     }
-}
-
-.table-wrapper {
-    overflow-x: auto;
 }
 </style>

@@ -4,6 +4,7 @@
 
 #app {
     font-family:
+        "Inter",
         "Plus Jakarta Sans",
         "Twemoji Country Flags",
         BlinkMacSystemFont,
@@ -31,7 +32,8 @@ textarea.form-control,
 .form-control,
 .form-select,
 .btn {
-    border-radius: 19px !important;
+    border-radius: 12px !important;
+    transition: all $transition-time $easing-smooth;
 }
 
 ::-webkit-scrollbar {
@@ -89,16 +91,22 @@ optgroup {
 }
 
 .modal {
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .modal-content {
-    border-radius: 1rem;
-    box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    background-color: $glass-bg-light;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid $glass-border-light;
+    box-shadow: $premium-shadow-light;
 
     .dark & {
-        box-shadow: 0 15px 70px rgb(0 0 0);
-        background-color: $dark-bg;
+        background-color: $glass-bg-dark;
+        border: 1px solid $glass-border-dark;
+        box-shadow: $premium-shadow-dark;
     }
 }
 
@@ -108,10 +116,14 @@ optgroup {
 }
 
 .shadow-box {
-    //overflow: hidden;   // Forget why add this, but multiple select hide by this
-    box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
+    background-color: $glass-bg-light;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid $glass-border-light;
+    box-shadow: $premium-shadow-light;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 16px;
+    transition: all $transition-time $easing-smooth;
 
     &.big-padding {
         padding: 20px;
@@ -376,14 +388,16 @@ html, body {
     .form-select:focus {
         color: $dark-font-color;
         background-color: rgba(255, 255, 255, 0.03);
-        font-family: 'Fira Code', monospace;
+        font-family: 'JetBrains Mono', monospace;
         border: 1px solid rgba(255, 255, 255, 0.08);
     }
     
     .form-control:focus,
     .form-select:focus {
-        border-color: rgba(0, 242, 96, 0.5);
-        box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+        border-color: rgba(0, 255, 65, 0.5);
+        background-color: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.15), 0 0 0 4px rgba(0, 255, 65, 0.05);
+        outline: none;
     }
 
     .form-select:disabled {
@@ -414,6 +428,10 @@ html, body {
 
     .bg-primary {
         color: $dark-font-color2;
+    }
+
+    .btn-primary:focus, .btn-outline-primary:focus {
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.3), 0 0 0 4px rgba(0, 255, 65, 0.1);
     }
 
     .btn-secondary {

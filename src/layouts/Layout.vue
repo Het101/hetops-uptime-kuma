@@ -378,12 +378,14 @@ main {
     left: 0;
     z-index: 1050;
     overflow-y: auto;
-    background: #fcfcfc; // Light mode background
+    background: rgba(252, 252, 252, 0.85); // Light mode glass background
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-right: 1px solid rgba(0, 0, 0, 0.05);
-    transition: background 0.3s ease, border-color 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     .sidebar-logo {
-        transition: opacity 0.3s ease;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         &:hover { opacity: 0.8; }
     }
 
@@ -397,7 +399,7 @@ main {
                 border-radius: 12px;
                 font-size: 14px;
                 font-weight: 500;
-                transition: all 0.3s ease;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 background: transparent;
                 
                 &:hover {
@@ -444,8 +446,8 @@ main {
     flex-direction: column;
     padding: 26px; // Match HetOps Tools content padding
     padding-bottom: 80px; // Extra offset for footers
-    background: #ffffff;
-    transition: background 0.3s ease, margin-left 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     @media (max-width: 767.98px) {
         margin-left: 0;
@@ -460,18 +462,20 @@ main {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #f8f9fa;
+    background-color: rgba(248, 249, 250, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid #dee2e6;
     z-index: 1060;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 4px 16px;
-    font-family: monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: #6b7280;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     svg {
         width: 12px;
@@ -489,7 +493,7 @@ main {
         color: #000;
         padding: 2px 8px;
         font-weight: bold;
-        border-radius: 2px;
+        border-radius: 4px;
         display: flex;
         align-items: center;
         gap: 6px;
@@ -518,8 +522,8 @@ main {
 
     // Dark overrides for Sidebar
     .hetops-sidebar {
-        background: #050505; // Deep dark from HetOps Tools
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(5, 5, 5, 0.85); // Deep dark from HetOps Tools with glass
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
 
         .nav-pills .nav-item .nav-link {
             color: #8c8c8c;
@@ -541,13 +545,13 @@ main {
     
     // Dark overrides for Main Content
     .hetops-main-content {
-        background: #020202;
+        background: linear-gradient(135deg, #020202 0%, #0a0a0a 50%, #111 100%);
     }
 
     // Dark overrides for Footer
     .hetops-footer {
-        background-color: #0a0a0a;
-        border-top: 1px solid #333;
+        background-color: rgba(10, 10, 10, 0.85);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
         color: #9ca3af;
         box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
 
@@ -559,7 +563,10 @@ main {
     }
 
     .bottom-nav {
-        background-color: $dark-bg;
+        background-color: rgba(2, 2, 2, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
 }
 

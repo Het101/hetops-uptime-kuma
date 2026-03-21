@@ -16,8 +16,19 @@ $dark-bg2: rgba(255, 255, 255, 0.03);
 $dark-border-color: rgba(255, 255, 255, 0.08);
 $dark-header-bg: #050505;
 
-$easing-in: cubic-bezier(0.54, 0.78, 0.55, 0.97);
-$easing-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-$easing-in-out: cubic-bezier(0.79, 0.14, 0.15, 0.86);
+// Premium UI Variables
+$glass-bg-light: rgba(255, 255, 255, 0.7);
+$glass-bg-dark: rgba(10, 10, 10, 0.7);
+$glass-border-light: rgba(0, 0, 0, 0.05);
+$glass-border-dark: rgba(255, 255, 255, 0.08);
+$premium-shadow-light: 0 10px 30px -10px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+$premium-shadow-dark: 0 10px 40px -10px rgba(0, 0, 0, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+
+// Smooth Motion
+$transition-time: 0.3s;
+$easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+$easing-in: $easing-smooth;
+$easing-out: $easing-smooth;
+$easing-in-out: $easing-smooth;
 
 $dropdown-border-radius: 0.5rem;
