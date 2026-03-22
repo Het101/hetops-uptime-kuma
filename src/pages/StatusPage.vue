@@ -244,7 +244,7 @@
                     <button
                         v-if="editMode"
                         type="button"
-                        class="p-0 bg-transparent border-0 small-reset-btn reset-top-left"
+                        class="p-0 border-0 reset-top-left"
                         @click.stop="resetToDefaultImage"
                     >
                         <font-awesome-icon icon="times" class="text-danger" />
@@ -1598,14 +1598,24 @@ footer {
         font-size: 20px;
         left: -14px;
         background-color: white;
+        color: black;
         padding: 5px;
         border-radius: 10px;
         cursor: pointer;
         box-shadow: 0 15px 70px rgba(0, 0, 0, 0.9);
+        border: 1px solid rgba(0,0,0,0.15);
+        
+        .dark & {
+            border: none;
+        }
     }
 
     /* Reset button placed at top-left of the logo */
     .reset-top-left {
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        z-index: 10;
         transition:
             transform $easing-in 0.18s,
             box-shadow $easing-in 0.18s,
@@ -1619,10 +1629,16 @@ footer {
         justify-content: center;
         border-radius: 50%;
         background: white;
-        border: none;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(0,0,0,0.15);
+        color: #ff4036;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         cursor: pointer;
         transform-origin: center;
+
+        .dark & {
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
 
         &:hover {
             background-color: rgba(0, 0, 0, 0.06);

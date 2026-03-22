@@ -640,6 +640,7 @@ export default {
 .monitor-list {
     flex: 1;
     overflow-y: auto;
+    padding-top: 8px;
     padding-right: 5px;
 }
 

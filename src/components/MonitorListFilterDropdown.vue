@@ -122,10 +122,6 @@ export default {
             background: rgba(0, 255, 65, 0.1);
         }
     }
-
-    &:active {
-        transform: scale(0.96);
-    }
 }
 
 .filter-active {
