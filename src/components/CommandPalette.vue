@@ -232,7 +232,7 @@ export default {
     transition: all 0.2s ease;
 
     &.active {
-        background: rgba(0, 255, 65, 0.1);
+        background: rgba(96, 165, 250, 0.1);
         
         .result-title {
             color: $primary;

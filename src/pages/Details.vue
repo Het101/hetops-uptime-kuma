@@ -1050,11 +1050,11 @@ table {
     &:hover {
         transform: translateY(-3px);
         box-shadow: $premium-shadow-light;
-        border-color: rgba(0, 255, 65, 0.2);
+        border-color: rgba(96, 165, 250, 0.2);
 
         .dark & {
             box-shadow: $premium-shadow-dark;
-            border-color: rgba(0, 255, 65, 0.3);
+            border-color: rgba(96, 165, 250, 0.3);
         }
     }
 

@@ -563,8 +563,8 @@ export default {
                 empty: canvasStyles.getPropertyValue("--beat-empty-color") || "#f0f8ff",
                 down: rootStyles.getPropertyValue("--bs-danger") || "#dc3545",
                 pending: rootStyles.getPropertyValue("--bs-warning") || "#ffc107",
-                maintenance: rootStyles.getPropertyValue("--maintenance") || "#1d4ed8",
-                up: rootStyles.getPropertyValue("--bs-primary") || "#5cdd8b",
+                maintenance: rootStyles.getPropertyValue("--maintenance") || "#a78bfa",
+                up: rootStyles.getPropertyValue("--bs-primary") || "#10b981",
             };
 
             // Draw each beat

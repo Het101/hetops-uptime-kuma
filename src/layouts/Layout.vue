@@ -386,11 +386,12 @@ main {
     left: 0;
     z-index: 1050;
     overflow-y: auto;
-    background: rgba(252, 252, 252, 0.85); // Light mode glass background
-    backdrop-filter: blur(20px);
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(252, 252, 252, 0.88);
+    backdrop-filter: blur(24px);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    border-top: 3px solid $primary; // blue accent bar
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
+
     .sidebar-logo {
         transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         &:hover { opacity: 0.8; }
@@ -416,9 +417,9 @@ main {
                 
                 &.active {
                     color: $primary !important;
-                    background: rgba(0, 255, 65, 0.05) !important;
+                    background: rgba(96, 165, 250, 0.05) !important;
                     position: relative;
-                    
+
                     // Vertical side indicator
                     &::before {
                         content: '';
@@ -430,7 +431,7 @@ main {
                         width: 3px;
                         background: $primary;
                         border-radius: 0 4px 4px 0;
-                        box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+                        box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
                     }
 
                     // Hide old bottom underline
@@ -502,7 +503,7 @@ main {
 
     .footer-badge {
         background-color: $primary;
-        color: #000;
+        color: #fff;
         padding: 2px 8px;
         font-weight: bold;
         border-radius: 4px;
@@ -534,8 +535,9 @@ main {
 
     // Dark overrides for Sidebar
     .hetops-sidebar {
-        background: rgba(5, 5, 5, 0.85); // Deep dark from HetOps Tools with glass
+        background: rgba(5, 5, 5, 0.88);
         border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 3px solid $primary; // keep accent in dark too
 
         .nav-pills .nav-item .nav-link {
             color: #8c8c8c;
@@ -546,10 +548,10 @@ main {
             }
 
             &.active {
-                color: #00ff41 !important;
-                background: rgba(0, 255, 65, 0.05) !important;
+                color: #60a5fa !important;
+                background: rgba(96, 165, 250, 0.05) !important;
                 &::before {
-                    box-shadow: 0 0 10px #00ff41;
+                    box-shadow: 0 0 10px #60a5fa;
                 }
             }
         }

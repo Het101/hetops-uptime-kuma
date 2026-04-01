@@ -22,7 +22,7 @@ export default {
             }
 
             if (this.status === 1) {
-                return "primary";
+                return "up";
             }
 
             if (this.status === 2) {
@@ -80,28 +80,28 @@ export default {
         border-color: rgba(255, 255, 255, 0.05);
     }
 
-    &.bg-primary {
-        background-color: rgba(0, 255, 65, 0.1) !important;
-        color: #00ff41 !important;
-        border-color: rgba(0, 255, 65, 0.2);
+    &.bg-up {
+        background-color: rgba(16, 185, 129, 0.1) !important;
+        color: #10b981 !important;
+        border-color: rgba(16, 185, 129, 0.25);
     }
 
     &.bg-danger {
-        background-color: rgba(255, 64, 54, 0.1) !important;
-        color: #ff4036 !important;
-        border-color: rgba(255, 64, 54, 0.2);
+        background-color: rgba(239, 68, 68, 0.1) !important;
+        color: #ef4444 !important;
+        border-color: rgba(239, 68, 68, 0.25);
     }
 
     &.bg-warning {
-        background-color: rgba(255, 189, 46, 0.1) !important;
-        color: #ffbd2e !important;
-        border-color: rgba(255, 189, 46, 0.2);
+        background-color: rgba(245, 158, 11, 0.1) !important;
+        color: #f59e0b !important;
+        border-color: rgba(245, 158, 11, 0.25);
     }
 
     &.bg-maintenance {
-        background-color: rgba(52, 152, 219, 0.1) !important;
-        color: #3498db !important;
-        border-color: rgba(52, 152, 219, 0.2);
+        background-color: rgba(167, 139, 250, 0.1) !important;
+        color: #a78bfa !important;
+        border-color: rgba(167, 139, 250, 0.25);
     }
 }
 
@@ -120,94 +120,52 @@ export default {
         opacity: 0.4;
     }
 
-    &.dot-primary {
-        background: #00ff41;
-        &::after { animation: status-pulse-green 2s infinite; }
+    &.dot-up {
+        background: #10b981;
+        &::after { animation: pulse-up 2s infinite; }
     }
 
     &.dot-danger {
-        background: #ff4036;
-        &::after { animation: status-pulse-red 1s infinite linear; }
+        background: #ef4444;
+        &::after { animation: pulse-down 1s infinite linear; }
     }
 
     &.dot-warning {
-        background: #ffbd2e;
-        &::after { animation: status-pulse-yellow 2s infinite; }
+        background: #f59e0b;
+        &::after { animation: pulse-pending 2s infinite; }
     }
 
     &.dot-maintenance {
-        background: #3498db;
-        &::after { animation: status-pulse-blue 3s infinite ease-in-out; }
+        background: #a78bfa;
+        &::after { animation: pulse-maintenance 3s infinite ease-in-out; }
+    }
+
+    &.dot-secondary {
+        background: #6b7280;
     }
 }
 
-@keyframes status-pulse-green {
-    0% {
-        transform: scale(1);
-        opacity: 0.8;
-    }
-
-    70% {
-        transform: scale(3);
-        opacity: 0;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 0;
-    }
+@keyframes pulse-up {
+    0%   { transform: scale(1); opacity: 0.8; }
+    70%  { transform: scale(3); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
 }
 
-@keyframes status-pulse-red {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-        box-shadow: 0 0 0 0 rgba(255, 64, 54, 0.7);
-    }
-
-    70% {
-        transform: scale(1.5);
-        opacity: 0;
-        box-shadow: 0 0 0 10px rgba(255, 64, 54, 0);
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 0;
-    }
+@keyframes pulse-down {
+    0%   { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70%  { transform: scale(1.5); opacity: 0; box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { transform: scale(1); opacity: 0; }
 }
 
-@keyframes status-pulse-yellow {
-    0% {
-        transform: scale(1);
-        opacity: 0.8;
-    }
-
-    50% {
-        transform: scale(2);
-        opacity: 0.4;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 0.8;
-    }
+@keyframes pulse-pending {
+    0%   { transform: scale(1); opacity: 0.8; }
+    50%  { transform: scale(2); opacity: 0.4; }
+    100% { transform: scale(1); opacity: 0.8; }
 }
 
-@keyframes status-pulse-blue {
-    0% {
-        transform: scale(1);
-        opacity: 0.5;
-    }
-
-    50% {
-        transform: scale(2.5);
-        opacity: 0;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 0;
-    }
+@keyframes pulse-maintenance {
+    0%   { transform: scale(1); opacity: 0.5; }
+    50%  { transform: scale(2.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
 }
 </style>

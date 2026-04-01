@@ -1,13 +1,23 @@
-$primary: #00ff41;
-$danger: #ff4036;
+// UI accent (buttons, links, active nav — NOT a status color)
+$primary: #60a5fa;
+$link-color: #60a5fa;
+
+// Semantic status colors — each visually distinct
+$status-up: #10b981;          // emerald — healthy/online
+$status-down: #ef4444;        // red — down/error
+$status-pending: #f59e0b;     // amber — pending/checking
+$status-maintenance: #a78bfa; // purple — maintenance window
+$status-paused: #6b7280;      // gray — paused/disabled
+
+// Bootstrap variable aliases
+$danger: #ef4444;
 $warning: #ffbd2e;
-$maintenance: #3498db;
-$link-color: #00ff41;
+$maintenance: #a78bfa; // purple, intentionally different from UI blue
 $border-radius: 50rem;
 $secondary-text: #a0a0a0;
 
-$highlight: #00f260;
-$highlight-white: rgba(0, 242, 96, 0.1);
+$highlight: #93c5fd;
+$highlight-white: rgba(96, 165, 250, 0.1);
 
 $dark-font-color: #ffffff;
 $dark-font-color2: #020202;

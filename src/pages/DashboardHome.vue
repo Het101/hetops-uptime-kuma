@@ -6,29 +6,34 @@
             </h1>
 
             <div class="stats-container mb-4">
-                <div class="stat-card glass-card shadow-box">
+                <div class="stat-card glass-card shadow-box card-up">
+                    <div class="stat-icon-wrap up-icon"><font-awesome-icon icon="circle-check" /></div>
                     <div class="stat-label">{{ $t("Up") }}</div>
                     <div class="num up-num" :class="$root.stats.up === 0 && 'text-secondary'">
                         {{ $root.stats.up }}
                     </div>
                 </div>
-                <div class="stat-card glass-card shadow-box">
+                <div class="stat-card glass-card shadow-box card-down">
+                    <div class="stat-icon-wrap down-icon"><font-awesome-icon icon="circle-xmark" /></div>
                     <div class="stat-label">{{ $t("Down") }}</div>
                     <div class="num text-danger">
                         {{ $root.stats.down }}
                     </div>
                 </div>
-                <div class="stat-card glass-card shadow-box">
+                <div class="stat-card glass-card shadow-box card-maintenance">
+                    <div class="stat-icon-wrap maintenance-icon"><font-awesome-icon icon="wrench" /></div>
                     <div class="stat-label">{{ $t("Maintenance") }}</div>
                     <div class="num text-maintenance">
                         {{ $root.stats.maintenance }}
                     </div>
                 </div>
-                <div class="stat-card glass-card shadow-box">
+                <div class="stat-card glass-card shadow-box card-unknown">
+                    <div class="stat-icon-wrap unknown-icon"><font-awesome-icon icon="circle-question" /></div>
                     <div class="stat-label">{{ $t("Unknown") }}</div>
                     <div class="num text-secondary">{{ $root.stats.unknown }}</div>
                 </div>
-                <div class="stat-card glass-card shadow-box">
+                <div class="stat-card glass-card shadow-box card-paused">
+                    <div class="stat-icon-wrap paused-icon"><font-awesome-icon icon="circle-pause" /></div>
                     <div class="stat-label">{{ $t("Pause") }}</div>
                     <div class="num text-secondary">{{ $root.stats.pause }}</div>
                 </div>
@@ -326,36 +331,69 @@ export default {
     text-align: center;
     border-radius: 20px;
     min-height: 140px;
+    border-top: 2px solid transparent;
+    transition: all 0.25s ease;
+
+    .stat-icon-wrap {
+        font-size: 18px;
+        margin-bottom: 10px;
+        opacity: 0.7;
+    }
 
     .stat-label {
-        font-size: 14px;
-        font-weight: 600;
+        font-size: 11px;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.08em;
         color: #6b7280;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
 
     .num {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 42px;
+        font-size: 44px;
         line-height: 1;
         font-weight: 700;
-        
+
         &.up-num {
-            color: $primary;
-            text-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            color: $status-up;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
         }
     }
 
+    // Status-specific top borders and icon colors
+    &.card-up {
+        border-top-color: $status-up;
+        .up-icon { color: $status-up; }
+        &:hover { border-color: rgba(16, 185, 129, 0.4); }
+    }
+    &.card-down {
+        border-top-color: $status-down;
+        .down-icon { color: $status-down; }
+        &:hover { border-color: rgba(239, 68, 68, 0.4); }
+    }
+    &.card-maintenance {
+        border-top-color: $status-maintenance;
+        .maintenance-icon { color: $status-maintenance; }
+        &:hover { border-color: rgba(167, 139, 250, 0.4); }
+    }
+    &.card-unknown {
+        border-top-color: $status-paused;
+        .unknown-icon { color: $status-paused; }
+        &:hover { border-color: rgba(107, 114, 128, 0.4); }
+    }
+    &.card-paused {
+        border-top-color: $status-paused;
+        .paused-icon { color: $status-paused; }
+        &:hover { border-color: rgba(107, 114, 128, 0.4); }
+    }
+
     &:hover {
-        transform: translateY(-5px);
+        transform: translateY(-4px);
         box-shadow: $premium-shadow-light;
-        border-color: rgba(0, 255, 65, 0.2);
 
         .dark & {
             box-shadow: $premium-shadow-dark;
-            border-color: rgba(0, 255, 65, 0.3);
         }
     }
 }

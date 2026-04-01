@@ -104,22 +104,22 @@ export default {
 
     &:hover {
         background: rgba(0, 0, 0, 0.05);
-        border-color: rgba(0, 255, 65, 0.2);
-        
+        border-color: rgba(96, 165, 250, 0.2);
+
         .dark & {
             background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(0, 255, 65, 0.3);
+            border-color: rgba(96, 165, 250, 0.3);
         }
     }
 
     &.active {
-        background: rgba(0, 255, 65, 0.08);
+        background: rgba(96, 165, 250, 0.08);
         border-color: $primary;
         color: $primary;
-        box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+        box-shadow: 0 0 15px rgba(96, 165, 250, 0.1);
 
         .dark & {
-            background: rgba(0, 255, 65, 0.1);
+            background: rgba(96, 165, 250, 0.1);
         }
     }
 }

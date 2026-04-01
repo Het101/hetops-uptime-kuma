@@ -398,7 +398,7 @@ export default {
     display: block;
     
     path {
-        filter: drop-shadow(0 0 2px rgba(0, 255, 65, 0.2));
+        filter: drop-shadow(0 0 2px rgba(96, 165, 250, 0.2));
     }
 }
 
@@ -458,16 +458,16 @@ export default {
         background: #fff;
         transform: translateY(-2px);
         box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
-        border-color: rgba(0, 255, 65, 0.3);
+        border-color: rgba(96, 165, 250, 0.3);
     }
 
     .dark & {
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid rgba(255, 255, 255, 0.05);
-        
+
         &:hover {
             background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(0, 255, 65, 0.4);
+            border-color: rgba(96, 165, 250, 0.4);
             box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5);
             transform: translateY(-3px);
         }

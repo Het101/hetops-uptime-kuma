@@ -21,7 +21,7 @@ function createParticles() {
                 particle.style.position = 'absolute';
                 particle.style.width = '4px';
                 particle.style.height = '4px';
-                particle.style.background = 'rgba(0, 255, 65, 0.3)';
+                particle.style.background = 'rgba(96, 165, 250, 0.3)';
                 particle.style.borderRadius = '50%';
                 particle.style.animation = `hetops-float ${15 + Math.random() * 10}s infinite`;
                 particle.style.left = Math.random() * 100 + '%';

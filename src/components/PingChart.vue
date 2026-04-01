@@ -398,13 +398,13 @@ export default {
                 });
                 switch (beat.status) {
                     case MAINTENANCE:
-                        colorData.push("rgba(23 ,71, 245, 0.41)");
+                        colorData.push("rgba(167, 139, 250, 0.35)");
                         break;
                     case PENDING:
-                        colorData.push("rgba(245, 182, 23, 0.41)");
+                        colorData.push("rgba(245, 158, 11, 0.35)");
                         break;
                     default:
-                        colorData.push("rgba(220, 53, 69, 0.41)");
+                        colorData.push("rgba(239, 68, 68, 0.35)");
                 }
 
                 lastHeartbeatTime = beatTime;
@@ -417,11 +417,11 @@ export default {
                         data: pingData,
                         fill: "origin",
                         tension: 0.4,
-                        borderColor: "#00ff41",
+                        borderColor: "#10b981",
                         borderWidth: 3,
                         pointRadius: 0,
                         pointHoverRadius: 6,
-                        pointBackgroundColor: "#00ff41",
+                        pointBackgroundColor: "#10b981",
                         pointBorderColor: "#fff",
                         pointBorderWidth: 2,
                         backgroundColor: (context) => {
@@ -431,8 +431,8 @@ export default {
                                 return null;
                             }
                             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                            gradient.addColorStop(0, "rgba(0, 255, 65, 0.3)");
-                            gradient.addColorStop(1, "rgba(0, 255, 65, 0)");
+                            gradient.addColorStop(0, "rgba(16, 185, 129, 0.3)");
+                            gradient.addColorStop(1, "rgba(16, 185, 129, 0)");
                             return gradient;
                         },
                         yAxisID: "y",
@@ -563,9 +563,9 @@ export default {
                         data: minPingData,
                         fill: "origin",
                         tension: 0.4,
-                        borderColor: "#0dcaf0",
+                        borderColor: "#10b981",
                         borderWidth: 2,
-                        backgroundColor: "rgba(13, 202, 240, 0.1)",
+                        backgroundColor: "rgba(16, 185, 129, 0.08)",
                         yAxisID: "y",
                         label: this.$t("minPing"),
                     },
@@ -574,7 +574,7 @@ export default {
                         data: avgPingData,
                         fill: "origin",
                         tension: 0.4,
-                        borderColor: "#00ff41",
+                        borderColor: "#60a5fa",
                         borderWidth: 3,
                         pointRadius: 0,
                         pointHoverRadius: 6,
@@ -585,8 +585,8 @@ export default {
                                 return null;
                             }
                             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                            gradient.addColorStop(0, "rgba(0, 255, 65, 0.4)");
-                            gradient.addColorStop(1, "rgba(0, 255, 65, 0)");
+                            gradient.addColorStop(0, "rgba(96, 165, 250, 0.35)");
+                            gradient.addColorStop(1, "rgba(96, 165, 250, 0)");
                             return gradient;
                         },
                         yAxisID: "y",
@@ -597,9 +597,9 @@ export default {
                         data: maxPingData,
                         fill: "origin",
                         tension: 0.4,
-                        borderColor: "#fd7e14",
+                        borderColor: "#f59e0b",
                         borderWidth: 2,
-                        backgroundColor: "rgba(253, 126, 20, 0.1)",
+                        backgroundColor: "rgba(245, 158, 11, 0.08)",
                         yAxisID: "y",
                         label: this.$t("maxPing"),
                     },

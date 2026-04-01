@@ -689,7 +689,7 @@ export default {
         &:focus {
             background: transparent;
             border-color: $primary;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1), 0 0 0 4px rgba(0, 255, 65, 0.05);
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.1), 0 0 0 4px rgba(96, 165, 250, 0.05);
         }
 
         .dark & {

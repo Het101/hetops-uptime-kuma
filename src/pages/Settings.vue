@@ -294,14 +294,14 @@ export default {
     }
 
     .router-link-active .menu-item {
-        background: rgba(0, 255, 65, 0.08);
+        background: rgba(96, 165, 250, 0.08);
         color: $primary;
         font-weight: 700;
-        border-color: rgba(0, 255, 65, 0.2);
-        box-shadow: 0 4px 15px rgba(0, 255, 65, 0.1);
+        border-color: rgba(96, 165, 250, 0.2);
+        box-shadow: 0 4px 15px rgba(96, 165, 250, 0.1);
 
         .dark & {
-            background: rgba(0, 255, 65, 0.1);
+            background: rgba(96, 165, 250, 0.1);
         }
     }
 }

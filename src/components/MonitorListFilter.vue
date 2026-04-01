@@ -292,7 +292,7 @@ export default {
     transition: all $transition-time $easing-smooth;
 
     &:hover {
-        background: rgba(0, 255, 65, 0.08) !important;
+        background: rgba(96, 165, 250, 0.08) !important;
         transform: translateX(4px);
     }
 }
@@ -309,9 +309,9 @@ export default {
     gap: 6px;
 
     &.running {
-        background-color: rgba(0, 255, 65, 0.1) !important;
-        color: #00ff41 !important;
-        border: 1px solid rgba(0, 255, 65, 0.2);
+        background-color: rgba(16, 185, 129, 0.1) !important;
+        color: #10b981 !important;
+        border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
     &.paused {
