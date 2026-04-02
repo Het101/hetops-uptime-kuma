@@ -5,6 +5,21 @@
                 {{ $t("Quick Stats") }}
             </h1>
 
+            <!-- System Health Bar -->
+            <div v-if="totalMonitors > 0" class="health-overview glass-card shadow-box mb-4">
+                <div class="health-label">
+                    <font-awesome-icon icon="chart-line" class="me-2" />
+                    System Health
+                </div>
+                <div class="health-track">
+                    <div class="health-fill" :style="{ width: healthPercent + '%', background: healthColor }"></div>
+                </div>
+                <div class="health-right">
+                    <span class="health-pct" :style="{ color: healthColor }">{{ healthPercent }}%</span>
+                    <span class="health-sub">{{ $root.stats.up }} / {{ totalMonitors }} online</span>
+                </div>
+            </div>
+
             <div class="stats-container mb-4">
                 <div class="stat-card glass-card shadow-box card-up">
                     <div class="stat-icon-wrap up-icon"><font-awesome-icon icon="circle-check" /></div>
@@ -65,7 +80,7 @@
                         <tr
                             v-for="(beat, index) in displayedRecords"
                             :key="index"
-                            :class="{ 'shadow-box': $root.windowWidth <= 550 }"
+                            :class="['event-row', beatRowClass(beat.status), { 'shadow-box': $root.windowWidth <= 550 }]"
                         >
                             <td v-if="showGroupColumn">
                                 <router-link
@@ -159,6 +174,20 @@ export default {
         tableColumnCount() {
             return this.showGroupColumn ? 5 : 4;
         },
+        totalMonitors() {
+            const s = this.$root.stats;
+            if (!s) return 0;
+            return (s.up ?? 0) + (s.down ?? 0) + (s.maintenance ?? 0) + (s.pending ?? 0) + (s.unknown ?? 0);
+        },
+        healthPercent() {
+            if (this.totalMonitors === 0) return 100;
+            return Math.round(((this.$root.stats?.up ?? 0) / this.totalMonitors) * 100);
+        },
+        healthColor() {
+            if (this.healthPercent >= 90) return "#10b981";
+            if (this.healthPercent >= 70) return "#f59e0b";
+            return "#ef4444";
+        },
     },
     watch: {
         perPage() {
@@ -190,6 +219,16 @@ export default {
     },
 
     methods: {
+        /**
+         * Returns a CSS class name based on heartbeat status for event row coloring.
+         * @param {number} status - The heartbeat status code.
+         * @returns {string} CSS class name.
+         */
+        beatRowClass(status) {
+            const map = { 0: "event-down", 1: "event-up", 2: "event-pending", 3: "event-maintenance" };
+            return map[status] ?? "event-unknown";
+        },
+
         /**
          * Returns the group (parent) name for a monitor, or empty string if none.
          * @param {number} monitorID - The monitor ID.
@@ -398,8 +437,77 @@ export default {
     }
 }
 
+.health-overview {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: 16px;
+
+    .health-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6b7280;
+        white-space: nowrap;
+        min-width: 130px;
+    }
+
+    .health-track {
+        flex: 1;
+        height: 5px;
+        background: rgba(0, 0, 0, 0.06);
+        border-radius: 99px;
+        overflow: hidden;
+
+        .dark & { background: rgba(255, 255, 255, 0.08); }
+    }
+
+    .health-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease;
+    }
+
+    .health-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+    }
+
+    .health-pct {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1;
+        transition: color 0.5s ease;
+    }
+
+    .health-sub {
+        font-size: 10px;
+        color: #9ca3af;
+        font-family: 'JetBrains Mono', monospace;
+        white-space: nowrap;
+    }
+}
+
 .table-wrapper {
     border-radius: 20px;
+}
+
+// Status-colored left border on event rows
+.event-row {
+    td:first-child {
+        border-left: 3px solid transparent;
+        transition: border-color 0.2s ease;
+    }
+
+    &.event-up td:first-child        { border-left-color: $status-up; }
+    &.event-down td:first-child      { border-left-color: $status-down; }
+    &.event-pending td:first-child   { border-left-color: $status-pending; }
+    &.event-maintenance td:first-child { border-left-color: $status-maintenance; }
 }
 
 table {

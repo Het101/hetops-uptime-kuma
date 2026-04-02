@@ -24,6 +24,19 @@
                 <div style="color: #9ca3af; font-size: 10px; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Fira Code', monospace; font-style: normal; font-weight: normal;">HANDY TOOLS FOR DEVOPS</div>
             </router-link>
 
+            <!-- Live Monitor Stats -->
+            <div v-if="$root.loggedIn && $root.stats" class="sidebar-live-stats">
+                <span class="live-stat up-stat">
+                    <span class="live-dot"></span>
+                    {{ $root.stats.up ?? 0 }} Up
+                </span>
+                <span class="live-divider">·</span>
+                <span class="live-stat" :class="($root.stats.down ?? 0) > 0 ? 'down-stat has-issues' : 'down-stat'">
+                    <span class="live-dot"></span>
+                    {{ $root.stats.down ?? 0 }} Down
+                </span>
+            </div>
+
             <!-- Sidebar Navigation -->
             <ul class="nav nav-pills flex-column mb-auto gap-3">
                 <li v-if="$root.loggedIn" class="nav-item">
@@ -138,7 +151,7 @@
                 <span class="footer-badge normal-badge"><font-awesome-icon icon="terminal" /> NORMAL</span>
                 <span class="footer-text hidden-sm">hetops/uptime-kuma</span>
                 <span class="footer-text branch-text"><font-awesome-icon icon="code-branch" /> main</span>
-                <span class="footer-text warning-text"><font-awesome-icon icon="exclamation-circle" /> 0</span>
+                <span class="footer-text warning-text"><font-awesome-icon icon="exclamation-circle" /> {{ $root.stats?.down ?? 0 }}</span>
             </div>
             <div class="footer-right">
                 <span class="footer-text hidden-sm font-bold" id="kuma-footer-time">00:00:00</span>
@@ -375,6 +388,62 @@ main {
         text-overflow: ellipsis;
         max-width: 160px;
     }
+}
+
+// Live stats strip in sidebar
+.sidebar-live-stats {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 10px;
+    font-size: 11px;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+
+    .dark & { background: rgba(255, 255, 255, 0.04); }
+
+    .live-stat {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .live-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .up-stat {
+        color: $status-up;
+        .live-dot { background: $status-up; }
+    }
+
+    .down-stat {
+        color: $status-paused;
+        .live-dot { background: $status-paused; }
+
+        &.has-issues {
+            color: $status-down;
+            .live-dot {
+                background: $status-down;
+                animation: blink-dot 1.2s ease infinite;
+            }
+        }
+    }
+
+    .live-divider { color: rgba(0, 0, 0, 0.15); }
+}
+
+.dark .sidebar-live-stats .live-divider { color: rgba(255, 255, 255, 0.12); }
+
+@keyframes blink-dot {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.25; }
 }
 
 // Common structural layout styles

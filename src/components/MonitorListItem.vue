@@ -37,18 +37,24 @@
                             </span>
                             <div class="flex-fill text-truncate" style="min-width: 0">
                                 <div class="d-flex align-items-center justify-content-between gap-2">
-                                    <div class="text-truncate name-label">{{ monitor.name }}</div>
-                                    <div v-if="monitor.active && sparklinePoints.length > 1" class="sparkline-container">
-                                        <svg viewBox="0 0 100 30" class="sparkline-svg">
-                                            <path
-                                                :d="sparklinePath"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
+                                    <div class="d-flex align-items-center gap-2 text-truncate flex-fill">
+                                        <span class="status-dot-mini" :style="{ background: statusColor }"></span>
+                                        <div class="text-truncate name-label">{{ monitor.name }}</div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                                        <div v-if="monitor.active && sparklinePoints.length > 1" class="sparkline-container">
+                                            <svg viewBox="0 0 100 30" class="sparkline-svg">
+                                                <path
+                                                    :d="sparklinePath"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <span v-if="lastBeat && lastBeat.ping != null && lastBeat.ping >= 0" class="ping-badge">{{ lastBeat.ping }}ms</span>
                                     </div>
                                 </div>
                                 <div v-if="monitor.tags.length > 0" class="tags gap-1">
@@ -207,6 +213,17 @@ export default {
                 c["col-xl-6"] = true;
             }
             return c;
+        },
+        lastBeat() {
+            return this.$root.lastHeartbeatList?.[this.monitor.id];
+        },
+        statusColor() {
+            const status = this.lastBeat?.status;
+            if (status === 1) return "#10b981";
+            if (status === 0) return "#ef4444";
+            if (status === 2) return "#f59e0b";
+            if (status === 3) return "#a78bfa";
+            return "#6b7280";
         },
     },
     watch: {
@@ -373,6 +390,26 @@ export default {
 .name-label {
     font-size: 14px;
     font-weight: 600;
+}
+
+.status-dot-mini {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background-color 0.4s ease;
+}
+
+.ping-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: #9ca3af;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: -0.02em;
+
+    .dark & { color: #4b5563; }
 }
 
 .sparkline-container {
