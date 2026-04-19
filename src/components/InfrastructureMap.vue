@@ -1,14 +1,15 @@
 <template>
-    <div class="infrastructure-map-wrapper shadow-box mb-4">
+    <div v-if="monitors.length > 0" class="infrastructure-map-wrapper shadow-box mb-4">
         <div class="map-header">
             <h3>{{ $t("System Infrastructure") }}</h3>
             <div class="map-legend">
                 <span class="legend-item"><span class="dot up"></span> {{ $t("Up") }}</span>
                 <span class="legend-item"><span class="dot down"></span> {{ $t("Down") }}</span>
                 <span class="legend-item"><span class="dot maintenance"></span> {{ $t("Maintenance") }}</span>
+                <span class="legend-item monitor-count">{{ monitors.length }} monitors</span>
             </div>
         </div>
-        
+
         <div class="map-container">
             <div class="isometric-grid">
                 <div
@@ -21,11 +22,14 @@
                         <div class="face top"></div>
                         <div class="face front"></div>
                         <div class="face side"></div>
-                        
+
                         <!-- Tooltip -->
                         <div class="node-tooltip">
                             <div class="tooltip-name">{{ monitor.name }}</div>
                             <div class="tooltip-status">{{ statusText(monitor.id) }}</div>
+                            <div v-if="pingTime(monitor.id) !== null" class="tooltip-ping">
+                                {{ pingTime(monitor.id) }}ms
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -39,36 +43,28 @@ export default {
     computed: {
         monitors() {
             return Object.values(this.$root.monitorList).filter(m => m.active);
-        }
+        },
     },
     methods: {
         statusClass(monitorID) {
             const status = this.$root.lastHeartbeatList[monitorID]?.status;
-            if (status === 1) {
-                return "status-up";
-            }
-            if (status === 0) {
-                return "status-down";
-            }
-            if (status === 3) {
-                return "status-maintenance";
-            }
+            if (status === 1) return "status-up";
+            if (status === 0) return "status-down";
+            if (status === 3) return "status-maintenance";
             return "status-unknown";
         },
         statusText(monitorID) {
             const status = this.$root.lastHeartbeatList[monitorID]?.status;
-            if (status === 1) {
-                return this.$t("Up");
-            }
-            if (status === 0) {
-                return this.$t("Down");
-            }
-            if (status === 3) {
-                return this.$t("Maintenance");
-            }
+            if (status === 1) return this.$t("Up");
+            if (status === 0) return this.$t("Down");
+            if (status === 3) return this.$t("Maintenance");
             return this.$t("Unknown");
-        }
-    }
+        },
+        pingTime(monitorID) {
+            const ping = this.$root.lastHeartbeatList[monitorID]?.ping;
+            return (ping != null && ping >= 0) ? ping : null;
+        },
+    },
 };
 </script>
 
@@ -106,6 +102,16 @@ export default {
         align-items: center;
         gap: 6px;
         color: #6b7280;
+
+        &.monitor-count {
+            margin-left: 8px;
+            padding: 2px 8px;
+            background: rgba(96, 165, 250, 0.1);
+            border-radius: 20px;
+            font-weight: 700;
+            color: $primary;
+            font-size: 11px;
+        }
     }
     
     .dot {
@@ -148,6 +154,14 @@ export default {
     transform-style: preserve-3d;
 }
 
+// Staggered entry animation — must target .node-wrapper so nth-child
+// correctly counts grid children (each .node-wrapper holds exactly one .node-3d)
+@for $i from 1 through 60 {
+    .node-wrapper:nth-child(#{$i}) .node-3d {
+        animation-delay: $i * 0.04s;
+    }
+}
+
 .node-wrapper {
     width: 40px;
     height: 40px;
@@ -163,10 +177,6 @@ export default {
     transform-style: preserve-3d;
     transition: all 0.4s $easing-smooth;
     animation: node-entry 0.8s ease-out backwards;
-
-    @for $i from 1 through 50 {
-        &:nth-child(#{$i}) { animation-delay: $i * 0.05s; }
-    }
 
     &:hover {
         transform: translateZ(20px);
@@ -295,6 +305,14 @@ export default {
     .tooltip-status {
         opacity: 0.7;
         font-family: 'JetBrains Mono', monospace;
+    }
+
+    .tooltip-ping {
+        margin-top: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        color: $primary;
+        font-weight: 600;
     }
 }
 

@@ -75,9 +75,11 @@ export default {
 
             const tools = [
                 { title: "Dashboard", description: "Overview of all monitors", icon: "tachometer-alt", action: () => this.$router.push("/dashboard") },
-                { title: "Settings", description: "General and appearance settings", icon: "cog", action: () => this.$router.push("/settings") },
-                { title: "Status Pages", description: "Manage public status pages", icon: "stream", action: () => this.$router.push("/status-pages") },
+                { title: "Settings", description: "General and appearance settings", icon: "cog", action: () => this.$router.push("/settings/general") },
+                { title: "Status Pages", description: "Manage public status pages", icon: "stream", action: () => this.$router.push("/manage-status-page") },
+                { title: "Maintenance", description: "Schedule and manage maintenance windows", icon: "wrench", action: () => this.$router.push("/maintenance") },
                 { title: "Add Monitor", description: "Create a new monitor", icon: "plus-circle", action: () => this.$router.push("/add") },
+                { title: "Monitor List", description: "View full monitor list with filters", icon: "list", action: () => this.$router.push("/list") },
                 { title: "Toggle Theme", description: "Switch between Light and Dark", icon: "adjust", action: () => this.$root.toggleTheme() },
             ];
 

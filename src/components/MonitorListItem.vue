@@ -172,9 +172,11 @@ export default {
             
             // Normalize ping values to 0-30 range for SVG viewbox
             const maxPing = Math.max(...lastHeartbeats.map(h => h.ping || 0), 100);
-            
+            // Guard against division by zero when only 1 heartbeat exists
+            const denominator = Math.max(lastHeartbeats.length - 1, 1);
+
             return lastHeartbeats.map((h, i) => ({
-                x: (i / (lastHeartbeats.length - 1)) * 100,
+                x: (i / denominator) * 100,
                 y: 30 - ((h.ping || 0) / maxPing) * 25 - 2 // Offset slightly from bottom
             }));
         },

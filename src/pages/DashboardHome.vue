@@ -1,6 +1,6 @@
 <template>
-    <transition ref="tableContainer" name="slide-fade" appear>
-        <div v-if="$route.name === 'DashboardHome'">
+    <transition name="slide-fade" appear>
+        <div v-if="$route.name === 'DashboardHome'" ref="tableContainer">
             <h1 class="mb-3">
                 {{ $t("Quick Stats") }}
             </h1>
@@ -51,6 +51,11 @@
                     <div class="stat-icon-wrap paused-icon"><font-awesome-icon icon="circle-pause" /></div>
                     <div class="stat-label">{{ $t("Pause") }}</div>
                     <div class="num text-secondary">{{ $root.stats.pause }}</div>
+                </div>
+                <div v-if="avgResponseTime !== null" class="stat-card glass-card shadow-box card-response">
+                    <div class="stat-icon-wrap response-icon"><font-awesome-icon icon="tachometer-alt" /></div>
+                    <div class="stat-label">Avg Response</div>
+                    <div class="num response-num">{{ avgResponseTime }}<span class="unit">ms</span></div>
                 </div>
             </div>
 
@@ -188,6 +193,12 @@ export default {
             if (this.healthPercent >= 70) return "#f59e0b";
             return "#ef4444";
         },
+
+        avgResponseTime() {
+            const pings = Object.values(this.$root.avgPingList || {}).filter(v => v != null && v > 0);
+            if (pings.length === 0) return null;
+            return Math.round(pings.reduce((a, b) => a + b, 0) / pings.length);
+        },
     },
     watch: {
         perPage() {
@@ -300,6 +311,7 @@ export default {
          */
         updatePerPage() {
             const tableContainer = this.$refs.tableContainer;
+            if (!tableContainer) return;
             const tableContainerHeight = tableContainer.offsetHeight;
             const availableHeight = window.innerHeight - tableContainerHeight;
             const additionalPerPage = Math.floor(availableHeight / 58);
@@ -317,7 +329,6 @@ export default {
         clearAllEvents() {
             this.clearingAllEvents = true;
             const monitorIDs = Object.keys(this.$root.monitorList);
-            let failed = 0;
             const total = monitorIDs.length;
 
             if (total === 0) {
@@ -326,26 +337,31 @@ export default {
                 return;
             }
 
+            let completed = 0;
+            let failed = 0;
+
+            const onDone = () => {
+                completed++;
+                if (completed < total) return;
+                // All callbacks have fired — now update UI
+                this.clearingAllEvents = false;
+                this.page = 1;
+                this.getImportantHeartbeatListLength();
+                if (failed === 0) {
+                    this.$root.toastSuccess(this.$t("Events cleared successfully"));
+                } else {
+                    this.$root.toastError(this.$t("Could not clear events", { failed, total }));
+                }
+            };
+
             monitorIDs.forEach((monitorID) => {
                 this.$root.getSocket().emit("clearEvents", monitorID, (res) => {
                     if (!res || !res.ok) {
                         failed++;
                     }
+                    onDone();
                 });
             });
-            this.clearingAllEvents = false;
-            this.page = 1;
-            this.getImportantHeartbeatListLength();
-            if (failed === 0) {
-                this.$root.toastSuccess(this.$t("Events cleared successfully"));
-            } else {
-                this.$root.toastError(
-                    this.$t("Could not clear events", {
-                        failed,
-                        total,
-                    })
-                );
-            }
         },
     },
 };
@@ -425,6 +441,29 @@ export default {
         border-top-color: $status-paused;
         .paused-icon { color: $status-paused; }
         &:hover { border-color: rgba(107, 114, 128, 0.4); }
+    }
+
+    &.card-response {
+        border-top-color: $primary;
+        .response-icon { color: $primary; }
+        &:hover { border-color: rgba(96, 165, 250, 0.4); }
+
+        .response-num {
+            color: $primary;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+
+            .unit {
+                font-size: 14px;
+                font-weight: 500;
+                opacity: 0.6;
+            }
+        }
     }
 
     &:hover {

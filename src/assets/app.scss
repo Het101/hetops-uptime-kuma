@@ -133,6 +133,20 @@ optgroup {
     }
 }
 
+// Alias used by stat/health cards — same glass appearance as shadow-box
+.glass-card {
+    background-color: $glass-bg-light;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid $glass-border-light;
+    border-radius: 16px;
+
+    .dark & {
+        background-color: rgba(2, 2, 2, 0.4);
+        border: 1px solid $glass-border-dark;
+    }
+}
+
 .btn {
     padding: 10px 24px;
     font-weight: 600;
@@ -313,98 +327,6 @@ optgroup {
 // Global button spacing in any flex container
 .d-flex.gap-2, .btn-group {
     gap: 15px !important;
-}
-
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-.bg-maintenance {
-    color: white !important;
-    background-color: $maintenance !important;
-}
-
-.bg-dark {
-    color: white;
-}
-
-.text-maintenance {
-    color: $maintenance !important;
-}
-
-.incident a,
-.bg-maintenance a {
-    color: inherit;
-}
-
-.list-group {
-    border-radius: 0.75rem;
-
-    .dark & {
-        .list-group-item {
-            background-color: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            color: $dark-font-color;
-            border-color: rgba(255, 255, 255, 0.08);
-
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-        }
-    }
-}
-
-// optgroup
-optgroup {
-    color: #b1b1b1;
-    option {
-        color: #212529;
-    }
-}
-
-// Scrollbar
-::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 20px;
-}
-
-
-
-
-.modal-content {
-    border-radius: 16px;
-    background-color: $glass-bg-light;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid $glass-border-light;
-    box-shadow: $premium-shadow-light;
-
-    .dark & {
-        background-color: $glass-bg-dark;
-        border: 1px solid $glass-border-dark;
-        box-shadow: $premium-shadow-dark;
-    }
-}
-
-.VuePagination__count {
-    font-size: 13px;
-    text-align: center;
-}
-
-.shadow-box {
-    background-color: $glass-bg-light;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid $glass-border-light;
-    box-shadow: $premium-shadow-light;
-    padding: 10px;
-    border-radius: 16px;
-    transition: all $transition-time $easing-smooth;
-
-    &.big-padding {
-        padding: 20px;
-    }
 }
 
 // Global Body & HTML cleanup for scrolling

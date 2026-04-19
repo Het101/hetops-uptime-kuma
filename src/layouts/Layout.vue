@@ -35,6 +35,8 @@
                     <span class="live-dot"></span>
                     {{ $root.stats.down ?? 0 }} Down
                 </span>
+                <span class="live-divider">·</span>
+                <span class="live-stat uptime-stat">{{ uptimePercent }}%</span>
             </div>
 
             <!-- Sidebar Navigation -->
@@ -148,16 +150,21 @@
         <!-- HetOps Global Footer -->
         <footer v-if="!$root.isMobile" class="hetops-footer">
             <div class="footer-left">
-                <span class="footer-badge normal-badge"><font-awesome-icon icon="terminal" /> NORMAL</span>
+                <span class="footer-badge" :class="footerStatusClass">
+                    <font-awesome-icon :icon="footerStatusIcon" /> {{ footerStatusLabel }}
+                </span>
                 <span class="footer-text hidden-sm">hetops/uptime-kuma</span>
                 <span class="footer-text branch-text"><font-awesome-icon icon="code-branch" /> main</span>
-                <span class="footer-text warning-text"><font-awesome-icon icon="exclamation-circle" /> {{ $root.stats?.down ?? 0 }}</span>
+                <span v-if="($root.stats?.down ?? 0) > 0" class="footer-text warning-text">
+                    <font-awesome-icon icon="exclamation-circle" /> {{ $root.stats.down }} down
+                </span>
             </div>
             <div class="footer-right">
                 <span class="footer-text hidden-sm font-bold" id="kuma-footer-time">00:00:00</span>
-                <span class="footer-text success-text"><font-awesome-icon icon="check-circle" /> ALL_SYSTEMS_OPTIMAL</span>
+                <span class="footer-text" :class="footerStatusTextClass">
+                    <font-awesome-icon :icon="footerStatusTextIcon" /> {{ footerStatusText }}
+                </span>
                 <span class="footer-text hidden-lg">UTF-8</span>
-                <span class="footer-text hidden-lg">Prettier</span>
             </div>
         </footer>
     </div>
@@ -197,6 +204,38 @@ export default {
             } else {
                 return false;
             }
+        },
+
+        uptimePercent() {
+            const s = this.$root.stats;
+            if (!s) return 100;
+            const total = (s.up ?? 0) + (s.down ?? 0) + (s.maintenance ?? 0) + (s.pending ?? 0) + (s.unknown ?? 0);
+            if (total === 0) return 100;
+            return Math.round(((s.up ?? 0) / total) * 100);
+        },
+
+        hasIssues() {
+            return (this.$root.stats?.down ?? 0) > 0;
+        },
+
+        footerStatusClass() {
+            return this.hasIssues ? "issues-badge" : "normal-badge";
+        },
+        footerStatusIcon() {
+            return this.hasIssues ? "exclamation-triangle" : "terminal";
+        },
+        footerStatusLabel() {
+            return this.hasIssues ? "ISSUES" : "NORMAL";
+        },
+        footerStatusTextClass() {
+            return this.hasIssues ? "warning-text" : "success-text";
+        },
+        footerStatusTextIcon() {
+            return this.hasIssues ? "exclamation-circle" : "check-circle";
+        },
+        footerStatusText() {
+            const down = this.$root.stats?.down ?? 0;
+            return this.hasIssues ? `${down}_MONITOR${down > 1 ? "S" : ""}_DOWN` : "ALL_SYSTEMS_OPTIMAL";
         },
     },
 
@@ -437,6 +476,11 @@ main {
     }
 
     .live-divider { color: rgba(0, 0, 0, 0.15); }
+
+    .uptime-stat {
+        color: $status-up;
+        font-weight: 700;
+    }
 }
 
 .dark .sidebar-live-stats .live-divider { color: rgba(255, 255, 255, 0.12); }
@@ -537,8 +581,8 @@ main {
 .hetops-footer {
     position: fixed;
     bottom: 0;
-    left: 0;
-    width: 100%;
+    left: 280px;
+    width: calc(100% - 280px);
     height: 30px;
     background-color: rgba(248, 249, 250, 0.85);
     backdrop-filter: blur(20px);
@@ -571,7 +615,6 @@ main {
     }
 
     .footer-badge {
-        background-color: $primary;
         color: #fff;
         padding: 2px 8px;
         font-weight: bold;
@@ -579,6 +622,15 @@ main {
         display: flex;
         align-items: center;
         gap: 6px;
+        transition: background-color 0.4s ease;
+
+        &.normal-badge { background-color: $primary; }
+        &.issues-badge { background-color: $status-down; animation: badge-pulse 1.5s infinite; }
+    }
+
+    @keyframes badge-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.75; }
     }
 
     .footer-text {
