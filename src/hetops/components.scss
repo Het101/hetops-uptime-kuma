@@ -470,9 +470,12 @@
     inset: 0;
     display: grid;
     place-content: center;
+    gap: 6px;
     text-align: center;
     b {
-        display: block;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
         font: 700 2rem/1 var(--ho-mono);
         letter-spacing: -0.04em;
         color: var(--ho-text);
@@ -576,7 +579,7 @@
 }
 #app .ho-tiles {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 12px;
 }
 #app .ho-tile {
@@ -946,6 +949,95 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+}
+
+// Number + unit sit together whatever whitespace the template leaves.
+#app .ho-kpi b {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    small {
+        margin-left: 0;
+    }
+}
+
+// Chart panel grows to the height of the incidents column beside it.
+#app .ho-fleet {
+    display: flex;
+    flex-direction: column;
+}
+#app .ho-fleet-plot {
+    flex: 1 1 190px;
+    min-height: 190px;
+    height: auto;
+}
+#app .ho-inc-more {
+    margin: 2px 0 0 26px;
+    font: 500 0.72rem/1.3 var(--ho-mono);
+    color: var(--ho-muted);
+}
+
+// ── Dashboard: monitor list sized to its content ────────────────────
+#app .shadow-box:has(> .list-header) {
+    height: auto !important;
+    max-height: calc(100vh - 160px);
+}
+#app .shadow-box:has(> .list-header) .monitor-list {
+    height: auto !important;
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
+}
+
+// ── Dashboard: status changes table ─────────────────────────────────
+#app .ho-section-title {
+    margin: 0;
+    font: 700 1rem/1.2 var(--ho-sans);
+    letter-spacing: -0.02em;
+    color: var(--ho-text);
+}
+#app .table-wrapper {
+    .table {
+        margin: 0;
+        --bs-table-bg: transparent;
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.025);
+    }
+    th {
+        font: 600 0.66rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--ho-muted);
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--ho-line) !important;
+    }
+    td {
+        padding: 9px 12px;
+        vertical-align: middle;
+        font-size: 0.86rem;
+        color: var(--ho-body);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    }
+    tbody tr:last-child td {
+        border-bottom: 0 !important;
+    }
+    td a,
+    td a:visited {
+        color: var(--ho-text);
+        font-weight: 600;
+        text-decoration: none;
+    }
+    td a:hover {
+        color: var(--ho-up);
+    }
+    td:nth-last-child(2) {
+        font: 500 0.78rem/1.3 var(--ho-mono);
+        color: var(--ho-muted);
+        white-space: nowrap;
+    }
+}
+
+// Public page: drop the description block when it has no text.
+#app .alert-heading:has(> p:empty) {
+    display: none;
 }
 
 // ── Live pill (header) ──────────────────────────────────────────────
