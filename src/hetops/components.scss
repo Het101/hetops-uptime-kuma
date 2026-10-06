@@ -1118,6 +1118,84 @@
     display: none;
 }
 
+// ── Public page: response row and footer ────────────────────────────
+#app .ho-pub-pulse {
+    margin: 8px 0 28px;
+}
+#app .ho-pub-pulse .ho-inc-title b {
+    color: var(--ho-text);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#app .ho-footer {
+    margin: 40px 0 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ho-line);
+}
+#app .ho-footer-note {
+    margin-bottom: 14px;
+    font-size: 0.88rem;
+    color: var(--ho-body);
+    p {
+        margin: 0;
+    }
+}
+#app .ho-footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+}
+#app .ho-footer a.ho-footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+    font: 700 0.95rem/1 var(--ho-sans);
+    letter-spacing: -0.02em;
+    // The theme colours every link green with a long :not() chain; footer links stay quiet.
+    color: var(--ho-text) !important;
+    img {
+        border-radius: 6px;
+    }
+    b {
+        color: var(--ho-up);
+    }
+}
+#app .ho-footer .ho-footer-links {
+    display: flex;
+    gap: 18px;
+    a {
+        font-size: 0.86rem;
+        color: var(--ho-muted) !important;
+        text-decoration: none;
+    }
+    a:hover {
+        color: var(--ho-text) !important;
+    }
+}
+#app .ho-footer-fresh {
+    margin: 0 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 500 0.74rem/1 var(--ho-mono);
+    color: var(--ho-muted);
+    .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--ho-up);
+    }
+}
+@media (max-width: 520px) {
+    #app .ho-footer-fresh {
+        margin-left: 0;
+    }
+}
+
 // ── Live pill (header) ──────────────────────────────────────────────
 #app .ho-pill {
     display: inline-flex;

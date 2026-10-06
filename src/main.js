@@ -11,6 +11,8 @@ import "./hetops/theme.scss";
 import "./hetops/components.scss";
 import HetopsStatusHero from "./hetops/components/HetopsStatusHero.vue";
 import HetopsServiceBoard from "./hetops/components/HetopsServiceBoard.vue";
+import HetopsPublicPulse from "./hetops/components/HetopsPublicPulse.vue";
+import HetopsFooter from "./hetops/components/HetopsFooter.vue";
 import HetopsOverview from "./hetops/components/HetopsOverview.vue";
 import HetopsLivePill from "./hetops/components/HetopsLivePill.vue";
 import HetopsMonitorInsight from "./hetops/components/HetopsMonitorInsight.vue";
@@ -49,6 +51,8 @@ app.component("HetopsServiceBoard", HetopsServiceBoard);
 app.component("HetopsOverview", HetopsOverview);
 app.component("HetopsLivePill", HetopsLivePill);
 app.component("HetopsMonitorInsight", HetopsMonitorInsight);
+app.component("HetopsPublicPulse", HetopsPublicPulse);
+app.component("HetopsFooter", HetopsFooter);
 app.use(router);
 app.use(i18n);
 
