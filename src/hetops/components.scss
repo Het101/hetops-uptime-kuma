@@ -1,0 +1,775 @@
+// HetOps Status components: hero, service board, overview, live pill.
+// Tones: every component sets --tone from its state, so one rule colours rings, glows, lines.
+@import "../assets/vars.scss";
+
+.is-up {
+    --tone: var(--ho-up);
+    --tone-rgb: 139, 195, 74;
+}
+.is-warn,
+.is-pending {
+    --tone: var(--ho-pending);
+    --tone-rgb: 227, 169, 68;
+}
+.is-down {
+    --tone: var(--ho-down);
+    --tone-rgb: 240, 100, 90;
+}
+.is-maint {
+    --tone: var(--ho-maint);
+    --tone-rgb: 122, 167, 217;
+}
+.is-idle,
+.is-unknown {
+    --tone: var(--ho-muted);
+    --tone-rgb: 142, 138, 129;
+}
+
+// ── Status hero ─────────────────────────────────────────────────────
+#app .ho-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+    padding: 36px 36px 32px;
+    margin-bottom: 40px;
+    border: 1px solid rgba(var(--tone-rgb), 0.35);
+    border-radius: 22px;
+    overflow: hidden;
+    background: radial-gradient(70% 120% at 0% 0%, rgba(var(--tone-rgb), 0.16), transparent 60%), var(--ho-panel);
+    isolation: isolate;
+
+    // Faint measurement grid, fading out to the right.
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+        background-size: 32px 32px;
+        mask-image: linear-gradient(90deg, #000, transparent 75%);
+    }
+}
+#app .ho-hero-main {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    min-width: 0;
+}
+
+#app .ho-beacon {
+    position: relative;
+    flex: none;
+    width: 84px;
+    height: 84px;
+    display: grid;
+    place-items: center;
+    .core {
+        position: relative;
+        z-index: 1;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--tone);
+        color: #08090a;
+        font-size: 28px;
+        box-shadow:
+            0 0 0 8px rgba(var(--tone-rgb), 0.14),
+            0 12px 40px -8px rgba(var(--tone-rgb), 0.6);
+    }
+    .ring {
+        position: absolute;
+        inset: 10px;
+        border-radius: 50%;
+        border: 2px solid rgba(var(--tone-rgb), 0.55);
+        opacity: 0;
+    }
+}
+
+#app .ho-eyebrow {
+    margin: 0 0 8px;
+    font: 600 0.74rem/1 var(--ho-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--tone);
+}
+#app .ho-headline {
+    margin: 0 0 14px;
+    font: 800 clamp(1.8rem, 3.6vw, 2.6rem) / 1.05 var(--ho-sans);
+    letter-spacing: -0.035em;
+    color: var(--ho-text);
+}
+#app .ho-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    span {
+        padding: 5px 11px;
+        border: 1px solid var(--ho-line-2);
+        border-radius: 999px;
+        font-size: 0.84rem;
+        color: var(--ho-body);
+        background: rgba(255, 255, 255, 0.02);
+    }
+    b {
+        font-family: var(--ho-mono);
+        color: var(--ho-text);
+    }
+    .bad {
+        border-color: rgba(240, 100, 90, 0.5);
+        color: var(--ho-down);
+        b {
+            color: var(--ho-down);
+        }
+    }
+    .warn {
+        border-color: rgba(227, 169, 68, 0.5);
+        color: var(--ho-pending);
+        b {
+            color: var(--ho-pending);
+        }
+    }
+}
+
+#app .ho-hero-side {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+}
+#app .ho-ring {
+    position: relative;
+    width: 148px;
+    height: 148px;
+    svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+    circle {
+        fill: none;
+        stroke-width: 9;
+    }
+    .track {
+        stroke: rgba(255, 255, 255, 0.06);
+    }
+    .fill {
+        stroke: var(--tone);
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1.2s var(--ho-ease);
+    }
+}
+#app .ho-ring-label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    b {
+        font: 700 1.55rem/1 var(--ho-mono);
+        letter-spacing: -0.03em;
+        color: var(--ho-text);
+    }
+    span {
+        margin-top: 6px;
+        font: 500 0.68rem/1 var(--ho-mono);
+        color: var(--ho-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+}
+#app .ho-fresh {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font: 500 0.76rem/1 var(--ho-mono);
+    color: var(--ho-muted);
+    .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--ho-up);
+    }
+}
+
+// ── Service board ───────────────────────────────────────────────────
+#app .ho-board {
+    display: grid;
+    gap: 36px;
+}
+#app .ho-group-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    h2 {
+        margin: 0;
+        font: 700 1.15rem/1.2 var(--ho-sans);
+        letter-spacing: -0.02em;
+        color: var(--ho-text);
+    }
+}
+#app .ho-group-sum {
+    font: 500 0.76rem/1 var(--ho-mono);
+    color: var(--ho-muted);
+    &.ok::before,
+    &.warn::before {
+        content: "";
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        margin-right: 7px;
+        border-radius: 50%;
+        background: var(--ho-up);
+    }
+    &.warn {
+        color: var(--ho-pending);
+    }
+    &.warn::before {
+        background: var(--ho-pending);
+    }
+}
+#app .ho-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 14px;
+}
+
+#app .ho-card {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    padding: 18px 18px 14px;
+    border: 1px solid var(--ho-line);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 40%), var(--ho-panel);
+    transition:
+        transform 0.35s var(--ho-ease),
+        border-color 0.25s,
+        box-shadow 0.35s;
+    &:hover {
+        transform: translateY(-3px);
+        border-color: rgba(var(--tone-rgb), 0.45);
+        box-shadow: 0 22px 40px -24px rgba(var(--tone-rgb), 0.45);
+    }
+    &.is-down {
+        border-color: rgba(240, 100, 90, 0.55);
+        background: radial-gradient(90% 70% at 0% 0%, rgba(240, 100, 90, 0.14), transparent 60%), var(--ho-panel);
+    }
+    &.is-pending {
+        border-color: rgba(227, 169, 68, 0.45);
+    }
+}
+#app .ho-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    h3 {
+        margin: 0;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font: 650 1rem/1.3 var(--ho-sans);
+        color: var(--ho-text);
+    }
+}
+#app .ho-state {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font: 600 0.72rem/1 var(--ho-mono);
+    color: var(--tone);
+    background: rgba(var(--tone-rgb), 0.12);
+    border: 1px solid rgba(var(--tone-rgb), 0.35);
+}
+#app .ho-card-mid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: end;
+}
+#app .ho-figures {
+    display: flex;
+    gap: 18px;
+    margin: 0;
+    dt {
+        font: 500 0.66rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--ho-muted);
+        margin-bottom: 6px;
+    }
+    dd {
+        margin: 0;
+        font: 700 1.35rem/1 var(--ho-mono);
+        letter-spacing: -0.03em;
+        color: var(--ho-text);
+        white-space: nowrap;
+    }
+    small {
+        font-size: 0.62em;
+        color: var(--ho-muted);
+        margin-left: 2px;
+        font-weight: 500;
+    }
+}
+#app .ho-spark {
+    width: 100%;
+    height: 44px;
+    overflow: visible;
+    .line {
+        fill: none;
+        stroke: var(--tone);
+        stroke-width: 2;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+    }
+    .area {
+        fill: rgba(var(--tone-rgb), 0.12);
+    }
+}
+#app .ho-beats {
+    display: flex;
+    gap: 3px;
+    height: 22px;
+    align-items: stretch;
+    i {
+        flex: 1;
+        border-radius: 3px;
+        background: #26282c;
+        transform-origin: bottom;
+        transition:
+            transform 0.2s var(--ho-ease),
+            filter 0.2s;
+        &:hover {
+            transform: scaleY(1.35);
+            filter: brightness(1.25);
+        }
+    }
+    .b-up {
+        background: var(--ho-up);
+        opacity: 0.85;
+    }
+    .b-down {
+        background: var(--ho-down);
+    }
+    .b-pending {
+        background: var(--ho-pending);
+    }
+    .b-maint {
+        background: var(--ho-maint);
+    }
+}
+#app .ho-card-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0;
+    font: 500 0.74rem/1.3 var(--ho-mono);
+    color: var(--ho-muted);
+    .ho-cert {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+    }
+}
+#app .is-down .ho-card-foot > span:first-child {
+    color: var(--ho-down);
+}
+
+// ── Dashboard overview ──────────────────────────────────────────────
+#app .ho-ov {
+    margin-bottom: 18px;
+}
+#app .ho-ov-top {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+#app .ho-donut-card,
+#app .ho-kpi,
+#app .ho-tile {
+    border: 1px solid var(--ho-line);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 45%), var(--ho-panel);
+}
+#app .ho-donut-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 18px;
+    align-items: center;
+    padding: 20px;
+}
+#app .ho-donut {
+    width: 140px;
+    height: 140px;
+    transform: rotate(-90deg);
+    circle {
+        fill: none;
+        stroke-width: 14;
+    }
+    .track {
+        stroke: rgba(255, 255, 255, 0.05);
+    }
+    .seg {
+        transition:
+            stroke-dasharray 0.9s var(--ho-ease),
+            stroke-dashoffset 0.9s var(--ho-ease);
+    }
+    .s-up {
+        stroke: var(--ho-up);
+    }
+    .s-down {
+        stroke: var(--ho-down);
+    }
+    .s-pending {
+        stroke: var(--ho-pending);
+    }
+    .s-maintenance {
+        stroke: var(--ho-maint);
+    }
+    .s-pause,
+    .s-unknown {
+        stroke: #3a3c40;
+    }
+}
+#app .ho-donut-center {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    width: 140px;
+    transform: translateY(-50%);
+    text-align: center;
+    b {
+        display: block;
+        font: 700 2rem/1 var(--ho-mono);
+        letter-spacing: -0.04em;
+        color: var(--ho-text);
+    }
+    b span {
+        font-size: 0.55em;
+        color: var(--ho-muted);
+    }
+    small {
+        font: 500 0.68rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--ho-muted);
+    }
+}
+#app .ho-legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    font-size: 0.84rem;
+    color: var(--ho-body);
+    li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    i {
+        width: 9px;
+        height: 9px;
+        border-radius: 3px;
+        background: #3a3c40;
+    }
+    b {
+        margin-left: auto;
+        font-family: var(--ho-mono);
+        color: var(--ho-text);
+    }
+    .s-up i {
+        background: var(--ho-up);
+    }
+    .s-down i {
+        background: var(--ho-down);
+    }
+    .s-pending i {
+        background: var(--ho-pending);
+    }
+    .s-maintenance i {
+        background: var(--ho-maint);
+    }
+}
+#app .ho-kpis {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+#app .ho-kpi {
+    display: grid;
+    align-content: space-between;
+    gap: 10px;
+    padding: 18px 20px;
+    span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font: 600 0.68rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--ho-muted);
+    }
+    span svg {
+        color: var(--ho-up);
+    }
+    b {
+        font: 700 1.9rem/1 var(--ho-mono);
+        letter-spacing: -0.04em;
+        color: var(--ho-text);
+    }
+    b small {
+        font-size: 0.5em;
+        color: var(--ho-muted);
+        margin-left: 4px;
+        font-weight: 500;
+        letter-spacing: 0;
+    }
+    b.warn {
+        color: var(--ho-pending);
+    }
+    b.bad {
+        color: var(--ho-down);
+    }
+    em {
+        font-style: normal;
+        font-size: 0.82rem;
+        color: var(--ho-muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+#app .ho-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+#app .ho-tile {
+    display: grid;
+    gap: 10px;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: var(--ho-body);
+    transition:
+        transform 0.3s var(--ho-ease),
+        border-color 0.2s,
+        box-shadow 0.3s;
+    &:hover {
+        transform: translateY(-2px);
+        border-color: rgba(var(--tone-rgb), 0.5);
+        box-shadow: 0 18px 32px -22px rgba(var(--tone-rgb), 0.5);
+        color: var(--ho-body);
+    }
+    &.is-down {
+        border-color: rgba(240, 100, 90, 0.55);
+        background: radial-gradient(90% 80% at 0% 0%, rgba(240, 100, 90, 0.14), transparent 60%), var(--ho-panel);
+    }
+    .ho-spark {
+        height: 40px;
+    }
+}
+#app .ho-tile-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    b {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--ho-text);
+        font-weight: 600;
+    }
+}
+#app .ho-dot {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--tone);
+    box-shadow: 0 0 0 0 rgba(var(--tone-rgb), 0.6);
+}
+#app .ho-state-sm {
+    margin-left: auto;
+    flex: none;
+    font: 600 0.66rem/1 var(--ho-mono);
+    color: var(--tone);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+#app .ho-tile-foot {
+    display: flex;
+    justify-content: space-between;
+    font: 600 0.86rem/1 var(--ho-mono);
+    color: var(--ho-text);
+    small {
+        color: var(--ho-muted);
+        font-weight: 500;
+    }
+}
+
+// ── Live pill (header) ──────────────────────────────────────────────
+#app .ho-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 10px;
+    border: 1px solid rgba(var(--tone-rgb), 0.45);
+    border-radius: 999px;
+    background: rgba(var(--tone-rgb), 0.1);
+    font: 600 0.78rem/1 var(--ho-mono);
+    color: var(--tone);
+    text-decoration: none;
+    white-space: nowrap;
+}
+#app .ho-pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--tone);
+}
+
+// ── Motion ──────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: no-preference) {
+    #app .ho-hero.is-up .ring,
+    #app .ho-hero.is-warn .ring,
+    #app .ho-hero.is-down .ring {
+        animation: ho-ripple 3s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+    }
+    #app .ho-beacon .r2 {
+        animation-delay: 1s !important;
+    }
+    #app .ho-beacon .r3 {
+        animation-delay: 2s !important;
+    }
+    @keyframes ho-ripple {
+        0% {
+            transform: scale(0.8);
+            opacity: 0.9;
+        }
+        100% {
+            transform: scale(2.1);
+            opacity: 0;
+        }
+    }
+
+    #app .ho-fresh .dot,
+    #app .ho-pill-dot,
+    #app .is-down .ho-dot,
+    #app .is-pending .ho-dot {
+        animation: ho-breathe 2.2s ease-in-out infinite;
+    }
+    @keyframes ho-breathe {
+        50% {
+            box-shadow: 0 0 0 6px rgba(var(--tone-rgb, 139, 195, 74), 0);
+            opacity: 0.55;
+        }
+    }
+
+    #app .ho-hero {
+        animation: ho-rise 0.7s var(--ho-ease) both;
+    }
+    #app .ho-group {
+        animation: ho-rise 0.7s var(--ho-ease) both;
+        animation-delay: calc(0.1s + var(--gi, 0) * 0.08s);
+    }
+    #app .ho-card {
+        animation: ho-rise 0.6s var(--ho-ease) both;
+        animation-delay: calc(0.15s + var(--mi, 0) * 0.05s);
+    }
+    #app .ho-ov-top {
+        animation: ho-rise 0.6s var(--ho-ease) both;
+    }
+    #app .ho-tile {
+        animation: ho-rise 0.55s var(--ho-ease) both;
+        animation-delay: calc(0.1s + var(--i, 0) * 0.04s);
+    }
+    @keyframes ho-rise {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+    }
+}
+
+// ── Small screens ───────────────────────────────────────────────────
+@media (max-width: 860px) {
+    #app .ho-hero {
+        grid-template-columns: 1fr;
+        padding: 26px 22px;
+        gap: 24px;
+    }
+    #app .ho-hero-side {
+        grid-template-columns: auto 1fr;
+        justify-items: start;
+        align-items: center;
+    }
+    #app .ho-ring {
+        width: 104px;
+        height: 104px;
+    }
+    #app .ho-ring-label b {
+        font-size: 1.15rem;
+    }
+    #app .ho-ring-label span {
+        font-size: 0.52rem;
+        letter-spacing: 0.04em;
+    }
+    #app .ho-ov-top {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 520px) {
+    #app .ho-hero-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+    #app .ho-beacon {
+        width: 64px;
+        height: 64px;
+        .core {
+            width: 50px;
+            height: 50px;
+            font-size: 22px;
+        }
+    }
+    #app .ho-kpi {
+        padding: 14px;
+    }
+    #app .ho-kpi b {
+        font-size: 1.5rem;
+    }
+    #app .ho-cards {
+        grid-template-columns: 1fr;
+    }
+    #app .ho-donut-card {
+        grid-template-columns: 120px 1fr;
+    }
+    #app .ho-donut {
+        width: 120px;
+        height: 120px;
+    }
+    #app .ho-donut-center {
+        width: 120px;
+    }
+}

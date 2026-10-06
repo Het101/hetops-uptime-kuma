@@ -30,6 +30,23 @@ jobs:
           npm run build
           test -f dist/index.html || { echo "::error::dist/index.html missing after build"; exit 1; }
 
+      # Start the real image and ask it for a page before anything is pushed. A frontend-less
+      # image once reached Docker Hub and took status.hetops.dev down; this makes that impossible.
+      - name: Smoke-test the image
+        run: |
+          set -e
+          docker build -f ./docker/dockerfile --target release -t hetops-status:smoke .
+          docker run -d --name smoke -p 3001:3001 hetops-status:smoke
+          trap 'docker logs smoke | tail -40; docker rm -f smoke > /dev/null' EXIT
+          for i in $(seq 1 60); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3001/setup-database || true)
+            [ "$code" = "200" ] && break
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:3001/setup-database | grep -q '<div id="app"' || { echo "::error::the image did not serve the app"; exit 1; }
+          curl -fsS -o /dev/null http://127.0.0.1:3001/icon.svg
+          echo "image serves the app"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 

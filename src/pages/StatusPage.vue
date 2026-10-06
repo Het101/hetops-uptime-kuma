@@ -377,7 +377,14 @@
             </template>
 
             <!-- Overall Status -->
-            <div class="shadow-box list p-4 overall-status mb-4">
+            <HetopsStatusHero
+                v-if="!enableEditMode"
+                :state="overallStatus"
+                :groups="$root.publicGroupList"
+                :last-update="lastUpdateTime"
+                :refresh-in="updateCountdownText"
+            />
+            <div v-else class="shadow-box list p-4 overall-status mb-4">
                 <div v-if="Object.keys($root.publicMonitorList).length === 0 && loadedData">
                     <font-awesome-icon icon="question-circle" class="ok" />
                     {{ $t("No Services") }}
@@ -489,7 +496,13 @@
                     👀 {{ $t("statusPageNothing") }}
                 </div>
 
+                <HetopsServiceBoard
+                    v-if="!enableEditMode"
+                    :groups="$root.publicGroupList"
+                    :show-certificate-expiry="config.showCertificateExpiry"
+                />
                 <PublicGroupList
+                    v-else
                     :edit-mode="enableEditMode"
                     :show-tags="config.showTags"
                     :show-certificate-expiry="config.showCertificateExpiry"
