@@ -38,6 +38,9 @@
             </a>
 
             <ul class="nav nav-pills">
+                <li v-if="$root.loggedIn" class="nav-item me-3 d-flex align-items-center">
+                    <HetopsLivePill />
+                </li>
                 <li v-if="$root.loggedIn" class="nav-item me-2">
                     <router-link to="/manage-status-page" class="nav-link">
                         <font-awesome-icon icon="stream" />

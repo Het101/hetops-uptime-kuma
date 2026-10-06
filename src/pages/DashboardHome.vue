@@ -1,40 +1,8 @@
 <template>
     <transition ref="tableContainer" name="slide-fade" appear>
         <div v-if="$route.name === 'DashboardHome'">
-            <h1 class="mb-3">
-                {{ $t("Quick Stats") }}
-            </h1>
-
-            <div class="shadow-box big-padding text-center mb-3">
-                <div class="row">
-                    <div class="col">
-                        <h3>{{ $t("Up") }}</h3>
-                        <span class="num" :class="$root.stats.up === 0 && 'text-secondary'">
-                            {{ $root.stats.up }}
-                        </span>
-                    </div>
-                    <div class="col">
-                        <h3>{{ $t("Down") }}</h3>
-                        <span class="num" :class="$root.stats.down > 0 ? 'text-danger' : 'text-secondary'">
-                            {{ $root.stats.down }}
-                        </span>
-                    </div>
-                    <div class="col">
-                        <h3>{{ $t("Maintenance") }}</h3>
-                        <span class="num" :class="$root.stats.maintenance > 0 ? 'text-maintenance' : 'text-secondary'">
-                            {{ $root.stats.maintenance }}
-                        </span>
-                    </div>
-                    <div class="col">
-                        <h3>{{ $t("Unknown") }}</h3>
-                        <span class="num text-secondary">{{ $root.stats.unknown }}</span>
-                    </div>
-                    <div class="col">
-                        <h3>{{ $t("pauseDashboardHome") }}</h3>
-                        <span class="num text-secondary">{{ $root.stats.pause }}</span>
-                    </div>
-                </div>
-            </div>
+            <h1 class="mb-3">Overview</h1>
+            <HetopsOverview />
 
             <div class="shadow-box table-shadow-box table-wrapper">
                 <div class="mb-3 text-end">

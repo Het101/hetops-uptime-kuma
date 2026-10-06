@@ -8,6 +8,11 @@ import "./assets/app.scss";
 import "./assets/vue-datepicker.scss";
 // HetOps Status theme: the whole visual layer, kept in one file so upstream merges stay clean.
 import "./hetops/theme.scss";
+import "./hetops/components.scss";
+import HetopsStatusHero from "./hetops/components/HetopsStatusHero.vue";
+import HetopsServiceBoard from "./hetops/components/HetopsServiceBoard.vue";
+import HetopsOverview from "./hetops/components/HetopsOverview.vue";
+import HetopsLivePill from "./hetops/components/HetopsLivePill.vue";
 import { i18n } from "./i18n";
 import { FontAwesomeIcon } from "./icon.js";
 import datetime from "./mixins/datetime";
@@ -37,6 +42,11 @@ const app = createApp({
     render: () => h(App),
 });
 
+// HetOps Status components, mounted from a few one-line hooks in upstream pages (see HETOPS.md).
+app.component("HetopsStatusHero", HetopsStatusHero);
+app.component("HetopsServiceBoard", HetopsServiceBoard);
+app.component("HetopsOverview", HetopsOverview);
+app.component("HetopsLivePill", HetopsLivePill);
 app.use(router);
 app.use(i18n);
 
