@@ -6,6 +6,8 @@ import "vue-toastification/dist/index.css";
 import App from "./App.vue";
 import "./assets/app.scss";
 import "./assets/vue-datepicker.scss";
+// HetOps Status theme: the whole visual layer, kept in one file so upstream merges stay clean.
+import "./hetops/theme.scss";
 import { i18n } from "./i18n";
 import { FontAwesomeIcon } from "./icon.js";
 import datetime from "./mixins/datetime";

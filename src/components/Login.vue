@@ -1,6 +1,11 @@
 <template>
     <div class="form-container">
         <div class="form">
+            <div class="ho-login-head">
+                <img src="/icon.svg" width="44" height="44" alt="" />
+                <h1>HetOps Status</h1>
+                <p>Sign in to manage monitors, status pages and incidents.</p>
+            </div>
             <form aria-label="Login Form" class="pt-3" @submit.prevent="submit">
                 <div v-if="!tokenRequired" class="form-floating">
                     <input

@@ -1,0 +1,564 @@
+// HetOps Status: the visual layer on top of Uptime Kuma.
+//
+// Kept in this one file (imported last from main.js) so upstream updates merge cleanly:
+// upstream owns structure and behaviour, this file owns how it looks. Selectors start with
+// #app so they outrank Kuma's scoped component styles without !important.
+//
+// Tokens: lid-dark surfaces, sclera text, and the HetOps Status icon's lime as the brand,
+// which is also "operational". Status is never colour alone: every badge also has text.
+@import "../assets/vars.scss";
+
+@font-face {
+    font-family: Archivo;
+    src: url("./fonts/Archivo.woff2") format("woff2");
+    font-weight: 100 900;
+    font-display: swap;
+}
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("./fonts/JetBrainsMono.woff2") format("woff2");
+    font-weight: 400 700;
+    font-display: swap;
+}
+
+:root {
+    --ho-bg: #{$dark-bg2};
+    --ho-bg-2: #0c0d0f;
+    --ho-panel: #{$dark-bg};
+    --ho-panel-2: #16171a;
+    --ho-line: #{$dark-border-color};
+    --ho-line-2: #2f3136;
+    --ho-text: #efe9dd;
+    --ho-body: #{$dark-font-color};
+    --ho-muted: #{$secondary-text};
+    --ho-up: #8bc34a;
+    --ho-down: #f0645a;
+    --ho-pending: #{$warning};
+    --ho-maint: #7aa7d9;
+    --ho-brand: #{$primary};
+    --ho-ease: #{$easing-out};
+    --ho-sans: Archivo, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --ho-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --maintenance: #{$maintenance};
+}
+
+// ── Type ────────────────────────────────────────────────────────────
+#app {
+    font-family: "Twemoji Country Flags", var(--ho-sans);
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.005em;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .title {
+        letter-spacing: -0.025em;
+        font-weight: 700;
+    }
+    h1 {
+        font-size: 1.75rem;
+    }
+    h2 {
+        font-size: 1.35rem;
+    }
+    code,
+    pre,
+    kbd,
+    .mono,
+    .badge,
+    .word,
+    .hp-bar-big + .word {
+        font-family: var(--ho-mono);
+    }
+}
+
+// ── Surfaces (dark) ─────────────────────────────────────────────────
+body.dark,
+.dark {
+    background-color: var(--ho-bg);
+}
+body.dark #app {
+    color: var(--ho-body);
+
+    .shadow-box {
+        background-color: var(--ho-panel);
+        border: 1px solid var(--ho-line);
+        border-radius: 16px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    a:not(.btn):not(.nav-link):not(.dropdown-item):not(.item) {
+        color: var(--ho-up);
+    }
+    a.item,
+    a.item:hover {
+        color: var(--ho-text);
+        text-decoration: none;
+    }
+    .table a {
+        color: var(--ho-text);
+        text-decoration-color: var(--ho-line-2);
+    }
+    .table a:hover {
+        color: var(--ho-up);
+        text-decoration-color: currentColor;
+    }
+    hr {
+        border-color: var(--ho-line);
+        opacity: 1;
+    }
+
+    .form-control,
+    .form-select,
+    .input-group-text {
+        background-color: var(--ho-bg-2);
+        border-color: var(--ho-line-2);
+        color: var(--ho-text);
+        &:focus {
+            border-color: var(--ho-brand);
+            box-shadow: 0 0 0 4px rgba(110, 161, 18, 0.18);
+        }
+        &::placeholder {
+            color: #6d6a63;
+        }
+    }
+    .form-text,
+    .text-muted {
+        color: var(--ho-muted) !important;
+    }
+
+    .modal-content {
+        background-color: var(--ho-panel);
+        border: 1px solid var(--ho-line-2);
+        border-radius: 18px;
+    }
+    .modal-header,
+    .modal-footer {
+        border-color: var(--ho-line);
+    }
+
+    .dropdown-menu {
+        background-color: var(--ho-panel-2);
+        border: 1px solid var(--ho-line-2);
+        box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.7);
+    }
+
+    .table {
+        --bs-table-bg: transparent;
+        color: var(--ho-body);
+        border-color: var(--ho-line);
+    }
+    .table th {
+        color: var(--ho-muted);
+        font-weight: 600;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+}
+
+// ── Buttons and badges ──────────────────────────────────────────────
+#app {
+    .btn {
+        font-weight: 600;
+        transition:
+            transform 0.2s var(--ho-ease),
+            background-color 0.2s,
+            border-color 0.2s,
+            color 0.2s;
+    }
+    .btn:active {
+        transform: scale(0.97);
+    }
+    .btn-primary {
+        color: #08090a;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: $highlight;
+        border-color: $highlight;
+        color: #08090a;
+    }
+    .btn-outline-primary {
+        color: var(--ho-up);
+        border-color: rgba(139, 195, 74, 0.5);
+    }
+    .btn-outline-primary:hover {
+        background-color: var(--ho-brand);
+        color: #08090a;
+    }
+    .btn-danger {
+        background-color: $danger;
+        border-color: $danger;
+    }
+
+    // Uptime and status pills: dark text on the lime, so they read at 4.5:1.
+    .badge {
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+    .badge.bg-primary {
+        color: #08090a !important;
+    }
+    .badge.bg-danger {
+        background-color: $danger !important;
+        color: #fff !important;
+    }
+    .badge.bg-warning {
+        color: #08090a !important;
+    }
+}
+body.dark #app .extra-info .tag-wrapper,
+body.dark #app .extra-info .badge,
+body.dark #app .extra-info .bg-success {
+    background: transparent !important;
+    color: var(--ho-muted) !important;
+    border: 1px solid var(--ho-line-2);
+    font: 500 0.7rem/1.6 var(--ho-mono);
+    * {
+        color: inherit !important;
+        background: transparent !important;
+    }
+}
+
+// ── Titlebar ────────────────────────────────────────────────────────
+body.dark #app header {
+    background-color: rgba(12, 13, 15, 0.85);
+    border-bottom: 1px solid var(--ho-line) !important;
+    backdrop-filter: saturate(140%) blur(12px);
+}
+#app header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    padding-top: 0.7rem !important;
+    padding-bottom: 0.7rem !important;
+
+    .ho-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        font-size: 1.15rem;
+        color: var(--ho-text);
+    }
+    .ho-brand img {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: block;
+    }
+    .ho-brand b {
+        color: var(--ho-up);
+        font-weight: 700;
+    }
+    .ho-brand small {
+        font: 500 0.66rem/1 var(--ho-mono);
+        color: var(--ho-muted);
+        border: 1px solid var(--ho-line-2);
+        border-radius: 999px;
+        padding: 4px 7px;
+        letter-spacing: 0.02em;
+    }
+
+    .nav-pills .nav-link {
+        color: var(--ho-body);
+        border-radius: 999px;
+        font-weight: 500;
+    }
+    .nav-pills .nav-link:hover {
+        color: var(--ho-text);
+        background: rgba(255, 255, 255, 0.04);
+    }
+    .nav-pills .nav-link.active,
+    .nav-pills .router-link-active {
+        color: #08090a !important;
+        background: var(--ho-brand) !important;
+    }
+    .profile-pic {
+        background-color: rgba(110, 161, 18, 0.18);
+        color: var(--ho-up);
+        font-family: var(--ho-mono);
+        font-weight: 700;
+    }
+}
+
+// ── Admin: monitor list and dashboard ───────────────────────────────
+body.dark #app {
+    .monitor-list {
+        .item {
+            border-radius: 12px;
+            transition: background-color 0.15s;
+        }
+        .item:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+        .item.active {
+            background-color: rgba(110, 161, 18, 0.1);
+            box-shadow: inset 3px 0 0 var(--ho-brand);
+        }
+        .item-name {
+            color: var(--ho-text);
+            font-weight: 500;
+        }
+    }
+    .hp-bar-big {
+        --beat-empty-color: #2a2c30 !important;
+    }
+
+    // Quick stats: quiet label, big mono number.
+    .shadow-box.big-padding h3 {
+        font: 600 0.74rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--ho-muted);
+        margin-bottom: 12px;
+    }
+    .shadow-box .num {
+        font: 700 2.1rem/1 var(--ho-mono);
+        letter-spacing: -0.03em;
+    }
+    .shadow-box .num.text-secondary {
+        color: #4a4844 !important;
+    }
+}
+body.dark #app .list-header {
+    border-bottom: 1px solid var(--ho-line);
+}
+
+// ── Monitor detail: stats read as label then number ─────────────────
+body.dark #app .stats {
+    h4 {
+        font: 600 0.72rem/1.2 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--ho-muted);
+        margin-bottom: 4px;
+    }
+    p {
+        color: #5c5a55;
+        font-size: 0.72rem;
+    }
+    span.num,
+    .num,
+    span > a {
+        font: 700 1.6rem/1.1 var(--ho-mono);
+        letter-spacing: -0.03em;
+        color: var(--ho-text);
+        text-decoration: none;
+    }
+    a:hover {
+        color: var(--ho-up);
+    }
+}
+
+// Sticky save bar on long forms: a glass strip, not a floating block.
+body.dark #app .fixed-bottom-bar {
+    background: rgba(12, 13, 15, 0.86) !important;
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--ho-line);
+    border-radius: 0 0 16px 16px;
+}
+
+// ── Sign in ─────────────────────────────────────────────────────────
+#app .form-container .form {
+    width: min(380px, 100% - 32px);
+    padding: 32px 28px 24px;
+    border: 1px solid var(--ho-line-2);
+    border-radius: 20px;
+    background: radial-gradient(120% 80% at 0% 0%, rgba(110, 161, 18, 0.12), transparent 55%), var(--ho-panel);
+}
+#app .ho-login-head {
+    text-align: left;
+    img {
+        border-radius: 11px;
+        margin-bottom: 18px;
+    }
+    h1 {
+        font-size: 1.5rem;
+        margin: 0 0 6px;
+        color: var(--ho-text);
+    }
+    p {
+        margin: 0 0 6px;
+        color: var(--ho-muted);
+        font-size: 0.92rem;
+    }
+}
+
+// ── Public status page ──────────────────────────────────────────────
+// Readers here are customers checking whether it's us or them: the answer comes first.
+#app .container > .main {
+    max-width: 960px;
+    margin-inline: auto;
+}
+#app .title-flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.6rem;
+    margin-top: 1rem;
+    .logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 11px;
+        object-fit: contain;
+    }
+}
+
+#app .overall-status {
+    position: relative;
+    overflow: hidden;
+    padding: 28px 28px !important;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ho-text);
+    border-width: 1px;
+    > div,
+    > * > div {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    svg {
+        width: 28px;
+        height: 28px;
+        flex: none;
+    }
+    .ok {
+        color: var(--ho-up);
+    }
+    .warning {
+        color: var(--ho-pending);
+    }
+    .danger {
+        color: var(--ho-down);
+    }
+    .status-maintenance {
+        color: var(--ho-maint);
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 4px;
+        background: var(--ho-line-2);
+    }
+    &:has(.ok)::before {
+        background: var(--ho-up);
+    }
+    &:has(.warning)::before {
+        background: var(--ho-pending);
+    }
+    &:has(.danger)::before {
+        background: var(--ho-down);
+    }
+    &:has(.status-maintenance)::before {
+        background: var(--ho-maint);
+    }
+}
+body.dark #app .overall-status {
+    &:has(.ok) {
+        background: linear-gradient(90deg, rgba(139, 195, 74, 0.1), transparent 60%), var(--ho-panel);
+        border-color: rgba(139, 195, 74, 0.35);
+    }
+    &:has(.warning) {
+        background: linear-gradient(90deg, rgba(227, 169, 68, 0.1), transparent 60%), var(--ho-panel);
+        border-color: rgba(227, 169, 68, 0.35);
+    }
+    &:has(.danger) {
+        background: linear-gradient(90deg, rgba(240, 100, 90, 0.1), transparent 60%), var(--ho-panel);
+        border-color: rgba(240, 100, 90, 0.4);
+    }
+    &:has(.status-maintenance) {
+        background: linear-gradient(90deg, rgba(122, 167, 217, 0.1), transparent 60%), var(--ho-panel);
+        border-color: rgba(122, 167, 217, 0.4);
+    }
+}
+
+#app .alert-heading p {
+    color: var(--ho-muted);
+    margin: 0;
+}
+
+#app .group-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font: 600 0.74rem/1 var(--ho-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ho-muted);
+    span {
+        font: inherit;
+    }
+}
+
+body.dark #app .monitor-list.shadow-box {
+    padding: 6px 18px !important;
+}
+#app .monitor-list .item {
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    .info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .badge {
+        min-width: 62px;
+    }
+}
+body.dark #app .monitor-list .item + .item {
+    border-top: 1px solid var(--ho-line);
+    border-radius: 0;
+}
+#app .word {
+    color: var(--ho-muted);
+    font-size: 0.72rem;
+}
+
+// Footer: the page's own text, then a quiet credit line.
+#app footer,
+#app .footer {
+    color: var(--ho-muted);
+    font-size: 0.86rem;
+    a {
+        color: var(--ho-body);
+    }
+}
+
+// Incidents and maintenance banners: bordered panels, not solid blocks.
+body.dark #app .incident.bg-info,
+body.dark #app .incident.bg-primary {
+    color: #08090a !important;
+}
+
+// ── Motion ──────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: no-preference) {
+    // Public page only: the admin lists re-render on every heartbeat and would replay it.
+    #app .main > .overall-status,
+    #app .main .group-title,
+    #app .main .monitor-list.shadow-box {
+        animation: ho-settle 0.6s var(--ho-ease) both;
+    }
+    #app .main .monitor-list.shadow-box {
+        animation-delay: 0.08s;
+    }
+    @keyframes ho-settle {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    #app * {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}

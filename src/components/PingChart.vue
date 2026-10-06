@@ -171,7 +171,7 @@ export default {
                         mode: "nearest",
                         intersect: false,
                         padding: 10,
-                        backgroundColor: this.$root.theme === "light" ? "rgba(212,232,222,1.0)" : "rgba(32,42,38,1.0)",
+                        backgroundColor: this.$root.theme === "light" ? "rgba(212,232,222,1.0)" : "rgba(22,23,26,1.0)",
                         bodyColor: this.$root.theme === "light" ? "rgba(12,12,18,1.0)" : "rgba(220,220,220,1.0)",
                         titleColor: this.$root.theme === "light" ? "rgba(12,12,18,1.0)" : "rgba(220,220,220,1.0)",
                         // No longer rely solely on datasetIndex === 0; we want to hide tooltips only for the bars
@@ -291,16 +291,16 @@ export default {
         getBarColorForDatapoint(datapoint) {
             if (datapoint.maintenance != null) {
                 // Target is in maintenance
-                return "rgba(23,71,245,0.41)";
+                return "rgba(122, 167, 217, 0.4)";
             } else if (datapoint.down === 0) {
                 // Target is up, no need to display a bar
                 return "#000";
             } else if (datapoint.up === 0) {
                 // Target is down
-                return "rgba(220, 53, 69, 0.41)";
+                return "rgba(240, 100, 90, 0.45)";
             } else {
                 // Show yellow for mixed status
-                return "rgba(245, 182, 23, 0.41)";
+                return "rgba(227, 169, 68, 0.45)";
             }
         },
         // push datapoint to chartData
@@ -398,13 +398,13 @@ export default {
                 });
                 switch (beat.status) {
                     case MAINTENANCE:
-                        colorData.push("rgba(23 ,71, 245, 0.41)");
+                        colorData.push("rgba(122, 167, 217, 0.4)");
                         break;
                     case PENDING:
-                        colorData.push("rgba(245, 182, 23, 0.41)");
+                        colorData.push("rgba(227, 169, 68, 0.45)");
                         break;
                     default:
-                        colorData.push("rgba(220, 53, 69, 0.41)");
+                        colorData.push("rgba(240, 100, 90, 0.45)");
                 }
 
                 lastHeartbeatTime = beatTime;
@@ -417,8 +417,8 @@ export default {
                         data: pingData,
                         fill: "origin",
                         tension: 0.2,
-                        borderColor: "#4ABF74",
-                        backgroundColor: "#4ABF7438",
+                        borderColor: "#8BC34A",
+                        backgroundColor: "#8BC34A30",
                         yAxisID: "y",
                         label: this.$t("avgPing"),
                     },
@@ -547,8 +547,8 @@ export default {
                         data: minPingData,
                         fill: "origin",
                         tension: 0.2,
-                        borderColor: "#126331",
-                        backgroundColor: "#2F9C5914",
+                        borderColor: "#4F7A0E",
+                        backgroundColor: "#6EA11214",
                         yAxisID: "y",
                         label: this.$t("minPing"),
                     },
@@ -557,8 +557,8 @@ export default {
                         data: avgPingData,
                         fill: "origin",
                         tension: 0.2,
-                        borderColor: "#5CDD8B",
-                        backgroundColor: "#5CDD8B06",
+                        borderColor: "#8BC34A",
+                        backgroundColor: "#8BC34A08",
                         yAxisID: "y",
                         label: this.$t("avgPing"),
                     },

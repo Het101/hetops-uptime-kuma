@@ -12,9 +12,9 @@ export default {
     },
 
     mounted() {
-        // Default Light
+        // HetOps Status: dark by default (the HetOps look); users can still pick light or auto.
         if (!this.userTheme) {
-            this.userTheme = "auto";
+            this.userTheme = "dark";
         }
 
         // Default Heartbeat Bar

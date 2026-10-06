@@ -1,23 +1,26 @@
-$primary: #5cdd8b;
-$danger: #dc3545;
-$warning: #f8a306;
-$maintenance: #1747f5;
+// HetOps Status: tokens only. Values changed from upstream, names unchanged, so upstream
+// updates merge cleanly. Everything visual beyond tokens lives in src/hetops/theme.scss.
+// Text on these colours: primary takes dark text; danger and maintenance take white (4.5:1+).
+$primary: #6ea112;
+$danger: #cf3a3c;
+$warning: #e3a944;
+$maintenance: #3d6cd6;
 $link-color: #111;
 $border-radius: 50rem;
-$secondary-text: #aaa;
+$secondary-text: #8e8a81;
 
-$highlight: #7ce8a4;
-$highlight-white: #e7faec;
+$highlight: #86bb2a;
+$highlight-white: #eef6e0;
 
-$dark-font-color: #b1b8c0;
-$dark-font-color2: #020b05;
-$dark-bg: #0d1117;
-$dark-bg2: #070a10;
-$dark-border-color: #1d2634;
-$dark-header-bg: #161b22;
+$dark-font-color: #c4bfb3;
+$dark-font-color2: #08090a;
+$dark-bg: #111214;
+$dark-bg2: #08090a;
+$dark-border-color: #222428;
+$dark-header-bg: #0c0d0f;
 
 $easing-in: cubic-bezier(0.54, 0.78, 0.55, 0.97);
-$easing-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+$easing-out: cubic-bezier(0.16, 1, 0.3, 1);
 $easing-in-out: cubic-bezier(0.79, 0.14, 0.15, 0.86);
 
-$dropdown-border-radius: 0.5rem;
+$dropdown-border-radius: 0.75rem;
