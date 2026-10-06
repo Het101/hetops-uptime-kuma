@@ -510,6 +510,8 @@
                 />
             </div>
 
+            <HetopsPublicPulse v-if="!enableEditMode && loadedData" />
+
             <!-- Past Incidents -->
             <div v-if="pastIncidentCount > 0" class="past-incidents-section mb-4">
                 <h2 class="past-incidents-title mb-3">
@@ -560,7 +562,14 @@
                 @incident-updated="loadIncidentHistory"
             />
 
-            <footer class="mt-5 mb-4">
+            <HetopsFooter
+                v-if="!enableEditMode"
+                :slug="slug"
+                :footer-html="footerHTML || ''"
+                :last-update="lastUpdateTime"
+                :refresh-in="updateCountdownText || ''"
+            />
+            <footer v-else class="mt-5 mb-4">
                 <div class="custom-footer-text text-start">
                     <strong v-if="enableEditMode">{{ $t("Custom Footer") }}:</strong>
                 </div>
