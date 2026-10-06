@@ -31,6 +31,9 @@
                 Every monitor has stayed up through its recent checks.
             </p>
         </div>
+        <p v-if="incidents.length > limit" class="ho-inc-more">
+            + {{ incidents.length - limit }} older in the status changes below
+        </p>
     </div>
 </template>
 
@@ -42,7 +45,7 @@ import { human } from "./pulse.js";
 export default {
     props: {
         incidents: { type: Array, default: () => [] },
-        limit: { type: Number, default: 6 },
+        limit: { type: Number, default: 5 },
     },
     computed: {
         rows() {

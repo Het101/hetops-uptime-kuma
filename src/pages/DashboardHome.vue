@@ -5,7 +5,8 @@
             <HetopsOverview />
 
             <div class="shadow-box table-shadow-box table-wrapper">
-                <div class="mb-3 text-end">
+                <div class="mb-3 d-flex align-items-center justify-content-between">
+                    <h3 class="ho-section-title">Status changes</h3>
                     <button
                         class="btn btn-sm btn-outline-danger"
                         :disabled="clearingAllEvents"
