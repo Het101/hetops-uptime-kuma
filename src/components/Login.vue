@@ -7,31 +7,32 @@
                 <p>Sign in to manage monitors, status pages and incidents.</p>
             </div>
             <form aria-label="Login Form" class="pt-3" @submit.prevent="submit">
-                <div v-if="!tokenRequired" class="form-floating">
+                <div v-if="!tokenRequired" class="ho-field">
+                    <label for="floatingInput">{{ $t("Username") }}</label>
                     <input
                         id="floatingInput"
                         v-model="username"
                         type="text"
                         class="form-control"
-                        placeholder="Username"
                         autocomplete="username"
                         required
                     />
-                    <label for="floatingInput">{{ $t("Username") }}</label>
                 </div>
 
-                <div v-if="!tokenRequired" class="mt-3">
+                <!-- The id lands on HiddenInput's wrapper, so the label wraps it to stay tied to the input. -->
+                <label v-if="!tokenRequired" class="ho-field">
+                    <span>{{ $t("Password") }}</span>
                     <HiddenInput
                         id="floatingPassword"
                         v-model="password"
-                        :placeholder="$t('Password')"
                         autocomplete="current-password"
                         :required="true"
                     />
-                </div>
+                </label>
 
                 <div v-if="tokenRequired">
-                    <div class="form-floating mt-3">
+                    <div class="ho-field">
+                        <label for="otp">{{ $t("Token") }}</label>
                         <input
                             id="otp"
                             ref="otpInput"
@@ -43,11 +44,10 @@
                             autocomplete="one-time-code"
                             required
                         />
-                        <label for="otp">{{ $t("Token") }}</label>
                     </div>
                 </div>
 
-                <div class="form-check mb-3 mt-3 d-flex justify-content-center pe-4">
+                <div class="form-check mb-3 mt-1 ps-0">
                     <div class="form-check">
                         <input
                             id="remember"

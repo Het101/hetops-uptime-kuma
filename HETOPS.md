@@ -53,3 +53,4 @@ Conflicts, if any, are in the files in the table above; keep upstream's structur
 
 - **Public page at the root:** Settings → General → Entry Page → **Status Page – HetOps Status**. Visitors then land on the public page; the dashboard stays at `/dashboard` behind sign-in.
 - **Status page settings** (Edit Status Page): theme **Dark**, "Show Powered By" off, footer text `Part of [HetOps](https://hetops.dev) · [hetops.dev](https://hetops.dev)`.
+- **Monitors and status page from code:** `node extra/hetops-setup.mjs https://status.hetops.dev --slug deck` (add `--dry-run` first to see the plan). It asks for the username, password and 2FA code in the terminal, reuses any monitor already watching the same URL, adds the rest (app health, Coolify, n8n, nightly backup checks) and sets the status page groups. Edit the `MONITORS` list to add an app. It always sends `timeout`: upstream turns a missing one into `interval × 800` seconds.
