@@ -388,6 +388,68 @@ body.dark #app .fixed-bottom-bar {
     }
 }
 
+// Both fields: label above, same height, same radius; the eye button sits inside the password field.
+#app .ho-field {
+    display: grid;
+    text-align: left;
+    gap: 7px;
+    margin: 0 0 16px;
+    > label,
+    > span {
+        font: 600 0.72rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--ho-muted);
+    }
+    .form-control {
+        height: 46px;
+        padding: 0 14px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+    }
+    .input-group {
+        margin: 0 !important;
+        .form-control {
+            border-radius: 12px 0 0 12px;
+            border-right: 0;
+        }
+        .btn {
+            display: grid;
+            place-items: center;
+            width: 46px;
+            border-radius: 0 12px 12px 0 !important;
+            border-color: var(--ho-line-2);
+            background: var(--ho-bg-2);
+            color: var(--ho-muted);
+        }
+        .btn:hover {
+            color: var(--ho-text);
+        }
+    }
+}
+#app .form-container .form .form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 0;
+    color: var(--ho-body);
+    font-size: 0.88rem;
+    .form-check-input {
+        margin: 0;
+        float: none;
+    }
+}
+#app .form-container .btn-primary {
+    height: 46px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+// Upstream paints the app wrapper a slightly different black and only as tall as its content.
+body.dark #app > .dark {
+    min-height: 100vh;
+    background-color: var(--ho-bg);
+}
+
 // ── Public status page ──────────────────────────────────────────────
 // Readers here are customers checking whether it's us or them: the answer comes first.
 #app .container > .main {
