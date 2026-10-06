@@ -145,6 +145,8 @@
                 </div>
             </div>
 
+            <HetopsMonitorInsight :monitor-id="monitor.id" />
+
             <div class="shadow-box">
                 <div class="row">
                     <div class="col-md-8">

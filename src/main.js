@@ -13,6 +13,7 @@ import HetopsStatusHero from "./hetops/components/HetopsStatusHero.vue";
 import HetopsServiceBoard from "./hetops/components/HetopsServiceBoard.vue";
 import HetopsOverview from "./hetops/components/HetopsOverview.vue";
 import HetopsLivePill from "./hetops/components/HetopsLivePill.vue";
+import HetopsMonitorInsight from "./hetops/components/HetopsMonitorInsight.vue";
 import { i18n } from "./i18n";
 import { FontAwesomeIcon } from "./icon.js";
 import datetime from "./mixins/datetime";
@@ -47,6 +48,7 @@ app.component("HetopsStatusHero", HetopsStatusHero);
 app.component("HetopsServiceBoard", HetopsServiceBoard);
 app.component("HetopsOverview", HetopsOverview);
 app.component("HetopsLivePill", HetopsLivePill);
+app.component("HetopsMonitorInsight", HetopsMonitorInsight);
 app.use(router);
 app.use(i18n);
 

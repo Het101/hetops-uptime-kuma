@@ -1,4 +1,4 @@
-// HetOps Status components: hero, service board, overview, live pill.
+// HetOps Status components: hero, service board, overview, fleet chart, incidents, monitor insight, live pill.
 // Tones: every component sets --tone from its state, so one rule colours rings, glows, lines.
 @import "../assets/vars.scss";
 
@@ -396,24 +396,41 @@
 }
 #app .ho-ov-top {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 260px 1fr;
     gap: 14px;
     margin-bottom: 14px;
 }
 #app .ho-donut-card,
 #app .ho-kpi,
-#app .ho-tile {
+#app .ho-tile,
+#app .ho-panel,
+#app .ho-insight {
     border: 1px solid var(--ho-line);
     border-radius: 18px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 45%), var(--ho-panel);
 }
 #app .ho-donut-card {
-    position: relative;
     display: grid;
-    grid-template-columns: 140px 1fr;
-    gap: 18px;
-    align-items: center;
-    padding: 20px;
+    justify-items: center;
+    align-content: center;
+    gap: 16px;
+    padding: 22px 20px;
+}
+#app .ho-donut-wrap {
+    position: relative;
+    width: 140px;
+    height: 140px;
+}
+#app .ho-donut-side {
+    width: 100%;
+    display: grid;
+    gap: 10px;
+}
+#app .ho-verdict {
+    margin: 0;
+    text-align: center;
+    font: 700 0.95rem/1.2 var(--ho-sans);
+    color: var(--tone);
 }
 #app .ho-donut {
     width: 140px;
@@ -450,10 +467,9 @@
 }
 #app .ho-donut-center {
     position: absolute;
-    left: 20px;
-    top: 50%;
-    width: 140px;
-    transform: translateY(-50%);
+    inset: 0;
+    display: grid;
+    place-content: center;
     text-align: center;
     b {
         display: block;
@@ -511,7 +527,7 @@
 }
 #app .ho-kpis {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
 }
 #app .ho-kpi {
@@ -616,14 +632,319 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
+#app .ho-tile-foot > span {
+    white-space: nowrap;
+}
+#app .ho-tile-ago {
+    font: 500 0.68rem/1 var(--ho-mono);
+    color: #6a6761;
+}
 #app .ho-tile-foot {
     display: flex;
     justify-content: space-between;
-    font: 600 0.86rem/1 var(--ho-mono);
+    gap: 6px;
+    font: 600 0.8rem/1 var(--ho-mono);
     color: var(--ho-text);
     small {
         color: var(--ho-muted);
+        font-size: 0.66rem;
         font-weight: 500;
+    }
+}
+
+// ── Panels: fleet latency and incidents ─────────────────────────────
+#app .ho-ov-mid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+}
+#app .ho-panel {
+    padding: 18px 20px;
+    min-width: 0;
+}
+#app .ho-panel-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 10px;
+    margin-bottom: 14px;
+    h3 {
+        margin: 0;
+        font: 700 1rem/1.2 var(--ho-sans);
+        letter-spacing: -0.02em;
+        color: var(--ho-text);
+    }
+    span {
+        font: 500 0.72rem/1.3 var(--ho-mono);
+        color: var(--ho-muted);
+    }
+}
+#app .ho-fleet-plot {
+    position: relative;
+    height: 190px;
+    padding-left: 54px;
+    cursor: crosshair;
+    svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+    }
+    .grid {
+        stroke: rgba(255, 255, 255, 0.06);
+        stroke-dasharray: 3 5;
+        vector-effect: non-scaling-stroke;
+    }
+    .line {
+        fill: none;
+        stroke-width: 2;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+        transition: opacity 0.2s;
+    }
+    .line.dim {
+        opacity: 0.15;
+    }
+    .cross {
+        stroke: rgba(239, 233, 221, 0.4);
+        vector-effect: non-scaling-stroke;
+    }
+}
+#app .ho-fleet-axis span {
+    position: absolute;
+    left: 0;
+    transform: translateY(-50%);
+    font: 500 0.66rem/1 var(--ho-mono);
+    color: #6a6761;
+}
+#app .ho-fleet-tip {
+    position: absolute;
+    top: 6px;
+    margin-left: 62px;
+    display: grid;
+    gap: 5px;
+    min-width: 170px;
+    padding: 10px 12px;
+    border: 1px solid var(--ho-line-2);
+    border-radius: 12px;
+    background: rgba(17, 18, 20, 0.94);
+    box-shadow: 0 18px 32px -16px rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+    font: 500 0.74rem/1.2 var(--ho-mono);
+    color: var(--ho-body);
+    b {
+        color: var(--ho-text);
+    }
+    span {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+    i {
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+    }
+    em {
+        margin-left: auto;
+        font-style: normal;
+        color: var(--ho-text);
+    }
+}
+#app .ho-fleet-legend {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    li {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.84rem;
+        color: var(--ho-body);
+        cursor: default;
+    }
+    i {
+        width: 10px;
+        height: 3px;
+        border-radius: 2px;
+    }
+    b {
+        font: 600 0.8rem/1 var(--ho-mono);
+        color: var(--ho-text);
+    }
+    small {
+        color: var(--ho-muted);
+        font-weight: 500;
+    }
+}
+
+#app .ho-inc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    position: relative;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 5px;
+        top: 8px;
+        bottom: 8px;
+        width: 2px;
+        background: var(--ho-line);
+    }
+    li {
+        position: relative;
+        display: grid;
+        grid-template-columns: 12px 1fr;
+        gap: 14px;
+        padding: 0 0 14px;
+    }
+}
+#app .ho-inc-mark {
+    position: relative;
+    z-index: 1;
+    width: 12px;
+    height: 12px;
+    margin-top: 4px;
+    border-radius: 50%;
+    background: var(--ho-panel);
+    border: 2px solid var(--ho-up);
+}
+#app .ho-inc-list li.open .ho-inc-mark {
+    border-color: var(--ho-down);
+    background: var(--ho-down);
+}
+#app .ho-inc-body {
+    min-width: 0;
+    p {
+        margin: 0;
+    }
+}
+#app .ho-inc-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    a {
+        color: var(--ho-text);
+        font-weight: 600;
+        text-decoration: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    a:hover {
+        color: var(--ho-up);
+    }
+}
+#app .ho-inc-dur {
+    flex: none;
+    font: 600 0.74rem/1.4 var(--ho-mono);
+    color: var(--ho-down);
+}
+#app .ho-inc-msg {
+    margin-top: 2px !important;
+    font-size: 0.82rem;
+    color: var(--ho-body);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#app .ho-inc-when {
+    margin-top: 3px !important;
+    font: 500 0.7rem/1.3 var(--ho-mono);
+    color: var(--ho-muted);
+    b {
+        color: var(--ho-down);
+    }
+}
+#app .ho-inc-empty {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 6px 0;
+    color: var(--ho-muted);
+    svg {
+        color: var(--ho-up);
+        margin-top: 3px;
+    }
+    p {
+        margin: 0;
+        font-size: 0.88rem;
+    }
+    b {
+        color: var(--ho-text);
+    }
+}
+
+// ── Monitor detail: insight strip ───────────────────────────────────
+#app .ho-insight {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    border-color: rgba(var(--tone-rgb), 0.3);
+    background: radial-gradient(60% 140% at 0% 50%, rgba(var(--tone-rgb), 0.12), transparent 60%), var(--ho-panel);
+}
+#app .ho-insight-state {
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+    p {
+        margin: 0;
+        font: 500 0.8rem/1.3 var(--ho-mono);
+        color: var(--ho-muted);
+    }
+    .ho-state {
+        font-size: 0.86rem;
+        padding: 8px 14px;
+    }
+}
+#app .ho-insight-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    > div {
+        padding-left: 14px;
+        border-left: 1px solid var(--ho-line);
+        min-width: 0;
+    }
+    dt {
+        font: 600 0.66rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--ho-muted);
+        margin-bottom: 8px;
+    }
+    dd {
+        margin: 0 0 6px;
+        font: 700 1.45rem/1 var(--ho-mono);
+        letter-spacing: -0.03em;
+        color: var(--ho-text);
+        white-space: nowrap;
+    }
+    dd.warn {
+        color: var(--ho-pending);
+    }
+    dd.bad {
+        color: var(--ho-down);
+    }
+    em {
+        display: block;
+        font-style: normal;
+        font-size: 0.76rem;
+        color: var(--ho-muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
 
@@ -696,8 +1017,20 @@
         animation: ho-rise 0.6s var(--ho-ease) both;
         animation-delay: calc(0.15s + var(--mi, 0) * 0.05s);
     }
-    #app .ho-ov-top {
+    #app .ho-ov-top,
+    #app .ho-insight {
         animation: ho-rise 0.6s var(--ho-ease) both;
+    }
+    #app .ho-ov-mid {
+        animation: ho-rise 0.6s var(--ho-ease) 0.08s both;
+    }
+    #app .ho-inc-list li {
+        animation: ho-rise 0.5s var(--ho-ease) both;
+        animation-delay: calc(0.15s + var(--i, 0) * 0.05s);
+    }
+    #app .ho-inc-list li.open .ho-inc-mark {
+        --tone-rgb: 240, 100, 90;
+        animation: ho-breathe 2.2s ease-in-out infinite;
     }
     #app .ho-tile {
         animation: ho-rise 0.55s var(--ho-ease) both;
@@ -734,8 +1067,14 @@
         font-size: 0.52rem;
         letter-spacing: 0.04em;
     }
-    #app .ho-ov-top {
+    #app .ho-ov-top,
+    #app .ho-ov-mid,
+    #app .ho-insight {
         grid-template-columns: 1fr;
+    }
+    #app .ho-kpis,
+    #app .ho-insight-grid {
+        grid-template-columns: 1fr 1fr;
     }
 }
 @media (max-width: 520px) {
@@ -762,14 +1101,8 @@
     #app .ho-cards {
         grid-template-columns: 1fr;
     }
-    #app .ho-donut-card {
-        grid-template-columns: 120px 1fr;
-    }
-    #app .ho-donut {
-        width: 120px;
-        height: 120px;
-    }
-    #app .ho-donut-center {
-        width: 120px;
+    #app .ho-fleet-plot {
+        padding-left: 46px;
+        height: 160px;
     }
 }
