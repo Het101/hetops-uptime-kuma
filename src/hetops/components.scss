@@ -579,7 +579,7 @@
 }
 #app .ho-tiles {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
     gap: 12px;
 }
 #app .ho-tile {
@@ -967,14 +967,92 @@
     flex-direction: column;
 }
 #app .ho-fleet-plot {
+    --axis: 54px;
     flex: 1 1 190px;
     min-height: 190px;
     height: auto;
+    padding-left: var(--axis);
+    // Pinned to the box so the plot fills whatever height the row gives it.
+    svg {
+        position: absolute;
+        top: 0;
+        left: var(--axis);
+        width: calc(100% - var(--axis));
+        height: 100%;
+    }
 }
 #app .ho-inc-more {
     margin: 2px 0 0 26px;
     font: 500 0.72rem/1.3 var(--ho-mono);
     color: var(--ho-muted);
+}
+
+@media (max-width: 1100px) {
+    #app .ho-tiles {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+// Phones: each status change as a compact two-line row instead of a tall card.
+@media (max-width: 550px) {
+    #app .table-wrapper tbody tr.shadow-box {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 4px 10px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        text-align: left;
+        td {
+            display: block;
+            padding: 0;
+            border: 0 !important;
+            text-align: left;
+        }
+        td:nth-last-child(2),
+        td:last-child {
+            grid-column: 1 / -1;
+        }
+    }
+}
+
+// ── Pagination: separate quiet buttons, accent only on the current page ──
+#app .kuma_pagination {
+    margin-top: 16px;
+}
+#app .pagination {
+    gap: 6px;
+    margin: 0;
+    .page-item .page-link {
+        min-width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        padding: 0 10px;
+        border: 1px solid var(--ho-line);
+        border-radius: 10px !important;
+        background: transparent;
+        color: var(--ho-body);
+        font: 600 0.8rem/1 var(--ho-mono);
+        box-shadow: none;
+        transition:
+            border-color 0.2s,
+            color 0.2s,
+            background 0.2s;
+    }
+    .page-item .page-link:hover {
+        border-color: var(--ho-line-2);
+        color: var(--ho-text);
+        background: rgba(255, 255, 255, 0.03);
+    }
+    .page-item.active .page-link {
+        border-color: rgba(139, 195, 74, 0.45);
+        background: rgba(139, 195, 74, 0.12);
+        color: var(--ho-up);
+    }
+    .page-item.disabled .page-link {
+        opacity: 0.35;
+        background: transparent;
+    }
 }
 
 // ── Dashboard: monitor list sized to its content ────────────────────
@@ -1194,7 +1272,7 @@
         grid-template-columns: 1fr;
     }
     #app .ho-fleet-plot {
-        padding-left: 46px;
+        --axis: 46px;
         height: 160px;
     }
 }

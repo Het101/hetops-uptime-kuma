@@ -102,7 +102,7 @@
             <HetopsIncidents class="ho-panel" :incidents="incidents" />
         </div>
 
-        <div class="ho-tiles">
+        <div class="ho-tiles" :style="{ '--cols': cols }">
             <router-link
                 v-for="(t, i) in tiles"
                 :key="t.id"
@@ -265,6 +265,11 @@ export default {
         },
         openIncidents() {
             return this.incidents.filter((r) => !r.end).length;
+        },
+        // Columns that divide the tile count evenly, so the last row isn't half empty.
+        cols() {
+            const n = this.active.length;
+            return n <= 4 ? Math.max(n, 1) : n % 4 === 0 ? 4 : n % 3 === 0 ? 3 : 4;
         },
         tiles() {
             const rank = { down: 0, pending: 1, maint: 2, unknown: 3, up: 4 };
