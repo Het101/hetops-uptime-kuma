@@ -15,6 +15,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # The image's build stage copies the repo as-is and expects the frontend already built
+      # (upstream's release process runs `npm run build` first). Without this the image has no
+      # dist/ and the server exits with "Cannot find 'dist/index.html'".
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build the frontend
+        run: |
+          npm ci
+          npm run build
+          test -f dist/index.html || { echo "::error::dist/index.html missing after build"; exit 1; }
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
