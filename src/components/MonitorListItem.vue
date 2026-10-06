@@ -36,29 +36,15 @@
                                 />
                             </span>
                             <div class="flex-fill text-truncate" style="min-width: 0">
-                                <div class="d-flex align-items-center justify-content-between gap-2">
-                                    <div class="d-flex align-items-center gap-2 text-truncate flex-fill">
-                                        <span class="status-dot-mini" :style="{ background: statusColor }"></span>
-                                        <div class="text-truncate name-label">{{ monitor.name }}</div>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                                        <div v-if="monitor.active && sparklinePoints.length > 1" class="sparkline-container">
-                                            <svg viewBox="0 0 100 30" class="sparkline-svg">
-                                                <path
-                                                    :d="sparklinePath"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <span v-if="lastBeat && lastBeat.ping != null && lastBeat.ping >= 0" class="ping-badge">{{ lastBeat.ping }}ms</span>
-                                    </div>
-                                </div>
+                                <div class="text-truncate">{{ monitor.name }}</div>
                                 <div v-if="monitor.tags.length > 0" class="tags gap-1">
-                                    <Tag v-for="tag in monitor.tags" :key="tag" :item="tag" :size="'sm'" />
+                                    <Tag
+                                        v-for="tag in monitor.tags"
+                                        :key="tag"
+                                        :item="tag"
+                                        :size="'sm'"
+                                        :title="tag.name"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -161,31 +147,6 @@ export default {
         };
     },
     computed: {
-        sparklinePoints() {
-            const heartbeats = this.$root.heartbeatList[this.monitor.id] || [];
-            if (heartbeats.length === 0) {
-                return [];
-            }
-            
-            // Get last 20 heartbeats
-            const lastHeartbeats = heartbeats.slice(-20);
-            
-            // Normalize ping values to 0-30 range for SVG viewbox
-            const maxPing = Math.max(...lastHeartbeats.map(h => h.ping || 0), 100);
-            // Guard against division by zero when only 1 heartbeat exists
-            const denominator = Math.max(lastHeartbeats.length - 1, 1);
-
-            return lastHeartbeats.map((h, i) => ({
-                x: (i / denominator) * 100,
-                y: 30 - ((h.ping || 0) / maxPing) * 25 - 2 // Offset slightly from bottom
-            }));
-        },
-        sparklinePath() {
-            if (this.sparklinePoints.length < 2) {
-                return "";
-            }
-            return `M ${this.sparklinePoints.map(p => `${p.x},${p.y}`).join(" L ")}`;
-        },
         sortedChildMonitorList() {
             let result = Object.values(this.$root.monitorList);
 
@@ -215,17 +176,6 @@ export default {
                 c["col-xl-6"] = true;
             }
             return c;
-        },
-        lastBeat() {
-            return this.$root.lastHeartbeatList?.[this.monitor.id];
-        },
-        statusColor() {
-            const status = this.lastBeat?.status;
-            if (status === 1) return "#10b981";
-            if (status === 0) return "#ef4444";
-            if (status === 2) return "#f59e0b";
-            if (status === 3) return "#a78bfa";
-            return "#6b7280";
         },
     },
     watch: {
@@ -389,58 +339,6 @@ export default {
     padding-right: 5px !important;
 }
 
-.name-label {
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.status-dot-mini {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    transition: background-color 0.4s ease;
-}
-
-.ping-badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: 600;
-    color: #9ca3af;
-    white-space: nowrap;
-    flex-shrink: 0;
-    letter-spacing: -0.02em;
-
-    .dark & { color: #4b5563; }
-}
-
-.sparkline-container {
-    width: 45px;
-    height: 18px;
-    flex-shrink: 0;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-    color: $primary;
-
-    .dark & {
-        color: $primary;
-    }
-}
-
-.draggable-item:hover .sparkline-container {
-    opacity: 1;
-}
-
-.sparkline-svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    
-    path {
-        filter: drop-shadow(0 0 2px rgba(96, 165, 250, 0.2));
-    }
-}
-
 .tags {
     margin-top: 4px;
     padding-left: 4px;
@@ -485,42 +383,17 @@ export default {
 }
 
 .draggable-item {
-    cursor: pointer;
+    cursor: grab;
     position: relative;
-    margin-bottom: 12px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.4);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transition: all $transition-time $easing-smooth;
 
-    &:hover {
-        background: #fff;
-        transform: translateY(-2px);
-        box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
-        border-color: rgba(96, 165, 250, 0.3);
-    }
-
-    .dark & {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-
-        &:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(96, 165, 250, 0.4);
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5);
-            transform: translateY(-3px);
-        }
-    }
-
+    /* We don't want the padding change due to the border animated */
     .item {
-        padding: 14px 20px;
-        text-decoration: none;
-        color: inherit;
-        display: block;
+        padding: 12px 15px;
+        transition: none !important;
     }
 
-    &.disabled {
-        opacity: 0.6;
+    &.dragging {
+        cursor: grabbing;
     }
 }
 

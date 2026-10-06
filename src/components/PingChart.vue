@@ -171,7 +171,7 @@ export default {
                         mode: "nearest",
                         intersect: false,
                         padding: 10,
-                        backgroundColor: this.$root.theme === "light" ? "rgba(212,232,222,1.0)" : "rgba(32,42,38,1.0)",
+                        backgroundColor: this.$root.theme === "light" ? "rgba(212,232,222,1.0)" : "rgba(22,23,26,1.0)",
                         bodyColor: this.$root.theme === "light" ? "rgba(12,12,18,1.0)" : "rgba(220,220,220,1.0)",
                         titleColor: this.$root.theme === "light" ? "rgba(12,12,18,1.0)" : "rgba(220,220,220,1.0)",
                         // No longer rely solely on datasetIndex === 0; we want to hide tooltips only for the bars
@@ -291,16 +291,16 @@ export default {
         getBarColorForDatapoint(datapoint) {
             if (datapoint.maintenance != null) {
                 // Target is in maintenance
-                return "rgba(23,71,245,0.41)";
+                return "rgba(122, 167, 217, 0.4)";
             } else if (datapoint.down === 0) {
                 // Target is up, no need to display a bar
                 return "#000";
             } else if (datapoint.up === 0) {
                 // Target is down
-                return "rgba(220, 53, 69, 0.41)";
+                return "rgba(240, 100, 90, 0.45)";
             } else {
                 // Show yellow for mixed status
-                return "rgba(245, 182, 23, 0.41)";
+                return "rgba(227, 169, 68, 0.45)";
             }
         },
         // push datapoint to chartData
@@ -310,15 +310,15 @@ export default {
             // Show ping values if it was up in this period
             avgPingData.push({
                 x,
-                y: datapoint.up > 0 && datapoint.avgPing > 0 ? datapoint.avgPing : null,
+                y: datapoint.up > 0 && datapoint.avgPing != null ? datapoint.avgPing : null,
             });
             minPingData.push({
                 x,
-                y: datapoint.up > 0 && datapoint.avgPing > 0 ? datapoint.minPing : null,
+                y: datapoint.up > 0 && datapoint.avgPing != null ? datapoint.minPing : null,
             });
             maxPingData.push({
                 x,
-                y: datapoint.up > 0 && datapoint.avgPing > 0 ? datapoint.maxPing : null,
+                y: datapoint.up > 0 && datapoint.avgPing != null ? datapoint.maxPing : null,
             });
             downData.push({
                 x,
@@ -398,13 +398,13 @@ export default {
                 });
                 switch (beat.status) {
                     case MAINTENANCE:
-                        colorData.push("rgba(167, 139, 250, 0.35)");
+                        colorData.push("rgba(122, 167, 217, 0.4)");
                         break;
                     case PENDING:
-                        colorData.push("rgba(245, 158, 11, 0.35)");
+                        colorData.push("rgba(227, 169, 68, 0.45)");
                         break;
                     default:
-                        colorData.push("rgba(239, 68, 68, 0.35)");
+                        colorData.push("rgba(240, 100, 90, 0.45)");
                 }
 
                 lastHeartbeatTime = beatTime;
@@ -416,25 +416,9 @@ export default {
                         // Line Chart
                         data: pingData,
                         fill: "origin",
-                        tension: 0.4,
-                        borderColor: "#10b981",
-                        borderWidth: 3,
-                        pointRadius: 0,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: "#10b981",
-                        pointBorderColor: "#fff",
-                        pointBorderWidth: 2,
-                        backgroundColor: (context) => {
-                            const chart = context.chart;
-                            const { ctx, chartArea } = chart;
-                            if (!chartArea) {
-                                return null;
-                            }
-                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                            gradient.addColorStop(0, "rgba(16, 185, 129, 0.3)");
-                            gradient.addColorStop(1, "rgba(16, 185, 129, 0)");
-                            return gradient;
-                        },
+                        tension: 0.2,
+                        borderColor: "#8BC34A",
+                        backgroundColor: "#8BC34A30",
                         yAxisID: "y",
                         label: this.$t("avgPing"),
                     },
@@ -562,10 +546,9 @@ export default {
                         // minimum ping chart
                         data: minPingData,
                         fill: "origin",
-                        tension: 0.4,
-                        borderColor: "#10b981",
-                        borderWidth: 2,
-                        backgroundColor: "rgba(16, 185, 129, 0.08)",
+                        tension: 0.2,
+                        borderColor: "#4F7A0E",
+                        backgroundColor: "#6EA11214",
                         yAxisID: "y",
                         label: this.$t("minPing"),
                     },
@@ -573,22 +556,9 @@ export default {
                         // average ping chart
                         data: avgPingData,
                         fill: "origin",
-                        tension: 0.4,
-                        borderColor: "#60a5fa",
-                        borderWidth: 3,
-                        pointRadius: 0,
-                        pointHoverRadius: 6,
-                        backgroundColor: (context) => {
-                            const chart = context.chart;
-                            const { ctx, chartArea } = chart;
-                            if (!chartArea) {
-                                return null;
-                            }
-                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                            gradient.addColorStop(0, "rgba(96, 165, 250, 0.35)");
-                            gradient.addColorStop(1, "rgba(96, 165, 250, 0)");
-                            return gradient;
-                        },
+                        tension: 0.2,
+                        borderColor: "#8BC34A",
+                        backgroundColor: "#8BC34A08",
                         yAxisID: "y",
                         label: this.$t("avgPing"),
                     },
@@ -596,10 +566,9 @@ export default {
                         // maximum ping chart
                         data: maxPingData,
                         fill: "origin",
-                        tension: 0.4,
-                        borderColor: "#f59e0b",
-                        borderWidth: 2,
-                        backgroundColor: "rgba(245, 158, 11, 0.08)",
+                        tension: 0.2,
+                        borderColor: "#21b55a",
+                        backgroundColor: "#1E7A4214",
                         yAxisID: "y",
                         label: this.$t("maxPing"),
                     },

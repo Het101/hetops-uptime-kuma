@@ -1,67 +1,42 @@
 <template>
-    <transition name="slide-fade" appear>
-        <div v-if="$route.name === 'DashboardHome'" ref="tableContainer">
+    <transition ref="tableContainer" name="slide-fade" appear>
+        <div v-if="$route.name === 'DashboardHome'">
             <h1 class="mb-3">
                 {{ $t("Quick Stats") }}
             </h1>
 
-            <!-- System Health Bar -->
-            <div v-if="totalMonitors > 0" class="health-overview glass-card shadow-box mb-4">
-                <div class="health-label">
-                    <font-awesome-icon icon="chart-line" class="me-2" />
-                    System Health
-                </div>
-                <div class="health-track">
-                    <div class="health-fill" :style="{ width: healthPercent + '%', background: healthColor }"></div>
-                </div>
-                <div class="health-right">
-                    <span class="health-pct" :style="{ color: healthColor }">{{ healthPercent }}%</span>
-                    <span class="health-sub">{{ $root.stats.up }} / {{ totalMonitors }} online</span>
+            <div class="shadow-box big-padding text-center mb-3">
+                <div class="row">
+                    <div class="col">
+                        <h3>{{ $t("Up") }}</h3>
+                        <span class="num" :class="$root.stats.up === 0 && 'text-secondary'">
+                            {{ $root.stats.up }}
+                        </span>
+                    </div>
+                    <div class="col">
+                        <h3>{{ $t("Down") }}</h3>
+                        <span class="num" :class="$root.stats.down > 0 ? 'text-danger' : 'text-secondary'">
+                            {{ $root.stats.down }}
+                        </span>
+                    </div>
+                    <div class="col">
+                        <h3>{{ $t("Maintenance") }}</h3>
+                        <span class="num" :class="$root.stats.maintenance > 0 ? 'text-maintenance' : 'text-secondary'">
+                            {{ $root.stats.maintenance }}
+                        </span>
+                    </div>
+                    <div class="col">
+                        <h3>{{ $t("Unknown") }}</h3>
+                        <span class="num text-secondary">{{ $root.stats.unknown }}</span>
+                    </div>
+                    <div class="col">
+                        <h3>{{ $t("pauseDashboardHome") }}</h3>
+                        <span class="num text-secondary">{{ $root.stats.pause }}</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="stats-container mb-4">
-                <div class="stat-card glass-card shadow-box card-up">
-                    <div class="stat-icon-wrap up-icon"><font-awesome-icon icon="circle-check" /></div>
-                    <div class="stat-label">{{ $t("Up") }}</div>
-                    <div class="num up-num" :class="$root.stats.up === 0 && 'text-secondary'">
-                        {{ $root.stats.up }}
-                    </div>
-                </div>
-                <div class="stat-card glass-card shadow-box card-down">
-                    <div class="stat-icon-wrap down-icon"><font-awesome-icon icon="circle-xmark" /></div>
-                    <div class="stat-label">{{ $t("Down") }}</div>
-                    <div class="num text-danger">
-                        {{ $root.stats.down }}
-                    </div>
-                </div>
-                <div class="stat-card glass-card shadow-box card-maintenance">
-                    <div class="stat-icon-wrap maintenance-icon"><font-awesome-icon icon="wrench" /></div>
-                    <div class="stat-label">{{ $t("Maintenance") }}</div>
-                    <div class="num text-maintenance">
-                        {{ $root.stats.maintenance }}
-                    </div>
-                </div>
-                <div class="stat-card glass-card shadow-box card-unknown">
-                    <div class="stat-icon-wrap unknown-icon"><font-awesome-icon icon="circle-question" /></div>
-                    <div class="stat-label">{{ $t("Unknown") }}</div>
-                    <div class="num text-secondary">{{ $root.stats.unknown }}</div>
-                </div>
-                <div class="stat-card glass-card shadow-box card-paused">
-                    <div class="stat-icon-wrap paused-icon"><font-awesome-icon icon="circle-pause" /></div>
-                    <div class="stat-label">{{ $t("Pause") }}</div>
-                    <div class="num text-secondary">{{ $root.stats.pause }}</div>
-                </div>
-                <div v-if="avgResponseTime !== null" class="stat-card glass-card shadow-box card-response">
-                    <div class="stat-icon-wrap response-icon"><font-awesome-icon icon="tachometer-alt" /></div>
-                    <div class="stat-label">Avg Response</div>
-                    <div class="num response-num">{{ avgResponseTime }}<span class="unit">ms</span></div>
-                </div>
-            </div>
-
-            <InfrastructureMap />
-
-            <div class="shadow-box table-wrapper p-4">
+            <div class="shadow-box table-shadow-box table-wrapper">
                 <div class="mb-3 text-end">
                     <button
                         class="btn btn-sm btn-outline-danger"
@@ -85,7 +60,7 @@
                         <tr
                             v-for="(beat, index) in displayedRecords"
                             :key="index"
-                            :class="['event-row', beatRowClass(beat.status), { 'shadow-box': $root.windowWidth <= 550 }]"
+                            :class="{ 'shadow-box': $root.windowWidth <= 550 }"
                         >
                             <td v-if="showGroupColumn">
                                 <router-link
@@ -142,7 +117,6 @@ import Status from "../components/Status.vue";
 import Datetime from "../components/Datetime.vue";
 import Pagination from "v-pagination-3";
 import Confirm from "../components/Confirm.vue";
-import InfrastructureMap from "../components/InfrastructureMap.vue";
 
 export default {
     components: {
@@ -150,7 +124,6 @@ export default {
         Status,
         Pagination,
         Confirm,
-        InfrastructureMap,
     },
     props: {
         calculatedHeight: {
@@ -178,26 +151,6 @@ export default {
         },
         tableColumnCount() {
             return this.showGroupColumn ? 5 : 4;
-        },
-        totalMonitors() {
-            const s = this.$root.stats;
-            if (!s) return 0;
-            return (s.up ?? 0) + (s.down ?? 0) + (s.maintenance ?? 0) + (s.pending ?? 0) + (s.unknown ?? 0);
-        },
-        healthPercent() {
-            if (this.totalMonitors === 0) return 100;
-            return Math.round(((this.$root.stats?.up ?? 0) / this.totalMonitors) * 100);
-        },
-        healthColor() {
-            if (this.healthPercent >= 90) return "#10b981";
-            if (this.healthPercent >= 70) return "#f59e0b";
-            return "#ef4444";
-        },
-
-        avgResponseTime() {
-            const pings = Object.values(this.$root.avgPingList || {}).filter(v => v != null && v > 0);
-            if (pings.length === 0) return null;
-            return Math.round(pings.reduce((a, b) => a + b, 0) / pings.length);
         },
     },
     watch: {
@@ -230,16 +183,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Returns a CSS class name based on heartbeat status for event row coloring.
-         * @param {number} status - The heartbeat status code.
-         * @returns {string} CSS class name.
-         */
-        beatRowClass(status) {
-            const map = { 0: "event-down", 1: "event-up", 2: "event-pending", 3: "event-maintenance" };
-            return map[status] ?? "event-unknown";
-        },
-
         /**
          * Returns the group (parent) name for a monitor, or empty string if none.
          * @param {number} monitorID - The monitor ID.
@@ -311,7 +254,6 @@ export default {
          */
         updatePerPage() {
             const tableContainer = this.$refs.tableContainer;
-            if (!tableContainer) return;
             const tableContainerHeight = tableContainer.offsetHeight;
             const availableHeight = window.innerHeight - tableContainerHeight;
             const additionalPerPage = Math.floor(availableHeight / 58);
@@ -329,6 +271,7 @@ export default {
         clearAllEvents() {
             this.clearingAllEvents = true;
             const monitorIDs = Object.keys(this.$root.monitorList);
+            let failed = 0;
             const total = monitorIDs.length;
 
             if (total === 0) {
@@ -337,31 +280,26 @@ export default {
                 return;
             }
 
-            let completed = 0;
-            let failed = 0;
-
-            const onDone = () => {
-                completed++;
-                if (completed < total) return;
-                // All callbacks have fired — now update UI
-                this.clearingAllEvents = false;
-                this.page = 1;
-                this.getImportantHeartbeatListLength();
-                if (failed === 0) {
-                    this.$root.toastSuccess(this.$t("Events cleared successfully"));
-                } else {
-                    this.$root.toastError(this.$t("Could not clear events", { failed, total }));
-                }
-            };
-
             monitorIDs.forEach((monitorID) => {
                 this.$root.getSocket().emit("clearEvents", monitorID, (res) => {
                     if (!res || !res.ok) {
                         failed++;
                     }
-                    onDone();
                 });
             });
+            this.clearingAllEvents = false;
+            this.page = 1;
+            this.getImportantHeartbeatListLength();
+            if (failed === 0) {
+                this.$root.toastSuccess(this.$t("Events cleared successfully"));
+            } else {
+                this.$root.toastError(
+                    this.$t("Could not clear events", {
+                        failed,
+                        total,
+                    })
+                );
+            }
         },
     },
 };
@@ -370,228 +308,22 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/vars";
 
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    width: 100%;
+.num {
+    font-size: 30px;
+    color: $primary;
+    font-weight: bold;
+    display: block;
 }
 
-.stat-card {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border-radius: 20px;
-    min-height: 140px;
-    border-top: 2px solid transparent;
-    transition: all 0.25s ease;
-
-    .stat-icon-wrap {
-        font-size: 18px;
-        margin-bottom: 10px;
-        opacity: 0.7;
-    }
-
-    .stat-label {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #6b7280;
-        margin-bottom: 6px;
-    }
-
-    .num {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 44px;
-        line-height: 1;
-        font-weight: 700;
-
-        &.up-num {
-            color: $status-up;
-            text-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
-        }
-    }
-
-    // Status-specific top borders and icon colors
-    &.card-up {
-        border-top-color: $status-up;
-        .up-icon { color: $status-up; }
-        &:hover { border-color: rgba(16, 185, 129, 0.4); }
-    }
-    &.card-down {
-        border-top-color: $status-down;
-        .down-icon { color: $status-down; }
-        &:hover { border-color: rgba(239, 68, 68, 0.4); }
-    }
-    &.card-maintenance {
-        border-top-color: $status-maintenance;
-        .maintenance-icon { color: $status-maintenance; }
-        &:hover { border-color: rgba(167, 139, 250, 0.4); }
-    }
-    &.card-unknown {
-        border-top-color: $status-paused;
-        .unknown-icon { color: $status-paused; }
-        &:hover { border-color: rgba(107, 114, 128, 0.4); }
-    }
-    &.card-paused {
-        border-top-color: $status-paused;
-        .paused-icon { color: $status-paused; }
-        &:hover { border-color: rgba(107, 114, 128, 0.4); }
-    }
-
-    &.card-response {
-        border-top-color: $primary;
-        .response-icon { color: $primary; }
-        &:hover { border-color: rgba(96, 165, 250, 0.4); }
-
-        .response-num {
-            color: $primary;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 36px;
-            font-weight: 700;
-            line-height: 1;
-            display: flex;
-            align-items: baseline;
-            gap: 4px;
-
-            .unit {
-                font-size: 14px;
-                font-weight: 500;
-                opacity: 0.6;
-            }
-        }
-    }
-
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: $premium-shadow-light;
-
-        .dark & {
-            box-shadow: $premium-shadow-dark;
-        }
-    }
-}
-
-.health-overview {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 14px 20px;
-    border-radius: 16px;
-
-    .health-label {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #6b7280;
-        white-space: nowrap;
-        min-width: 130px;
-    }
-
-    .health-track {
-        flex: 1;
-        height: 5px;
-        background: rgba(0, 0, 0, 0.06);
-        border-radius: 99px;
-        overflow: hidden;
-
-        .dark & { background: rgba(255, 255, 255, 0.08); }
-    }
-
-    .health-fill {
-        height: 100%;
-        border-radius: 99px;
-        transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease;
-    }
-
-    .health-right {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 2px;
-    }
-
-    .health-pct {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 1;
-        transition: color 0.5s ease;
-    }
-
-    .health-sub {
-        font-size: 10px;
-        color: #9ca3af;
-        font-family: 'JetBrains Mono', monospace;
-        white-space: nowrap;
-    }
-}
-
-.table-wrapper {
-    border-radius: 20px;
-}
-
-// Status-colored left border on event rows
-.event-row {
-    td:first-child {
-        border-left: 3px solid transparent;
-        transition: border-color 0.2s ease;
-    }
-
-    &.event-up td:first-child        { border-left-color: $status-up; }
-    &.event-down td:first-child      { border-left-color: $status-down; }
-    &.event-pending td:first-child   { border-left-color: $status-pending; }
-    &.event-maintenance td:first-child { border-left-color: $status-maintenance; }
+.shadow-box {
+    padding: 20px;
 }
 
 table {
     font-size: 14px;
-    
-    thead th {
-        color: #6b7280;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 12px;
-        letter-spacing: 0.05em;
-        padding: 16px 12px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-
-        .dark & {
-            border-bottom-color: rgba(255, 255, 255, 0.05);
-        }
-    }
-
-    tbody td {
-        padding: 16px 12px;
-        vertical-align: middle;
-        
-        a {
-            text-decoration: none;
-            color: inherit;
-            font-weight: 500;
-            transition: color 0.2s ease;
-            
-            &:hover {
-                color: $primary;
-            }
-        }
-    }
 
     tr {
-        transition: background-color 0.2s ease;
-
-        &:hover {
-            background-color: rgba(0, 0, 0, 0.02);
-
-            .dark & {
-                background-color: rgba(255, 255, 255, 0.02);
-            }
-        }
+        transition: all ease-in-out 0.2ms;
     }
 
     @media (max-width: 550px) {
@@ -610,5 +342,9 @@ table {
     .name-column {
         min-width: 200px;
     }
+}
+
+.table-wrapper {
+    overflow-x: auto;
 }
 </style>

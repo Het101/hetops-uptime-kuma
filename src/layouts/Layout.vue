@@ -12,109 +12,135 @@
             </div>
         </div>
 
-        <!-- Desktop Sidebar (HetOps Tools Style) -->
-        <aside v-if="!$root.isMobile" class="hetops-sidebar d-flex flex-column p-4">
-            <!-- Sidebar Logo (Unified SVG standard) -->
-            <router-link to="/dashboard" class="sidebar-logo d-flex flex-column mb-5 text-decoration-none" style="padding: 10px 0;">
-                <div style="display: flex; align-items: center; justify-content: flex-start;">
-                    <img src="/icon.svg" style="width: 140px; height: auto; display: block;" alt="HetOps Logo" />
-                    <span style="color: #6b7280; font-size: 12px; line-height: 16px; margin-left: 8px; font-family: 'Fira Code', monospace; font-weight: bold; font-style: italic; margin-top: 4px;">STATUS</span>
-                </div>
-                <!-- App Subtitle matching Tools -->
-                <div style="color: #9ca3af; font-size: 10px; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Fira Code', monospace; font-style: normal; font-weight: normal;">HANDY TOOLS FOR DEVOPS</div>
+        <!-- Desktop header -->
+        <header v-if="!$root.isMobile" class="d-flex flex-wrap justify-content-center py-3 mb-3 border-bottom">
+            <router-link
+                to="/dashboard"
+                class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
+            >
+                <span class="ho-brand ms-4">
+                    <img src="/icon.svg" width="30" height="30" alt="" />
+                    <span>
+                        HetOps
+                        <b>Status</b>
+                    </span>
+                </span>
             </router-link>
 
-            <!-- Live Monitor Stats -->
-            <div v-if="$root.loggedIn && $root.stats" class="sidebar-live-stats">
-                <span class="live-stat up-stat">
-                    <span class="live-dot"></span>
-                    {{ $root.stats.up ?? 0 }} Up
-                </span>
-                <span class="live-divider">·</span>
-                <span class="live-stat" :class="($root.stats.down ?? 0) > 0 ? 'down-stat has-issues' : 'down-stat'">
-                    <span class="live-dot"></span>
-                    {{ $root.stats.down ?? 0 }} Down
-                </span>
-                <span class="live-divider">·</span>
-                <span class="live-stat uptime-stat">{{ uptimePercent }}%</span>
-            </div>
+            <a
+                v-if="hasNewVersion"
+                target="_blank"
+                href="https://github.com/louislam/uptime-kuma/releases"
+                class="btn btn-primary me-3"
+            >
+                <font-awesome-icon icon="arrow-alt-circle-up" />
+                {{ $t("New Update") }}
+            </a>
 
-            <!-- Sidebar Navigation -->
-            <ul class="nav nav-pills flex-column mb-auto gap-3">
-                <li v-if="$root.loggedIn" class="nav-item">
-                    <router-link to="/dashboard" class="nav-link d-flex align-items-center gap-3">
-                        <font-awesome-icon icon="tachometer-alt" class="sidebar-icon" />
+            <ul class="nav nav-pills">
+                <li v-if="$root.loggedIn" class="nav-item me-2">
+                    <router-link to="/manage-status-page" class="nav-link">
+                        <font-awesome-icon icon="stream" />
+                        {{ $t("Status Pages") }}
+                    </router-link>
+                </li>
+                <li v-if="$root.loggedIn" class="nav-item me-2">
+                    <router-link to="/dashboard" class="nav-link">
+                        <font-awesome-icon icon="tachometer-alt" />
                         {{ $t("Dashboard") }}
                     </router-link>
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item">
-                    <router-link to="/manage-status-page" class="nav-link d-flex align-items-center gap-3">
-                        <font-awesome-icon icon="stream" class="sidebar-icon" />
-                        {{ $t("Status Pages") }}
-                    </router-link>
-                </li>
-                <li v-if="$root.loggedIn" class="nav-item">
-                    <router-link to="/maintenance" class="nav-link d-flex align-items-center gap-3" :class="{ active: $route.path.includes('manage-maintenance') }">
-                        <font-awesome-icon icon="wrench" class="sidebar-icon" />
-                        {{ $t("Maintenance") }}
-                    </router-link>
-                </li>
-                <li v-if="$root.loggedIn" class="nav-item">
-                    <router-link to="/settings/general" class="nav-link d-flex align-items-center gap-3" :class="{ active: $route.path.includes('settings') }">
-                        <font-awesome-icon icon="cog" class="sidebar-icon" />
-                        {{ $t("Settings") }}
-                    </router-link>
+                    <div class="dropdown dropdown-profile-pic">
+                        <div class="nav-link" data-bs-toggle="dropdown">
+                            <div class="profile-pic">{{ $root.usernameFirstChar }}</div>
+                            <font-awesome-icon icon="angle-down" />
+                        </div>
+
+                        <!-- Header's Dropdown Menu -->
+                        <ul class="dropdown-menu">
+                            <!-- Username -->
+                            <li>
+                                <i18n-t
+                                    v-if="$root.username != null"
+                                    tag="span"
+                                    keypath="signedInDisp"
+                                    class="dropdown-item-text"
+                                >
+                                    <strong>{{ $root.username }}</strong>
+                                </i18n-t>
+                                <span v-if="$root.username == null" class="dropdown-item-text">
+                                    {{ $t("signedInDispDisabled") }}
+                                </span>
+                            </li>
+
+                            <li><hr class="dropdown-divider" /></li>
+
+                            <!-- Functions -->
+                            <li>
+                                <router-link
+                                    to="/maintenance"
+                                    class="dropdown-item"
+                                    :class="{ active: $route.path.includes('manage-maintenance') }"
+                                >
+                                    <font-awesome-icon icon="wrench" />
+                                    {{ $t("Maintenance") }}
+                                </router-link>
+                            </li>
+
+                            <li>
+                                <router-link
+                                    to="/settings/general"
+                                    class="dropdown-item"
+                                    :class="{ active: $route.path.includes('settings') }"
+                                >
+                                    <font-awesome-icon icon="cog" />
+                                    {{ $t("Settings") }}
+                                </router-link>
+                            </li>
+
+                            <li>
+                                <a
+                                    href="https://github.com/louislam/uptime-kuma/wiki"
+                                    class="dropdown-item"
+                                    target="_blank"
+                                >
+                                    <font-awesome-icon icon="info-circle" />
+                                    {{ $t("Help") }}
+                                </a>
+                            </li>
+
+                            <li v-if="$root.loggedIn && $root.socket.token !== 'autoLogin'">
+                                <button class="dropdown-item" @click="$root.logout">
+                                    <font-awesome-icon icon="sign-out-alt" />
+                                    {{ $t("Logout") }}
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
+        </header>
 
-            <!-- Sidebar Footer (Profile / Logout) -->
-            <div v-if="$root.loggedIn" class="dropdown dropdown-profile-pic mt-5 pt-3 border-top border-secondary">
-                <div class="nav-link d-flex align-items-center gap-3" data-bs-toggle="dropdown" style="cursor: pointer;">
-                    <div class="profile-pic">{{ $root.usernameFirstChar }}</div>
-                    <div class="d-flex flex-column text-start" style="min-width: 0;">
-                        <strong v-if="$root.username != null" class="username-text" style="font-size: 14px; line-height: 1;">{{ $root.username }}</strong>
-                        <span style="font-size: 11px; color: #a0a0a0; margin-top: 4px;">Admin</span>
-                    </div>
-                </div>
-
-                <ul class="dropdown-menu shadow">
-                    <li>
-                        <a href="https://github.com/louislam/uptime-kuma/wiki" class="dropdown-item" target="_blank">
-                            <font-awesome-icon icon="info-circle" /> {{ $t("Help") }}
-                        </a>
-                    </li>
-                    <li v-if="$root.socket.token !== 'autoLogin'">
-                        <button class="dropdown-item text-danger" @click="$root.logout">
-                            <font-awesome-icon icon="sign-out-alt" /> {{ $t("Logout") }}
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            
-            <a v-if="hasNewVersion" target="_blank" href="https://github.com/louislam/uptime-kuma/releases" class="btn btn-primary mt-3 w-100 btn-sm">
-                <font-awesome-icon icon="arrow-alt-circle-up" /> {{ $t("New Update") }}
-            </a>
-        </aside>
-
-        <!-- Mobile header (Unified SVG standard) -->
-        <header v-else class="d-flex flex-wrap justify-content-center pt-3 pb-3 mb-3 border-bottom shadow-sm" style="background: rgba(10,10,10,0.8); backdrop-filter: blur(10px);">
+        <!-- Mobile header -->
+        <header v-else class="d-flex flex-wrap justify-content-center pt-2 pb-2 mb-3">
             <router-link to="/dashboard" class="d-flex align-items-center text-dark text-decoration-none">
-                <div style="display: flex; align-items: center; justify-content: center;">
-                    <img src="/icon.svg" style="width: 140px; height: auto; display: block;" alt="HetOps Logo" />
-                    <span style="color: #6b7280; font-size: 12px; line-height: 16px; margin-left: 8px; font-family: 'Fira Code', monospace; font-weight: bold; font-style: italic; margin-top: 4px;">STATUS</span>
-                </div>
+                <span class="ho-brand">
+                    <img src="/icon.svg" width="30" height="30" alt="" />
+                    <span>
+                        HetOps
+                        <b>Status</b>
+                    </span>
+                </span>
             </router-link>
         </header>
 
-        <!-- Main Content Area -->
-        <main class="hetops-main-content">
-            <div class="container-fluid py-4" style="max-width: 1400px;">
-                <router-view v-if="$root.loggedIn" />
-                <Login v-if="!$root.loggedIn && $root.allowLoginDialog" />
-            </div>
+        <main>
+            <router-view v-if="$root.loggedIn" />
+            <Login v-if="!$root.loggedIn && $root.allowLoginDialog" />
         </main>
 
-        <!-- Mobile Only Bottom Nav -->
+        <!-- Mobile Only -->
         <div v-if="$root.isMobile" style="width: 100%; height: calc(60px + env(safe-area-inset-bottom))" />
         <nav v-if="$root.isMobile && $root.loggedIn" class="bottom-nav">
             <router-link to="/dashboard" class="nav-link">
@@ -146,27 +172,6 @@
         >
             <font-awesome-icon icon="times" />
         </button>
-
-        <!-- HetOps Global Footer -->
-        <footer v-if="!$root.isMobile" class="hetops-footer">
-            <div class="footer-left">
-                <span class="footer-badge" :class="footerStatusClass">
-                    <font-awesome-icon :icon="footerStatusIcon" /> {{ footerStatusLabel }}
-                </span>
-                <span class="footer-text hidden-sm">hetops/uptime-kuma</span>
-                <span class="footer-text branch-text"><font-awesome-icon icon="code-branch" /> main</span>
-                <span v-if="($root.stats?.down ?? 0) > 0" class="footer-text warning-text">
-                    <font-awesome-icon icon="exclamation-circle" /> {{ $root.stats.down }} down
-                </span>
-            </div>
-            <div class="footer-right">
-                <span class="footer-text hidden-sm font-bold" id="kuma-footer-time">00:00:00</span>
-                <span class="footer-text" :class="footerStatusTextClass">
-                    <font-awesome-icon :icon="footerStatusTextIcon" /> {{ footerStatusText }}
-                </span>
-                <span class="footer-text hidden-lg">UTF-8</span>
-            </div>
-        </footer>
     </div>
 </template>
 
@@ -205,38 +210,6 @@ export default {
                 return false;
             }
         },
-
-        uptimePercent() {
-            const s = this.$root.stats;
-            if (!s) return 100;
-            const total = (s.up ?? 0) + (s.down ?? 0) + (s.maintenance ?? 0) + (s.pending ?? 0) + (s.unknown ?? 0);
-            if (total === 0) return 100;
-            return Math.round(((s.up ?? 0) / total) * 100);
-        },
-
-        hasIssues() {
-            return (this.$root.stats?.down ?? 0) > 0;
-        },
-
-        footerStatusClass() {
-            return this.hasIssues ? "issues-badge" : "normal-badge";
-        },
-        footerStatusIcon() {
-            return this.hasIssues ? "exclamation-triangle" : "terminal";
-        },
-        footerStatusLabel() {
-            return this.hasIssues ? "ISSUES" : "NORMAL";
-        },
-        footerStatusTextClass() {
-            return this.hasIssues ? "warning-text" : "success-text";
-        },
-        footerStatusTextIcon() {
-            return this.hasIssues ? "exclamation-circle" : "check-circle";
-        },
-        footerStatusText() {
-            const down = this.$root.stats?.down ?? 0;
-            return this.hasIssues ? `${down}_MONITOR${down > 1 ? "S" : ""}_DOWN` : "ALL_SYSTEMS_OPTIMAL";
-        },
     },
 
     watch: {},
@@ -256,14 +229,6 @@ export default {
         if (this.toastContainer != null) {
             this.toastContainerObserver.observe(this.toastContainer, { childList: true });
         }
-
-        // Clock logic for Footer
-        setInterval(() => {
-            const timeElement = document.getElementById("kuma-footer-time");
-            if (timeElement) {
-                timeElement.innerText = new Date().toLocaleTimeString();
-            }
-        }, 1000);
     },
 
     beforeUnmount() {
@@ -286,25 +251,18 @@ export default {
 @import "../assets/vars.scss";
 
 .nav-link {
-    position: relative;
     &:hover {
-        background-color: transparent;
-        color: $primary;
+        background-color: $primary;
+        color: #fff;
 
         .dark & {
-            background-color: transparent;
-            color: $primary;
+            background-color: $primary;
+            color: #000;
         }
 
         &.active {
-            background-color: transparent;
+            background-color: $highlight;
         }
-    }
-
-    &.active {
-        color: $primary !important;
-        position: relative;
-        background-color: transparent !important;
     }
 
     &.status-page {
@@ -390,19 +348,44 @@ main {
 
     .dropdown-menu {
         transition: all 0.2s;
-        padding: 0.5rem 0;
+        padding-left: 0;
+        padding-bottom: 0;
         margin-top: 8px !important;
         border-radius: 16px;
         overflow: hidden;
-        background: transparent; // Rely on global theme or light mode default
 
         .dropdown-divider {
-            margin: 0.5rem 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin: 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.4);
+            background-color: transparent;
+        }
+
+        .dropdown-item-text {
+            font-size: 14px;
+            padding-bottom: 0.7rem;
         }
 
         .dropdown-item {
-            padding: 0.6rem 1.2rem;
+            padding: 0.7rem 1rem;
+        }
+
+        .dark & {
+            background-color: $dark-bg;
+            color: $dark-font-color;
+            border-color: $dark-border-color;
+
+            .dropdown-item {
+                color: $dark-font-color;
+
+                &.active {
+                    color: $dark-font-color2;
+                    background-color: $highlight !important;
+                }
+
+                &:hover {
+                    background-color: $dark-bg2;
+                }
+            }
         }
     }
 
@@ -418,290 +401,21 @@ main {
         border-radius: 50rem;
         font-weight: bold;
         font-size: 10px;
-        flex-shrink: 0; // Prevent distortion from long flex siblings
-    }
-
-    .username-text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 160px;
-    }
-}
-
-// Live stats strip in sidebar
-.sidebar-live-stats {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 7px 12px;
-    margin-bottom: 20px;
-    background: rgba(0, 0, 0, 0.03);
-    border-radius: 10px;
-    font-size: 11px;
-    font-family: 'Fira Code', monospace;
-    font-weight: 600;
-
-    .dark & { background: rgba(255, 255, 255, 0.04); }
-
-    .live-stat {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .live-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    .up-stat {
-        color: $status-up;
-        .live-dot { background: $status-up; }
-    }
-
-    .down-stat {
-        color: $status-paused;
-        .live-dot { background: $status-paused; }
-
-        &.has-issues {
-            color: $status-down;
-            .live-dot {
-                background: $status-down;
-                animation: blink-dot 1.2s ease infinite;
-            }
-        }
-    }
-
-    .live-divider { color: rgba(0, 0, 0, 0.15); }
-
-    .uptime-stat {
-        color: $status-up;
-        font-weight: 700;
-    }
-}
-
-.dark .sidebar-live-stats .live-divider { color: rgba(255, 255, 255, 0.12); }
-
-@keyframes blink-dot {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.25; }
-}
-
-// Common structural layout styles
-.hetops-sidebar {
-    width: 280px;
-    height: calc(100vh - 30px);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1050;
-    overflow-y: auto;
-    background: rgba(252, 252, 252, 0.88);
-    backdrop-filter: blur(24px);
-    border-right: 1px solid rgba(0, 0, 0, 0.06);
-    border-top: 3px solid $primary; // blue accent bar
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    .sidebar-logo {
-        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        &:hover { opacity: 0.8; }
-    }
-
-    .nav-pills {
-        .nav-item {
-            width: 100%;
-            
-            .nav-link {
-                color: #555;
-                padding: 12px 20px;
-                border-radius: 12px;
-                font-size: 14px;
-                font-weight: 500;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                background: transparent;
-                
-                &:hover {
-                    color: $primary;
-                    background: rgba(0, 0, 0, 0.03);
-                }
-                
-                &.active {
-                    color: $primary !important;
-                    background: rgba(96, 165, 250, 0.05) !important;
-                    position: relative;
-
-                    // Vertical side indicator
-                    &::before {
-                        content: '';
-                        position: absolute;
-                        left: -16px;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        height: 60%;
-                        width: 3px;
-                        background: $primary;
-                        border-radius: 0 4px 4px 0;
-                        box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
-                    }
-
-                    // Hide old bottom underline
-                    &::after { display: none; }
-                }
-                
-                .sidebar-icon {
-                    width: 18px;
-                    opacity: 0.8;
-                }
-            }
-        }
-    }
-}
-
-.hetops-main-content {
-    margin-left: 280px; // Offset by precise tools sidebar width
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 26px; // Match HetOps Tools content padding
-    padding-bottom: 80px; // Extra offset for footers
-    background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    @media (max-width: 767.98px) {
-        margin-left: 0;
-        padding: 15px;
-        padding-bottom: 100px;
-        min-height: calc(100vh - 80px); // Account for mobile header
-    }
-}
-
-.hetops-footer {
-    position: fixed;
-    bottom: 0;
-    left: 280px;
-    width: calc(100% - 280px);
-    height: 30px;
-    background-color: rgba(248, 249, 250, 0.85);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid #dee2e6;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: #6b7280;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    @media (max-width: 767.98px) {
-        left: 0;
-        width: 100%;
-    }
-
-    svg {
-        width: 12px;
-        height: 12px;
-    }
-
-    .footer-left, .footer-right {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .footer-badge {
-        color: #fff;
-        padding: 2px 8px;
-        font-weight: bold;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: background-color 0.4s ease;
-
-        &.normal-badge { background-color: $primary; }
-        &.issues-badge { background-color: $status-down; animation: badge-pulse 1.5s infinite; }
-    }
-
-    @keyframes badge-pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.75; }
-    }
-
-    .footer-text {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-
-        &.branch-text { color: #2563eb; }
-        &.warning-text { color: #d97706; }
-        &.success-text { color: #059669; }
-    }
-
-    @media (max-width: 768px) {
-        .hidden-sm { display: none !important; }
-    }
-    @media (max-width: 1024px) {
-        .hidden-lg { display: none !important; }
     }
 }
 
 .dark {
-    background-color: #020202;
+    header {
+        background-color: $dark-header-bg;
+        border-bottom-color: $dark-header-bg !important;
 
-    // Dark overrides for Sidebar
-    .hetops-sidebar {
-        background: rgba(5, 5, 5, 0.88);
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
-        border-top: 3px solid $primary; // keep accent in dark too
-
-        .nav-pills .nav-item .nav-link {
-            color: #8c8c8c;
-            
-            &:hover {
-                color: #fff;
-                background: rgba(255, 255, 255, 0.05);
-            }
-
-            &.active {
-                color: #60a5fa !important;
-                background: rgba(96, 165, 250, 0.05) !important;
-                &::before {
-                    box-shadow: 0 0 10px #60a5fa;
-                }
-            }
-        }
-    }
-    
-    // Dark overrides for Main Content
-    .hetops-main-content {
-        background: linear-gradient(135deg, #020202 0%, #0a0a0a 50%, #111 100%);
-    }
-
-    // Dark overrides for Footer
-    .hetops-footer {
-        background-color: rgba(10, 10, 10, 0.85);
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        color: #9ca3af;
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-
-        .footer-text {
-            &.branch-text { color: #60a5fa; }
-            &.warning-text { color: #ffbd2e; }
-            &.success-text { color: #10b981; }
+        span {
+            color: #f0f6fc;
         }
     }
 
     .bottom-nav {
-        background-color: rgba(2, 2, 2, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: $dark-bg;
     }
 }
 

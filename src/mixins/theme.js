@@ -12,9 +12,9 @@ export default {
     },
 
     mounted() {
-        // Default Light
+        // HetOps Status: dark by default (the HetOps look); users can still pick light or auto.
         if (!this.userTheme) {
-            this.userTheme = "auto";
+            this.userTheme = "dark";
         }
 
         // Default Heartbeat Bar
@@ -102,7 +102,7 @@ export default {
             if (this.theme === "dark") {
                 document.querySelector("#theme-color").setAttribute("content", "#161B22");
             } else {
-                document.querySelector("#theme-color").setAttribute("content", "#60a5fa");
+                document.querySelector("#theme-color").setAttribute("content", "#5cdd8b");
             }
         },
     },

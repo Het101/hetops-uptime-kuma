@@ -45,86 +45,96 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../assets/vars.scss";
+@import "../assets/app.scss";
 
 .filter-dropdown-menu {
-    z-index: 1100;
-    transition: opacity 0.2s $easing-smooth, transform 0.2s $easing-smooth;
-    padding: 8px 0 !important;
+    z-index: 100;
+    transition: all 0.2s;
+    padding: 5px 0 !important;
     border-radius: 16px;
     overflow: hidden;
 
     position: absolute;
-    top: 100%;
-    right: 0; 
-    left: auto;
-    margin-top: 10px;
-    min-width: 220px;
-    box-shadow: $premium-shadow-light;
-    display: none; // Completely remove from layout when closed
+    inset: 0 auto auto 0;
+    margin: 0;
+    transform: translate(0, 36px);
+    box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
+    visibility: hidden;
     list-style: none;
+    height: 0;
     opacity: 0;
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    transform: translateY(10px);
+    background: white;
 
     &.open {
-        display: block; // Add to layout
+        height: unset;
+        visibility: inherit;
         opacity: 1;
-        transform: translateY(0);
+    }
+
+    .dropdown-item {
+        padding: 5px 15px;
+    }
+
+    .dropdown-item:focus {
+        background: $highlight-white;
+
+        .dark & {
+            background: $dark-bg2;
+        }
     }
 
     .dark & {
-        background: #111111;
-        border-color: rgba(255, 255, 255, 0.1);
-        box-shadow: $premium-shadow-dark;
+        background-color: $dark-bg;
+        color: $dark-font-color;
+        border-color: $dark-border-color;
+
+        .dropdown-item {
+            color: $dark-font-color;
+
+            &.active {
+                color: $dark-font-color2;
+                background-color: $highlight !important;
+            }
+
+            &:hover {
+                background-color: $dark-bg2;
+            }
+        }
     }
 }
 
 .filter-dropdown-status {
+    @extend .btn-outline-normal;
     display: flex;
     align-items: center;
-    padding: 8px 14px;
-    border-radius: 20px;
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    color: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    transition: all $transition-time $easing-smooth;
-    cursor: pointer;
-    white-space: nowrap;
+    margin-left: 0;
+    color: $link-color;
 
     .dark & {
-        background: rgba(255, 255, 255, 0.03);
-        border-color: rgba(255, 255, 255, 0.08);
         color: $dark-font-color;
     }
 
-    &:hover {
-        background: rgba(0, 0, 0, 0.05);
-        border-color: rgba(96, 165, 250, 0.2);
+    &:focus {
+        background-color: $highlight-white;
 
         .dark & {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(96, 165, 250, 0.3);
+            background-color: $dark-font-color2;
         }
     }
 
     &.active {
-        background: rgba(96, 165, 250, 0.08);
-        border-color: $primary;
-        color: $primary;
-        box-shadow: 0 0 15px rgba(96, 165, 250, 0.1);
+        border: 1px solid $highlight;
+        background-color: $highlight-white;
 
         .dark & {
-            background: rgba(96, 165, 250, 0.1);
+            background-color: $dark-font-color2;
         }
     }
 }
 
 .filter-active {
-    color: $primary;
+    color: $highlight;
 }
 </style>

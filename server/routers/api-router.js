@@ -129,7 +129,7 @@ router.all("/api/push/:pushToken", async (request, response) => {
         Monitor.sendStats(io, monitor.id, monitor.user_id);
 
         try {
-            new Prometheus(monitor, []).update(bean, undefined);
+            new Prometheus(monitor, await monitor.getTags()).update(bean, undefined);
         } catch (e) {
             log.error("prometheus", "Please submit an issue to our GitHub repo. Prometheus update error: ", e.message);
         }
@@ -313,18 +313,15 @@ router.get("/api/badge/:id/ping/:duration?", cache("5 minutes"), async (request,
 
         // Check if monitor is public
         const publicMonitor = await isMonitorPublic(requestedMonitorId);
-
-        const uptimeCalculator = await UptimeCalculator.getUptimeCalculator(requestedMonitorId);
-        const avgPing = uptimeCalculator.getDataByDuration(requestedDuration).avgPing;
-
         const badgeValues = { style };
 
         if (!publicMonitor) {
             // return a "N/A" badge in naColor (grey), if monitor is not public / not available / non exsitant
-
             badgeValues.message = "N/A";
             badgeValues.color = badgeConstants.naColor;
         } else {
+            const uptimeCalculator = await UptimeCalculator.getUptimeCalculator(requestedMonitorId);
+            const avgPing = uptimeCalculator.getDataByDuration(requestedDuration).avgPing;
             const avgPingValue = parseInt(overrideValue ?? avgPing);
 
             badgeValues.color = color;

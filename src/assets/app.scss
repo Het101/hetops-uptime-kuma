@@ -4,8 +4,6 @@
 
 #app {
     font-family:
-        "Inter",
-        "Plus Jakarta Sans",
         "Twemoji Country Flags",
         BlinkMacSystemFont,
         segoe ui,
@@ -28,19 +26,8 @@ h2 {
     font-size: 26px;
 }
 
-textarea.form-control,
-.form-control,
-.form-select,
-.btn {
-    border-radius: 12px !important;
-    transition: background-color $transition-time $easing-smooth, border-color $transition-time $easing-smooth, box-shadow $transition-time $easing-smooth, color $transition-time $easing-smooth, transform $transition-time $easing-smooth, opacity $transition-time $easing-smooth, filter $transition-time $easing-smooth;
-}
-
-// Global Micro-interactions for Cards
-.stat-card, a.shadow-box {
-    &:active {
-        transform: scale(0.98) !important;
-    }
+textarea.form-control {
+    border-radius: 19px;
 }
 
 ::-webkit-scrollbar {
@@ -70,15 +57,9 @@ textarea.form-control,
 
     .dark & {
         .list-group-item {
-            background-color: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background-color: $dark-bg;
             color: $dark-font-color;
-            border-color: rgba(255, 255, 255, 0.08);
-
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
+            border-color: $dark-border-color;
         }
     }
 }
@@ -91,25 +72,32 @@ optgroup {
     }
 }
 
+.dark {
+    optgroup {
+        color: #535864;
+        option {
+            color: $dark-font-color;
+        }
+    }
+}
+
 // Scrollbar
 ::-webkit-scrollbar-thumb {
     background: #ccc;
     border-radius: 20px;
 }
 
+.modal {
+    backdrop-filter: blur(3px);
+}
 
 .modal-content {
-    border-radius: 16px;
-    background-color: $glass-bg-light;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid $glass-border-light;
-    box-shadow: $premium-shadow-light;
+    border-radius: 1rem;
+    box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
 
     .dark & {
-        background-color: $glass-bg-dark;
-        border: 1px solid $glass-border-dark;
-        box-shadow: $premium-shadow-dark;
+        box-shadow: 0 15px 70px rgb(0 0 0);
+        background-color: $dark-bg;
     }
 }
 
@@ -119,245 +107,152 @@ optgroup {
 }
 
 .shadow-box {
-    background-color: $glass-bg-light;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid $glass-border-light;
-    box-shadow: $premium-shadow-light;
+    //overflow: hidden;   // Forget why add this, but multiple select hide by this
+    box-shadow: 0 15px 70px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    border-radius: 16px;
-    transition: all $transition-time $easing-smooth;
+    border-radius: 10px;
 
     &.big-padding {
         padding: 20px;
     }
 }
 
-// Alias used by stat/health cards — same glass appearance as shadow-box
-.glass-card {
-    background-color: $glass-bg-light;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid $glass-border-light;
-    border-radius: 16px;
-
-    .dark & {
-        background-color: rgba(2, 2, 2, 0.4);
-        border: 1px solid $glass-border-dark;
-    }
-}
-
 .btn {
-    padding: 10px 24px;
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: 0.02em;
-    border: 1px solid transparent;
-    transition: background-color $transition-time $easing-smooth, border-color $transition-time $easing-smooth, box-shadow $transition-time $easing-smooth, color $transition-time $easing-smooth, transform $transition-time $easing-smooth, opacity $transition-time $easing-smooth, filter $transition-time $easing-smooth;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-
-    svg {
-        font-size: 1.1em;
-    }
-
-    &:active {
-        transform: scale(0.96) !important;
-    }
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: #fff !important;
-    border: none;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
-
-    &:hover {
-        background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-    }
-
-    .dark & {
-        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
-        &:hover {
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-        }
-    }
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #ff4036 0%, #d32f2f 100%);
-    color: #fff !important;
-    border: none;
-    box-shadow: 0 4px 15px rgba(255, 64, 54, 0.2);
-
-    &:hover {
-        background: linear-gradient(135deg, #ff6b63 0%, #ff4036 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(255, 64, 54, 0.4);
-    }
-}
-
-.btn-normal, .btn-secondary {
-    background: rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: inherit;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-
-    &:hover {
-        background: rgba(0, 0, 0, 0.08);
-        border-color: rgba(0, 0, 0, 0.1);
-        transform: translateY(-1px);
-    }
-
-    .dark & {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.08);
-        color: $dark-font-color;
-
-        &:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-    }
-}
-
-.btn-outline-primary {
-    border: 2px solid $primary;
-    color: $primary;
-    background: transparent;
-
-    &:hover {
-        background: $primary;
-        color: #fff;
-        box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
-    }
-}
-
-.form-label {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #6b7280;
-    margin-bottom: 10px;
-
-    .dark & {
-        color: #9ca3af;
-    }
-}
-
-.form-text {
-    font-size: 12px;
-    color: #9ca3af;
-    margin-top: 8px;
-}
-
-.form-check-label {
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.form-check-input:checked {
-    background-color: $primary;
-    border-color: $primary;
-    box-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
-}
-
-.form-switch .form-check-input {
-    width: 2.5em;
-    height: 1.25em;
-    background-color: #d1d5db;
-    border-color: transparent !important;
-    transition: background-color 0.3s ease, background-position 0.3s ease, box-shadow 0.3s ease;
-    
-    &:disabled {
-        opacity: 0.5;
-    }
-
-    &:checked {
-        background-color: $primary;
-        box-shadow: 0 0 12px rgba(96, 165, 250, 0.4);
-    }
-}
-
-.input-group {
-    .btn {
-        border-radius: 0 12px 12px 0 !important;
-    }
-    .form-control {
-        border-radius: 12px 0 0 12px !important;
-    }
-}
-
-.btn-group, .gap-2 {
-    gap: 12px !important;
-}
-
-.btn-group > .btn {
-    border-radius: 12px !important;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .btn-sm {
-    padding: 6px 16px;
-    font-size: 12px;
+    border-radius: 25px;
 }
 
-.settings-content {
-    .settings-footer,
-    footer,
-    form > div:last-child:not(.mb-3):not(.mb-4):not(.my-3) {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
+.btn-primary {
+    color: white;
+
+    &:hover,
+    &:active,
+    &:focus,
+    &.active {
+        color: white;
+        background-color: $highlight;
+        border-color: $highlight;
+    }
+
+    .dark & {
+        color: $dark-font-color2;
+    }
+}
+
+.btn-normal {
+    $bg-color: #f5f5f5;
+
+    background-color: $bg-color;
+    border-color: $bg-color;
+
+    &:hover {
+        $hover-color: darken($bg-color, 3%);
+        background-color: $hover-color;
+        border-color: $hover-color;
+    }
+}
+
+.btn-warning {
+    color: white;
+
+    &:hover,
+    &:active,
+    &:focus,
+    &.active {
+        color: white;
+    }
+}
+
+.btn-info {
+    color: white;
+
+    &:hover,
+    &:active,
+    &:focus,
+    &.active {
+        color: white;
+    }
+}
+
+.btn-dark {
+    background-color: #161b22;
+}
+
+.btn-outline-normal {
+    padding: 4px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 25px;
+    background-color: transparent;
+
+    .dark & {
+        color: $dark-font-color;
+        border: 1px solid $dark-font-color2;
+    }
+
+    &.active {
+        background-color: $highlight-white;
 
         .dark & {
-            border-top-color: rgba(255, 255, 255, 0.05);
+            background-color: $dark-font-color2;
         }
     }
 }
 
-// Global button spacing in any flex container
-.d-flex.gap-2, .btn-group {
-    gap: 15px !important;
-}
+@media (max-width: 550px) {
+    .table-shadow-box {
+        padding: 10px !important;
 
-// Global Body & HTML cleanup for scrolling
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-}
+        thead {
+            display: none;
+        }
 
-.dropdown-menu, .filter-dropdown-menu {
-    background-color: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-    box-shadow: $premium-shadow-light !important;
-    backdrop-filter: none !important; // Remove blur to ensure solid background
-    opacity: 1 !important;
+        tbody {
+            .shadow-box {
+                background-color: white;
+            }
+        }
+
+        tr {
+            margin-top: 0 !important;
+            padding: 4px 10px !important;
+            display: block;
+            margin-bottom: 6px;
+
+            td:first-child {
+                font-weight: bold;
+            }
+
+            td:nth-child(-n + 3) {
+                text-align: center;
+            }
+
+            td:last-child {
+                text-align: left;
+            }
+
+            td {
+                border-bottom: 1px solid $dark-font-color;
+                display: block;
+                padding: 4px;
+
+                .badge {
+                    margin: auto;
+                    display: block;
+                    width: 30%;
+                }
+            }
+        }
+    }
 }
 
 // Dark Theme override here
 .dark {
-    background-color: #020202;
+    background-color: #090c10;
     color: $dark-font-color;
-    color-scheme: dark; // Tells the browser to use native dark controls
-
-    optgroup {
-        color: #535864;
-    }
-
-    option {
-        background-color: #0a0a0a;
-        color: $dark-font-color;
-    }
 
     mark,
     .mark {
@@ -369,57 +264,9 @@ html, body {
         background: $dark-border-color;
     }
 
-    // Global Dropdown Styling for Dark Mode
-    .dropdown-menu, .filter-dropdown-menu {
-        background-color: #111111 !important; // Solid deep charcoal
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-        padding: 0.5rem 0;
-
-        .dropdown-item {
-            color: #d1d5db !important;
-            padding: 0.6rem 1.2rem;
-            transition: all 0.2s ease;
-            background: transparent !important;
-
-            &:hover, &:focus {
-                background-color: rgba(255, 255, 255, 0.05) !important;
-                color: #fff !important;
-            }
-
-            &.active, &:active {
-                background-color: $primary !important;
-                color: #000 !important;
-            }
-
-            &.text-danger {
-                color: #ef4444 !important;
-                &:hover {
-                    background-color: rgba(239, 68, 68, 0.1) !important;
-                }
-            }
-        }
-
-        .dropdown-divider {
-            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-            margin: 0.5rem 0;
-            background-color: transparent !important;
-        }
-    }
-
     .shadow-box {
         &:not(.alert) {
-            background-color: rgba(2, 2, 2, 0.4);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s $easing-smooth;
-
-            &:hover {
-                border-color: rgba(96, 165, 250, 0.5);
-                box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.2), 0 20px 40px rgba(96, 165, 250, 0.15), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            }
+            background-color: $dark-bg;
         }
     }
 
@@ -439,11 +286,7 @@ html, body {
     }
 
     .form-switch .form-check-input {
-        background-color: #374151;
-        
-        &:checked {
-            background-color: $primary;
-        }
+        background-color: #232f3b;
     }
 
     a:not(.btn),
@@ -466,17 +309,7 @@ html, body {
     .form-select,
     .form-select:focus {
         color: $dark-font-color;
-        background-color: rgba(255, 255, 255, 0.03);
-        font-family: 'JetBrains Mono', monospace;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    
-    .form-control:focus,
-    .form-select:focus {
-        border-color: rgba(96, 165, 250, 0.5);
-        background-color: rgba(255, 255, 255, 0.05);
-        box-shadow: 0 0 20px rgba(96, 165, 250, 0.15), 0 0 0 4px rgba(96, 165, 250, 0.05);
-        outline: none;
+        background-color: $dark-bg2;
     }
 
     .form-select:disabled {
@@ -486,7 +319,7 @@ html, body {
 
     .form-control,
     .form-select {
-        border-color: rgba(255, 255, 255, 0.08);
+        border-color: $dark-border-color;
     }
 
     .form-control:disabled,
@@ -509,18 +342,32 @@ html, body {
         color: $dark-font-color2;
     }
 
-    .btn-primary:focus, .btn-outline-primary:focus {
-        box-shadow: 0 0 20px rgba(96, 165, 250, 0.3), 0 0 0 4px rgba(96, 165, 250, 0.1);
-    }
-
     .btn-secondary {
         color: white;
-        background-color: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
+    }
+
+    .btn-normal {
+        $bg-color: $dark-header-bg;
+
+        color: $dark-font-color;
+        background-color: $bg-color;
+        border-color: $bg-color;
+
         &:hover {
-           background-color: rgba(255, 255, 255, 0.1);
-           border-color: rgba(255, 255, 255, 0.2); 
+            $hover-color: darken($bg-color, 3%);
+            background-color: $hover-color;
+            border-color: $hover-color;
+        }
+    }
+
+    .btn-warning {
+        color: $dark-font-color2;
+
+        &:hover,
+        &:active,
+        &:focus,
+        &.active {
+            color: $dark-font-color2;
         }
     }
 
@@ -596,11 +443,11 @@ html, body {
 
 // page-change
 .slide-fade-enter-active {
-    transition: all 0.2s $easing-smooth;
+    transition: all 0.2s $easing-in;
 }
 
 .slide-fade-leave-active {
-    transition: all 0.2s $easing-smooth;
+    transition: all 0.2s $easing-in;
 }
 
 .slide-fade-enter-from,
@@ -610,11 +457,11 @@ html, body {
 }
 
 .slide-fade-right-enter-active {
-    transition: all 0.2s $easing-smooth;
+    transition: all 0.2s $easing-in;
 }
 
 .slide-fade-right-leave-active {
-    transition: all 0.2s $easing-smooth;
+    transition: all 0.2s $easing-in;
 }
 
 .slide-fade-right-enter-from,
@@ -624,11 +471,11 @@ html, body {
 }
 
 .slide-fade-up-enter-active {
-    transition: all 0.2s $easing-smooth;
+    transition: all 0.2s $easing-in;
 }
 
 .slide-fade-up-leave-active {
-    transition: all 0.2s $easing-smooth;
+    transition: all 0.2s $easing-in;
 }
 
 .slide-fade-up-enter-from,
@@ -653,8 +500,7 @@ html, body {
         text-decoration: none;
         padding: 13px 15px 10px 15px;
         border-radius: 10px;
-        transition: all ease-in-out 0.2s;
-        border: 1px solid transparent;
+        transition: all ease-in-out 0.15s;
 
         &.disabled {
             opacity: 0.3;
@@ -666,15 +512,7 @@ html, body {
         }
 
         &:hover {
-            background-color: rgba(0, 0, 0, 0.02) !important;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-            border-color: rgba(0, 0, 0, 0.05);
-
-            .dark & {
-                background-color: rgba(255, 255, 255, 0.03) !important;
-                border-color: rgba(255, 255, 255, 0.08);
-                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-            }
+            background-color: $highlight-white;
         }
 
         &.active {
@@ -688,9 +526,9 @@ html, body {
 }
 
 .alert-success {
-    color: #052e16;
-    background-color: $status-up;
-    border-color: $status-up;
+    color: #122f21;
+    background-color: $primary;
+    border-color: $primary;
 }
 
 .alert-info {
@@ -711,29 +549,9 @@ html, body {
     border-color: #4caf50;
 }
 
-@keyframes pulse-success {
-    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-    70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-}
-
-@keyframes pulse-danger {
-    0% { box-shadow: 0 0 0 0 rgba(255, 64, 54, 0.4); }
-    70% { box-shadow: 0 0 0 8px rgba(255, 64, 54, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 64, 54, 0); }
-}
-
-.badge.bg-success, .status-up {
-    animation: pulse-success 2s infinite;
-}
-
-.badge.bg-danger, .status-down, .status-maintenance {
-    animation: pulse-danger 2s infinite;
-}
-
 [contenteditable="true"] {
-    transition: background-color $transition-time $easing-smooth, color $transition-time $easing-smooth, outline $transition-time $easing-smooth;
-    background-color: transparent !important;
+    transition: all $easing-in 0.2s;
+    background-color: rgba(239, 239, 239, 0.7);
     border-radius: 8px;
 
     &.no-bg {
@@ -741,31 +559,30 @@ html, body {
     }
 
     &:focus {
-        outline: none !important;
-        background-color: rgba(0, 0, 0, 0.05) !important;
+        outline: 0 solid #eee;
+        background-color: rgba(245, 245, 245, 0.9);
     }
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.03) !important;
+        background-color: rgba(239, 239, 239, 0.8);
     }
 
     .dark & {
-        background-color: transparent !important;
-
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-        }
-
-        &:focus {
-            background-color: rgba(255, 255, 255, 0.08) !important;
-            color: white !important;
-            outline: none !important;
-        }
+        background-color: rgba(239, 239, 239, 0.2);
     }
+
+    /*
+    &::after {
+        margin-left: 5px;
+        content: "🖊️";
+        font-size: 13px;
+        color: #eee;
+    }
+    */
 }
 
 .action {
-    transition: all $easing-smooth 0.2s;
+    transition: all $easing-in 0.2s;
 
     &:hover {
         cursor: pointer;
@@ -802,7 +619,7 @@ h5.settings-subheading::after {
 /* required class */
 .code-editor,
 .css-editor {
-    /* we dont use `language-` classes anymore so thats why we need to add background and text color manually */
+    /* we dont use `language-` classes anymore so that's why we need to add background and text color manually */
 
     border-radius: 1rem;
     padding: 10px 5px;

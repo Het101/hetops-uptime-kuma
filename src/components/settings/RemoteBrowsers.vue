@@ -39,10 +39,20 @@ export default {
         RemoteBrowserDialog,
     },
 
-    inject: ["settingsComponent"],
-
     data() {
         return {};
+    },
+
+    computed: {
+        settings() {
+            return this.$parent.$parent.$parent.settings;
+        },
+        saveSettings() {
+            return this.$parent.$parent.$parent.saveSettings;
+        },
+        settingsLoaded() {
+            return this.$parent.$parent.$parent.settingsLoaded;
+        },
     },
 };
 </script>

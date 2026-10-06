@@ -1,9 +1,12 @@
 <template>
     <div class="form-container">
         <div class="form">
-            <form @submit.prevent="submit">
-                <h1 class="h3 mb-3 fw-normal" />
-
+            <div class="ho-login-head">
+                <img src="/icon.svg" width="44" height="44" alt="" />
+                <h1>HetOps Status</h1>
+                <p>Sign in to manage monitors, status pages and incidents.</p>
+            </div>
+            <form aria-label="Login Form" class="pt-3" @submit.prevent="submit">
                 <div v-if="!tokenRequired" class="form-floating">
                     <input
                         id="floatingInput"
@@ -17,17 +20,14 @@
                     <label for="floatingInput">{{ $t("Username") }}</label>
                 </div>
 
-                <div v-if="!tokenRequired" class="form-floating mt-3">
-                    <input
+                <div v-if="!tokenRequired" class="mt-3">
+                    <HiddenInput
                         id="floatingPassword"
                         v-model="password"
-                        type="password"
-                        class="form-control"
-                        placeholder="Password"
+                        :placeholder="$t('Password')"
                         autocomplete="current-password"
-                        required
+                        :required="true"
                     />
-                    <label for="floatingPassword">{{ $t("Password") }}</label>
                 </div>
 
                 <div v-if="tokenRequired">
@@ -75,7 +75,12 @@
 </template>
 
 <script>
+import HiddenInput from "./HiddenInput.vue";
+
 export default {
+    components: {
+        HiddenInput,
+    },
     data() {
         return {
             processing: false,

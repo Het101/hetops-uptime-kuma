@@ -7,6 +7,9 @@
                 :key="`${item.tag_id || item.id}-${item.value || ''}`"
                 :item="item"
                 :remove="deleteTag"
+                :title="item.name"
+                :scrollable="true"
+                :constrained="true"
             />
         </div>
         <div class="p-1">
@@ -21,8 +24,7 @@
                 {{ $t("Add") }}
             </button>
         </div>
-        <teleport to="body">
-<div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div ref="modal" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -168,7 +170,6 @@
                 </div>
             </div>
         </div>
-    </teleport>
     </div>
 </template>
 

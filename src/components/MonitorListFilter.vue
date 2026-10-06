@@ -1,159 +1,163 @@
 <template>
-    <div class="filter-container">
-        <MonitorListFilterDropdown :filterActive="filterState.status?.length > 0 || filterState.active?.length > 0">
-            <template #status>
-                <Status
-                    v-if="filterState.status?.length === 1 && !filterState.active?.length"
-                    :status="filterState.status[0]"
-                />
-                <span
-                    v-else-if="!filterState.status?.length && filterState.active?.length === 1"
-                    class="badge status-pill"
-                    :class="filterState.active[0] ? 'running' : 'paused'"
-                >
-                    <font-awesome-icon :icon="filterState.active[0] ? 'play' : 'pause'" class="icon-small" />
-                    {{ filterState.active[0] ? $t("Running") : $t("filterActivePaused") }}
-                </span>
-                <span v-else>
-                    {{ $t("Status") }}
-                </span>
-            </template>
-            <template #dropdown>
-                <li>
-                    <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(1)">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <Status :status="1" />
-                            <span class="ps-3">
-                                {{ $root.stats.up }}
-                                <span v-if="filterState.status?.includes(1)" class="px-1 filter-active">
-                                    <font-awesome-icon icon="check" />
-                                </span>
+    <MonitorListFilterDropdown :filterActive="filterState.status?.length > 0 || filterState.active?.length > 0">
+        <template #status>
+            <Status
+                v-if="filterState.status?.length === 1 && !filterState.active?.length"
+                :status="filterState.status[0]"
+            />
+            <span
+                v-else-if="!filterState.status?.length && filterState.active?.length === 1"
+                class="badge status-pill"
+                :class="filterState.active[0] ? 'running' : 'paused'"
+            >
+                <font-awesome-icon :icon="filterState.active[0] ? 'play' : 'pause'" class="icon-small" />
+                {{ filterState.active[0] ? $t("Running") : $t("filterActivePaused") }}
+            </span>
+            <span v-else>
+                {{ $t("Status") }}
+            </span>
+        </template>
+        <template #dropdown>
+            <li>
+                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(1)">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <Status :status="1" />
+                        <span class="ps-3">
+                            {{ $root.stats.up }}
+                            <span v-if="filterState.status?.includes(1)" class="px-1 filter-active">
+                                <font-awesome-icon icon="check" />
                             </span>
-                        </div>
+                        </span>
                     </div>
-                </li>
-                <li>
-                    <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(0)">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <Status :status="0" />
-                            <span class="ps-3">
-                                {{ $root.stats.down }}
-                                <span v-if="filterState.status?.includes(0)" class="px-1 filter-active">
-                                    <font-awesome-icon icon="check" />
-                                </span>
+                </div>
+            </li>
+            <li>
+                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(0)">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <Status :status="0" />
+                        <span class="ps-3">
+                            {{ $root.stats.down }}
+                            <span v-if="filterState.status?.includes(0)" class="px-1 filter-active">
+                                <font-awesome-icon icon="check" />
                             </span>
-                        </div>
+                        </span>
                     </div>
-                </li>
-                <li>
-                    <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(2)">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <Status :status="2" />
-                            <span class="ps-3">
-                                {{ $root.stats.pending }}
-                                <span v-if="filterState.status?.includes(2)" class="px-1 filter-active">
-                                    <font-awesome-icon icon="check" />
-                                </span>
+                </div>
+            </li>
+            <li>
+                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(2)">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <Status :status="2" />
+                        <span class="ps-3">
+                            {{ $root.stats.pending }}
+                            <span v-if="filterState.status?.includes(2)" class="px-1 filter-active">
+                                <font-awesome-icon icon="check" />
                             </span>
-                        </div>
+                        </span>
                     </div>
-                </li>
-                <li>
-                    <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(3)">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <Status :status="3" />
-                            <span class="ps-3">
-                                {{ $root.stats.maintenance }}
-                                <span v-if="filterState.status?.includes(3)" class="px-1 filter-active">
-                                    <font-awesome-icon icon="check" />
-                                </span>
+                </div>
+            </li>
+            <li>
+                <div class="dropdown-item" tabindex="0" @click.stop="toggleStatusFilter(3)">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <Status :status="3" />
+                        <span class="ps-3">
+                            {{ $root.stats.maintenance }}
+                            <span v-if="filterState.status?.includes(3)" class="px-1 filter-active">
+                                <font-awesome-icon icon="check" />
                             </span>
-                        </div>
+                        </span>
                     </div>
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                    <div class="dropdown-item" tabindex="0" @click.stop="toggleActiveFilter(true)">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <span class="badge status-pill running">
-                                <font-awesome-icon icon="play" class="icon-small" />
-                                {{ $t("Running") }}
+                </div>
+            </li>
+            <li>
+                <hr class="dropdown-divider" />
+            </li>
+            <li>
+                <div class="dropdown-item" tabindex="0" @click.stop="toggleActiveFilter(true)">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="badge status-pill running">
+                            <font-awesome-icon icon="play" class="icon-small" />
+                            {{ $t("Running") }}
+                        </span>
+                        <span class="ps-3">
+                            {{ $root.stats.active }}
+                            <span v-if="filterState.active?.includes(true)" class="px-1 filter-active">
+                                <font-awesome-icon icon="check" />
                             </span>
-                            <span class="ps-3">
-                                {{ $root.stats.active }}
-                                <span v-if="filterState.active?.includes(true)" class="px-1 filter-active">
-                                    <font-awesome-icon icon="check" />
-                                </span>
-                            </span>
-                        </div>
+                        </span>
                     </div>
-                </li>
-                <li>
-                    <div class="dropdown-item" tabindex="0" @click.stop="toggleActiveFilter(false)">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <span class="badge status-pill paused">
-                                <font-awesome-icon icon="pause" class="icon-small" />
-                                {{ $t("filterActivePaused") }}
+                </div>
+            </li>
+            <li>
+                <div class="dropdown-item" tabindex="0" @click.stop="toggleActiveFilter(false)">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="badge status-pill paused">
+                            <font-awesome-icon icon="pause" class="icon-small" />
+                            {{ $t("filterActivePaused") }}
+                        </span>
+                        <span class="ps-3">
+                            {{ $root.stats.pause }}
+                            <span v-if="filterState.active?.includes(false)" class="px-1 filter-active">
+                                <font-awesome-icon icon="check" />
                             </span>
-                            <span class="ps-3">
-                                {{ $root.stats.pause }}
-                                <span v-if="filterState.active?.includes(false)" class="px-1 filter-active">
-                                    <font-awesome-icon icon="check" />
-                                </span>
-                            </span>
-                        </div>
+                        </span>
                     </div>
-                </li>
-            </template>
-        </MonitorListFilterDropdown>
-        <MonitorListFilterDropdown :filterActive="filterState.tags?.length > 0" @open-menu="getExistingTags">
-            <template #status>
-                <Tag
-                    v-if="filterState.tags?.length === 1"
-                    :item="tagsList.find((tag) => tag.id === filterState.tags[0])"
-                    :size="'sm'"
-                />
-                <span v-else>
-                    {{ $t("Tags") }}
-                </span>
-            </template>
-            <template #dropdown>
-                <li class="list-unstyled m-0 p-0">
-                    <div class="tags-dropdown-scroll">
-                        <ul class="list-unstyled m-0 p-0">
-                            <li v-for="tag in tagsList" :key="tag.id">
-                                <div class="dropdown-item" tabindex="0" @click.stop="toggleTagFilter(tag)">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <span><Tag :item="tag" :size="'sm'" /></span>
-                                        <span class="ps-3">
-                                            {{ getTaggedMonitorCount(tag) }}
-                                            <span v-if="filterState.tags?.includes(tag.id)" class="px-1 filter-active">
-                                                <font-awesome-icon icon="check" />
-                                            </span>
+                </div>
+            </li>
+        </template>
+    </MonitorListFilterDropdown>
+    <MonitorListFilterDropdown :filterActive="filterState.tags?.length > 0" @open-menu="getExistingTags">
+        <template #status>
+            <span
+                v-if="filterState.tags?.length === 1"
+                class="selected-tag-wrapper"
+                :title="tagsList.find((tag) => tag.id === filterState.tags[0])?.name"
+            >
+                <Tag :item="tagsList.find((tag) => tag.id === filterState.tags[0])" :size="'sm'" :constrained="true" />
+            </span>
+            <span v-else>
+                {{ $t("Tags") }}
+            </span>
+        </template>
+        <template #dropdown>
+            <li class="list-unstyled m-0 p-0">
+                <div class="tags-dropdown-scroll">
+                    <ul class="list-unstyled m-0 p-0">
+                        <li v-for="tag in tagsList" :key="tag.id">
+                            <div class="dropdown-item" tabindex="0" @click.stop="toggleTagFilter(tag)">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="tag-name-wrapper" :title="tag.name">
+                                        <Tag :item="tag" :size="'sm'" :scrollable="true" :constrained="true" />
+                                    </span>
+                                    <span class="ps-3">
+                                        {{ getTaggedMonitorCount(tag) }}
+                                        <span v-if="filterState.tags?.includes(tag.id)" class="px-1 filter-active">
+                                            <font-awesome-icon icon="check" />
                                         </span>
-                                    </div>
+                                    </span>
                                 </div>
-                            </li>
-                            <li v-if="tagsList.length === 0">
-                                <div class="dropdown-item disabled px-3">
-                                    {{ $t("No tags found.") }}
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </template>
-        </MonitorListFilterDropdown>
-        <button
-            v-if="hasGroups"
-            type="button"
-            class="btn btn-outline-normal btn-collapse-all"
-            :title="allCollapsed ? $t('Expand All Groups') : $t('Collapse All Groups')"
-            @click="$emit('toggle-collapse-all')"
-        >
-            <font-awesome-icon :icon="allCollapsed ? 'folder' : 'folder-open'" fixed-width />
-        </button>
-    </div>
+                            </div>
+                        </li>
+                        <li v-if="tagsList.length === 0">
+                            <div class="dropdown-item disabled px-3">
+                                {{ $t("No tags found.") }}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </template>
+    </MonitorListFilterDropdown>
+    <button
+        v-if="hasGroups"
+        type="button"
+        class="btn btn-outline-normal btn-collapse-all"
+        :title="allCollapsed ? $t('Expand All Groups') : $t('Collapse All Groups')"
+        @click="$emit('toggle-collapse-all')"
+    >
+        <font-awesome-icon :icon="allCollapsed ? 'folder' : 'folder-open'" fixed-width />
+    </button>
 </template>
 
 <script>
@@ -276,75 +280,99 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/vars.scss";
 
-.filter-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    z-index: 1050; // Above monitor list items but below main overlays
-}
-
 .dropdown-item {
     cursor: pointer;
-    padding: 10px 16px;
-    border-radius: 8px;
-    margin: 2px 8px;
-    transition: all $transition-time $easing-smooth;
+}
 
-    &:hover {
-        background: rgba(96, 165, 250, 0.08) !important;
-        transform: translateX(4px);
+.simple-status {
+    min-width: 64px;
+    border: 1px solid #d1d5db;
+    background-color: transparent !important;
+    color: inherit !important;
+
+    .dark & {
+        border-color: #6b7280;
     }
 }
 
-.status-pill {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    display: inline-flex;
+.clear-filters-btn {
+    font-size: 0.8em;
+    margin-right: 5px;
+    display: flex;
     align-items: center;
-    gap: 6px;
+    padding: 2px 10px;
+    border-radius: 16px;
+    background-color: transparent;
 
-    &.running {
-        background-color: rgba(16, 185, 129, 0.1) !important;
-        color: #10b981 !important;
-        border: 1px solid rgba(16, 185, 129, 0.25);
+    .dark & {
+        color: $dark-font-color;
+        border: 1px solid $dark-font-color2;
     }
 
-    &.paused {
-        background-color: rgba(107, 114, 128, 0.1) !important;
-        color: #6b7280 !important;
-        border: 1px solid rgba(107, 114, 128, 0.2);
-    }
+    &.active {
+        border: 1px solid $highlight;
+        background-color: $highlight-white;
 
-    .icon-small {
-        font-size: 10px;
+        .dark & {
+            background-color: $dark-font-color2;
+        }
     }
 }
 
 .dropdown-divider {
-    margin: 8px 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    margin: 0.5rem 0;
+    border-top: 1px solid #d1d5db;
 
     .dark & {
-        border-top-color: rgba(255, 255, 255, 0.05);
+        border-top-color: #6b7280;
+    }
+}
+
+.status-pill {
+    min-width: 64px;
+    display: inline-block;
+    text-align: center;
+
+    &.running,
+    &.paused {
+        background-color: white !important;
+        border: 1px solid #d1d5db;
+        color: inherit;
+
+        .dark & {
+            background-color: transparent !important;
+            border-color: #6b7280;
+            color: $dark-font-color;
+        }
+
+        .icon-small {
+            font-size: 0.75em;
+            margin-right: 4px;
+        }
     }
 }
 
 .btn-collapse-all {
-    width: 42px;
-    height: 42px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: none !important;
 }
 
 .tags-dropdown-scroll {
     max-height: min(50vh, 320px);
+    max-width: 45vw;
     overflow-y: auto;
+}
+
+.tag-name-wrapper {
+    min-width: 0;
+    overflow: hidden;
+    max-width: min(800px, 38vw);
+    display: flex;
+    align-items: center;
+}
+
+.selected-tag-wrapper {
+    max-width: 120px;
+    display: flex;
+    align-items: center;
 }
 </style>

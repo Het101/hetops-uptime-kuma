@@ -1,62 +1,121 @@
 <template>
     <transition name="slide-fade" appear>
         <div v-if="monitor">
-            <div class="monitor-hero-section mb-4">
-                <div class="hero-watermark">{{ monitor.id }}</div>
-                <div class="hero-content">
-                    <router-link v-if="group !== ''" :to="monitorURL(monitor.parent)" class="group-breadcrumb">
-                        <font-awesome-icon icon="folder-open" class="me-1" /> {{ group }}
-                    </router-link>
-                    
-                    <div class="hero-title-row">
-                        <h1 class="hero-title">
-                            {{ monitor.name }}
-                        </h1>
-                        <div class="monitor-status-pill">
-                            <Status :status="lastHeartBeat.status" />
-                        </div>
-                    </div>
-
-                    <!-- eslint-disable-next-line vue/no-v-html-->
-                    <p v-if="monitor.description" class="hero-description" v-html="descriptionHTML"></p>
-                    
-                    <div class="hero-meta">
-                        <div class="tags">
-                            <Tag v-for="tag in monitor.tags" :key="tag.id" :item="tag" :size="'sm'" />
-                        </div>
-                        
-                        <div class="url-container">
-                            <div class="live-line"></div>
-                            <a
-                                v-if="
-                                    monitor.type === 'http' ||
-                                    monitor.type === 'keyword' ||
-                                    monitor.type === 'json-query' ||
-                                    monitor.type === 'real-browser' ||
-                                    monitor.type === 'websocket-upgrade'
-                                "
-                                :href="monitor.url"
-                                class="hero-url"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <font-awesome-icon icon="link" class="me-2" />
-                                {{ filterPassword(monitor.url) }}
-                            </a>
-                            <span v-else class="hero-url text-secondary">
-                                <font-awesome-icon icon="terminal" class="me-2" />
-                                <span v-if="monitor.type === 'port'">TCP Port {{ monitor.hostname }}:{{ monitor.port }}</span>
-                                <span v-if="monitor.type === 'ping'">Ping: {{ monitor.hostname }}</span>
-                                <span v-if="monitor.type === 'docker'">Docker: {{ monitor.docker_container }}</span>
-                                <span v-if="monitor.type === 'push'">Push Monitor</span>
-                                <span v-else>{{ monitor.type.toUpperCase() }}</span>
-                            </span>
-                        </div>
-                    </div>
+            <router-link v-if="group !== ''" :to="monitorURL(monitor.parent)">
+                {{ group }}
+            </router-link>
+            <h1>
+                {{ monitor.name }}
+                <div class="monitor-id">
+                    <div class="hash">#</div>
+                    <div>{{ monitor.id }}</div>
+                </div>
+            </h1>
+            <!-- eslint-disable-next-line vue/no-v-html-->
+            <p v-if="monitor.description" v-html="descriptionHTML"></p>
+            <div class="d-flex">
+                <div class="tags">
+                    <Tag
+                        v-for="tag in monitor.tags"
+                        :key="tag.id"
+                        :item="tag"
+                        :size="'sm'"
+                        :scrollable="true"
+                        :constrained="true"
+                    />
                 </div>
             </div>
+            <p class="url">
+                <a
+                    v-if="
+                        monitor.type === 'http' ||
+                        monitor.type === 'keyword' ||
+                        monitor.type === 'json-query' ||
+                        monitor.type === 'real-browser' ||
+                        monitor.type === 'websocket-upgrade'
+                    "
+                    :href="monitor.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    {{ filterPassword(monitor.url) }}
+                </a>
+                <span v-if="monitor.type === 'port'">TCP Port {{ monitor.hostname }}:{{ monitor.port }}</span>
+                <span v-if="monitor.type === 'ping'">Ping: {{ monitor.hostname }}</span>
+                <span v-if="monitor.type === 'globalping'">
+                    <a v-if="monitor.subtype === 'http'" :href="monitor.url" target="_blank" rel="noopener noreferrer">
+                        {{ filterPassword(monitor.url) }}
+                    </a>
+                    <span v-if="monitor.hostname">{{ monitor.hostname }}</span>
+                    <br />
+                    <span>{{ $t("Location") }}:</span>
+                    <span class="keyword">{{ monitor.location }}</span>
+                    <br />
+                    <span v-if="monitor.subtype === 'dns'">
+                        [{{ monitor.dns_resolve_type }}]
+                        <br />
+                        <span>{{ $t("Last Result") }}:</span>
+                        <span class="keyword">{{ monitor.dns_last_result }}</span>
+                    </span>
+                </span>
+                <span v-if="monitor.type === 'keyword'">
+                    <br />
+                    <span>{{ $t("Keyword") }}:</span>
+                    <span class="keyword">{{ monitor.keyword }}</span>
+                    <span v-if="monitor.invertKeyword" alt="Inverted keyword" class="keyword-inverted">↧</span>
+                </span>
+                <span v-if="monitor.type === 'json-query'">
+                    <br />
+                    <span>{{ $t("Json Query") }}:</span>
+                    <span class="keyword">{{ monitor.jsonPath }}</span>
+                    <br />
+                    <span>{{ $t("Expected Value") }}:</span>
+                    <span class="keyword">{{ monitor.expectedValue }}</span>
+                </span>
+                <span v-if="monitor.type === 'dns'">
+                    [{{ monitor.dns_resolve_type }}] {{ monitor.hostname }}
+                    <br />
+                    <span>{{ $t("Last Result") }}:</span>
+                    <span class="keyword">{{ monitor.dns_last_result }}</span>
+                </span>
+                <span v-if="monitor.type === 'docker'">Docker container: {{ monitor.docker_container }}</span>
+                <span v-if="monitor.type === 'gamedig'">
+                    Gamedig - {{ monitor.game }}: {{ monitor.hostname }}:{{ monitor.port }}
+                </span>
+                <span v-if="monitor.type === 'grpc-keyword'">
+                    gRPC - {{ filterPassword(monitor.grpcUrl) }}
+                    <br />
+                    <span>{{ $t("Keyword") }}:</span>
+                    <span class="keyword">{{ monitor.keyword }}</span>
+                </span>
+                <span v-if="monitor.type === 'mongodb'">{{ filterPassword(monitor.databaseConnectionString) }}</span>
+                <span v-if="monitor.type === 'mqtt'">
+                    MQTT: {{ monitor.hostname }}:{{ monitor.port }}/{{ monitor.mqttTopic }}
+                </span>
+                <span v-if="monitor.type === 'mysql'">{{ filterPassword(monitor.databaseConnectionString) }}</span>
+                <span v-if="monitor.type === 'oracledb'">
+                    {{
+                        $t("oracledbConnectionString", {
+                            connectionString: filterPassword(monitor.databaseConnectionString),
+                        })
+                    }}
+                </span>
+                <span v-if="monitor.type === 'postgres'">{{ filterPassword(monitor.databaseConnectionString) }}</span>
+                <span v-if="monitor.type === 'push'">
+                    Push:
+                    <a :href="pushURL" target="_blank" rel="noopener noreferrer">{{ pushURL }}</a>
+                </span>
+                <span v-if="monitor.type === 'radius'">Radius: {{ filterPassword(monitor.hostname) }}</span>
+                <span v-if="monitor.type === 'redis'">{{ filterPassword(monitor.databaseConnectionString) }}</span>
+                <span v-if="monitor.type === 'sqlserver'">
+                    SQL Server: {{ filterPassword(monitor.databaseConnectionString) }}
+                </span>
+                <span v-if="monitor.type === 'steam'">
+                    Steam Game Server: {{ monitor.hostname }}:{{ monitor.port }}
+                </span>
+            </p>
 
-            <div class="functions mb-4">
+            <div class="functions">
                 <div class="btn-group" role="group">
                     <button v-if="monitor.active" class="btn btn-normal" @click="pauseDialog">
                         <font-awesome-icon icon="pause" />
@@ -146,78 +205,88 @@
             </div>
 
             <!-- Stats -->
-            <div class="stats-grid mb-4">
-                <div v-if="monitor.type !== 'group'" class="stat-card shadow-box">
-                    <h4 class="stat-title">{{ pingTitle() }}</h4>
-                    <p class="stat-label">({{ $t("Current") }})</p>
-                    <span class="num">
-                        <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
-                            <CountUp :value="ping" />
-                        </a>
-                    </span>
-                </div>
-                
-                <div v-if="monitor.type !== 'group'" class="stat-card shadow-box">
-                    <h4 class="stat-title">{{ pingTitle(true) }}</h4>
-                    <p class="stat-label">({{ $t("hours", 24) }})</p>
-                    <span class="num">
-                        <CountUp :value="avgPing" />
-                    </span>
-                </div>
+            <div class="shadow-box big-padding text-center stats">
+                <div class="row">
+                    <div
+                        v-if="monitor.type !== 'group'"
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                    >
+                        <h4 class="col-4 col-sm-12">{{ pingTitle() }}</h4>
+                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("Current") }})</p>
+                        <span class="col-4 col-sm-12 num">
+                            <a href="#" @click.prevent="showPingChartBox = !showPingChartBox">
+                                <CountUp :value="ping" />
+                            </a>
+                        </span>
+                    </div>
+                    <div
+                        v-if="monitor.type !== 'group'"
+                        class="col-12 col-sm col row d-flex align-items-center d-sm-block"
+                    >
+                        <h4 class="col-4 col-sm-12">{{ pingTitle(true) }}</h4>
+                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
+                        <span class="col-4 col-sm-12 num">
+                            <CountUp :value="avgPing" />
+                        </span>
+                    </div>
 
-                <!-- Uptime (24-hour) -->
-                <div class="stat-card shadow-box">
-                    <h4 class="stat-title">{{ $t("Uptime") }}</h4>
-                    <p class="stat-label">({{ $t("hours", 24) }})</p>
-                    <span class="num">
-                        <Uptime :monitor="monitor" type="24" />
-                    </span>
-                </div>
+                    <!-- Uptime (24-hour) -->
+                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
+                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
+                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("hours", 24) }})</p>
+                        <span class="col-4 col-sm-12 num">
+                            <Uptime :monitor="monitor" type="24" />
+                        </span>
+                    </div>
 
-                <!-- Uptime (30-day) -->
-                <div class="stat-card shadow-box">
-                    <h4 class="stat-title">{{ $t("Uptime") }}</h4>
-                    <p class="stat-label">({{ $t("days", 30) }})</p>
-                    <span class="num">
-                        <Uptime :monitor="monitor" type="720" />
-                    </span>
-                </div>
+                    <!-- Uptime (30-day) -->
+                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
+                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
+                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("days", 30) }})</p>
+                        <span class="col-4 col-sm-12 num">
+                            <Uptime :monitor="monitor" type="720" />
+                        </span>
+                    </div>
 
-                <!-- Uptime (1-year) -->
-                <div class="stat-card shadow-box">
-                    <h4 class="stat-title">{{ $t("Uptime") }}</h4>
-                    <p class="stat-label">({{ $t("years", 1) }})</p>
-                    <span class="num">
-                        <Uptime :monitor="monitor" type="1y" />
-                    </span>
-                </div>
+                    <!-- Uptime (1-year) -->
+                    <div class="col-12 col-sm col row d-flex align-items-center d-sm-block">
+                        <h4 class="col-4 col-sm-12">{{ $t("Uptime") }}</h4>
+                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">({{ $t("years", 1) }})</p>
+                        <span class="col-4 col-sm-12 num">
+                            <Uptime :monitor="monitor" type="1y" />
+                        </span>
+                    </div>
 
-                <div v-if="tlsInfo" class="stat-card shadow-box">
-                    <h4 class="stat-title">{{ $t("Cert Exp.") }}</h4>
-                    <p class="stat-label">
-                        (<Datetime :value="tlsInfo.certInfo.validTo" date-only />)
-                    </p>
-                    <span class="num">
-                        <a href="#" @click.prevent="toggleCertInfoBox = !toggleCertInfoBox">
-                            {{ $t("days", tlsInfo.certInfo.daysRemaining) }}
-                        </a>
-                        <font-awesome-icon
-                            v-if="tlsInfo.hostnameMatchMonitorUrl === false"
-                            class="cert-info-warn"
-                            icon="exclamation-triangle"
-                            :title="$t('certHostnameMismatch')"
-                        />
-                    </span>
-                </div>
-
-                <div v-if="domainInfo" class="stat-card shadow-box">
-                    <h4 class="stat-title">{{ $t("labelDomainExpiry") }}</h4>
-                    <p class="stat-label">
-                        (<Datetime :value="domainInfo.expiresOn" date-only />)
-                    </p>
-                    <span class="num">
-                        {{ $t("days", domainInfo.daysRemaining) }}
-                    </span>
+                    <div v-if="tlsInfo" class="col-12 col-sm col row d-flex align-items-center d-sm-block">
+                        <h4 class="col-4 col-sm-12">{{ $t("Cert Exp.") }}</h4>
+                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">
+                            (
+                            <Datetime :value="tlsInfo.certInfo.validTo" date-only />
+                            )
+                        </p>
+                        <span class="col-4 col-sm-12 num">
+                            <a href="#" @click.prevent="toggleCertInfoBox = !toggleCertInfoBox">
+                                {{ $t("days", tlsInfo.certInfo.daysRemaining) }}
+                            </a>
+                            <font-awesome-icon
+                                v-if="tlsInfo.hostnameMatchMonitorUrl === false"
+                                class="cert-info-warn"
+                                icon="exclamation-triangle"
+                                :title="$t('certHostnameMismatch')"
+                            />
+                        </span>
+                    </div>
+                    <div v-if="domainInfo" class="col-12 col-sm col row d-flex align-items-center d-sm-block">
+                        <h4 class="col-4 col-sm-12">{{ $t("labelDomainExpiry") }}</h4>
+                        <p class="col-4 col-sm-12 mb-0 mb-sm-2">
+                            (
+                            <Datetime :value="domainInfo.expiresOn" date-only />
+                            )
+                        </p>
+                        <span class="col-4 col-sm-12 num">
+                            {{ $t("days", domainInfo.daysRemaining) }}
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -853,162 +922,14 @@ export default {
     }
 }
 
-.monitor-hero-section {
-    position: relative;
-    padding: 40px;
-    border-radius: 24px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    overflow: hidden;
-    box-shadow: $premium-shadow-light;
+.url {
+    color: $primary;
+    margin-bottom: 20px;
+    font-weight: bold;
 
-    .dark & {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-        border-color: rgba(255, 255, 255, 0.08);
-        box-shadow: $premium-shadow-dark;
-    }
-}
-
-.hero-watermark {
-    position: absolute;
-    right: -20px;
-    bottom: -40px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 180px;
-    font-weight: 900;
-    color: rgba(0, 0, 0, 0.03);
-    pointer-events: none;
-    line-height: 1;
-    z-index: 0;
-
-    .dark & {
-        color: rgba(255, 255, 255, 0.02);
-    }
-}
-
-.hero-content {
-    position: relative;
-    z-index: 1;
-}
-
-.group-breadcrumb {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #6b7280;
-    text-decoration: none;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    transition: color 0.2s ease;
-
-    &:hover {
+    a {
         color: $primary;
     }
-}
-
-.hero-title-row {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-}
-
-.hero-title {
-    font-size: 42px;
-    font-weight: 800;
-    margin: 0;
-    letter-spacing: -0.02em;
-    color: inherit;
-}
-
-.hero-description {
-    font-size: 16px;
-    color: #4b5563;
-    max-width: 800px;
-    margin-bottom: 24px;
-
-    .dark & {
-        color: #9ca3af;
-    }
-}
-
-.hero-meta {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    flex-wrap: wrap;
-}
-
-.url-container {
-    position: relative;
-    padding: 8px 0;
-}
-
-.hero-url {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    color: $primary;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-
-    &:hover {
-        text-decoration: underline;
-    }
-}
-
-.live-line {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    width: 40px;
-    background: $primary;
-    box-shadow: 0 0 10px $primary;
-    animation: live-scan 3s infinite ease-in-out;
-}
-
-@keyframes live-scan {
-    0% {
-        left: 0;
-        width: 10px;
-        opacity: 0;
-    }
-
-    20% {
-        opacity: 1;
-        width: 40px;
-    }
-
-    80% {
-        opacity: 1;
-        width: 40px;
-    }
-
-    100% {
-        left: 100%;
-        width: 10px;
-        opacity: 0;
-    }
-}
-
-@media (max-width: 768px) {
-    .monitor-hero-section {
-        padding: 24px;
-    }
-
-    .hero-title {
-        font-size: 28px;
-    }
-}
-
-.functions {
-    display: flex;
-    justify-content: flex-start;
 }
 
 .shadow-box {
@@ -1029,75 +950,28 @@ table {
     }
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px;
-    margin-top: 25px;
+.stats p {
+    font-size: 13px;
+    color: $secondary-text;
 }
 
-.stat-card {
-    padding: 16px !important;
-    margin-top: 0 !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border-radius: 16px;
-    transition: all $transition-time $easing-smooth;
+.stats {
+    padding: 10px;
 
-    &:hover {
-        transform: translateY(-3px);
-        box-shadow: $premium-shadow-light;
-        border-color: rgba(96, 165, 250, 0.2);
-
-        .dark & {
-            box-shadow: $premium-shadow-dark;
-            border-color: rgba(96, 165, 250, 0.3);
-        }
-    }
-
-    .stat-title {
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #6b7280;
-        margin-bottom: 4px;
-    }
-
-    .stat-label {
-        font-size: 11px !important;
-        color: $secondary-text !important;
-        margin-bottom: 8px !important;
-    }
-
-    .num {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 1;
-        color: inherit;
-
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: color 0.2s ease;
-            &:hover { color: $primary; }
-        }
+    .col {
+        margin: 20px 0;
     }
 }
 
 @media (max-width: 550px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-    
-    .stat-card {
-        padding: 12px !important;
-        .num { font-size: 20px; }
+    .stats {
+        .col {
+            margin: 10px 0 !important;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+        }
     }
 }
 
@@ -1143,6 +1017,7 @@ table {
 
 .tags {
     margin-bottom: 0.5rem;
+    max-width: 95vw;
 }
 
 .tags > div:first-child {

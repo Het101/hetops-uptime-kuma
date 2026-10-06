@@ -42,8 +42,8 @@
                     </div>
                     <div class="mx-3">
                         <router-view v-slot="{ Component }">
-                            <transition name="slide-fade" mode="out-in" appear>
-                                <component :is="Component" :key="$route.path" />
+                            <transition name="slide-fade" appear>
+                                <component :is="Component" />
                             </transition>
                         </router-view>
                     </div>
@@ -55,15 +55,8 @@
 
 <script>
 import { useRoute } from "vue-router";
-import { computed } from "vue";
 
 export default {
-    provide() {
-        return {
-            settingsComponent: this,
-        };
-    },
-
     data() {
         return {
             show: true,
@@ -252,79 +245,73 @@ export default {
 @import "../assets/vars.scss";
 
 .shadow-box-settings {
-    padding: 30px;
+    padding: 20px;
     min-height: calc(100vh - 155px);
-    border-radius: 24px !important;
+}
+
+footer {
+    color: $secondary-text;
+    font-size: 13px;
+    margin-top: 20px;
+    padding-bottom: 30px;
+    text-align: center;
 }
 
 .settings-menu {
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
-    padding-right: 20px;
-
-    .dark & {
-        border-right-color: rgba(255, 255, 255, 0.05);
-    }
-
     a {
         text-decoration: none !important;
-        color: inherit;
     }
 
     .menu-item {
-        border-radius: 12px;
-        margin: 4px 0;
-        padding: 12px 16px;
+        border-radius: 10px;
+        margin: 0.5em;
+        padding: 0.7em 1em;
         cursor: pointer;
-        transition: all $transition-time $easing-smooth;
-        font-weight: 500;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        border: 1px solid transparent;
+        border-left-width: 0;
+        transition: all ease-in-out 0.1s;
     }
 
     .menu-item:hover {
-        background: rgba(0, 0, 0, 0.03);
-        transform: translateX(4px);
+        background: $highlight-white;
 
         .dark & {
-            background: rgba(255, 255, 255, 0.03);
+            background: $dark-header-bg;
         }
     }
 
-    .router-link-active .menu-item {
-        background: rgba(96, 165, 250, 0.08);
-        color: $primary;
-        font-weight: 700;
-        border-color: rgba(96, 165, 250, 0.2);
-        box-shadow: 0 4px 15px rgba(96, 165, 250, 0.1);
+    .active .menu-item {
+        background: $highlight-white;
+        border-left: 4px solid $primary;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
 
         .dark & {
-            background: rgba(96, 165, 250, 0.1);
+            background: $dark-header-bg;
         }
     }
 }
 
 .settings-content {
-    padding-left: 30px;
-
     .settings-content-header {
-        font-family: Inter, sans-serif;
-        font-weight: 800;
-        font-size: 28px;
-        letter-spacing: -0.02em;
-        margin-bottom: 30px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        width: calc(100% + 20px);
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 0 10px 0 0;
+        margin-top: -20px;
+        margin-right: -20px;
+        padding: 12.5px 1em;
+        font-size: 26px;
 
         .dark & {
-            border-bottom-color: rgba(255, 255, 255, 0.05);
+            background: $dark-header-bg;
+            border-bottom: 0;
         }
 
         .mobile & {
-            padding: 15px 0;
-            border-bottom: none;
+            padding: 15px 0 0 0;
+
+            .dark & {
+                background-color: transparent;
+            }
         }
     }
 }

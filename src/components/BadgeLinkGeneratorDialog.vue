@@ -1,5 +1,4 @@
 <template>
-    <teleport to="body">
     <div ref="BadgeGeneratorModal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -211,7 +210,6 @@
             </div>
         </div>
     </div>
-    </teleport>
 </template>
 
 <script lang="ts">
@@ -290,7 +288,7 @@ export default {
             if (!this.monitor.id || !this.badge.type) {
                 return;
             }
-            let badgeURL = this.$root.baseURL + "/api/badge/" + this.monitor.id + "/" + this.badge.type;
+            let badgeURL = new URL(this.$root.baseURL).origin + "/api/badge/" + this.monitor.id + "/" + this.badge.type;
 
             let parameterList = {};
 

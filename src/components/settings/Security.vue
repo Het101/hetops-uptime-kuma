@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div v-if="settingsComponent.settingsLoaded" class="my-4">
+        <div v-if="settingsLoaded" class="my-4">
             <!-- Change Password -->
-            <template v-if="!settingsComponent.settings.disableAuth">
+            <template v-if="!settings.disableAuth">
                 <p>
                     <button
-                        v-if="!settingsComponent.settings.disableAuth"
+                        v-if="!settings.disableAuth"
                         id="logout-btn"
                         class="btn btn-danger ms-4 me-2 mb-2"
                         @click="$root.logout"
@@ -70,7 +70,7 @@
                 </form>
             </template>
 
-            <div v-if="!settingsComponent.settings.disableAuth" class="mt-5 mb-3">
+            <div v-if="!settings.disableAuth" class="mt-5 mb-3">
                 <h5 class="my-4 settings-subheading">
                     {{ $t("Two Factor Authentication") }}
                 </h5>
@@ -87,7 +87,7 @@
 
                 <div class="mb-4">
                     <button
-                        v-if="settingsComponent.settings.disableAuth"
+                        v-if="settings.disableAuth"
                         id="enableAuth-btn"
                         class="btn btn-outline-primary me-2 mb-2"
                         @click="enableAuth"
@@ -95,7 +95,7 @@
                         {{ $t("Enable Auth") }}
                     </button>
                     <button
-                        v-if="!settingsComponent.settings.disableAuth"
+                        v-if="!settings.disableAuth"
                         id="disableAuth-btn"
                         class="btn btn-primary me-2 mb-2"
                         @click="confirmDisableAuth"
@@ -153,8 +153,6 @@ export default {
         TwoFADialog,
     },
 
-    inject: ["settingsComponent"],
-
     data() {
         return {
             invalidPassword: false,
@@ -164,6 +162,18 @@ export default {
                 repeatNewPassword: "",
             },
         };
+    },
+
+    computed: {
+        settings() {
+            return this.$parent.$parent.$parent.settings;
+        },
+        saveSettings() {
+            return this.$parent.$parent.$parent.saveSettings;
+        },
+        settingsLoaded() {
+            return this.$parent.$parent.$parent.settingsLoaded;
+        },
     },
 
     watch: {
@@ -203,11 +213,11 @@ export default {
          * @returns {void}
          */
         disableAuth() {
-            this.settingsComponent.settings.disableAuth = true;
+            this.settings.disableAuth = true;
 
             // Need current password to disable auth
             // Set it to empty if done
-            this.settingsComponent.saveSettings(() => {
+            this.saveSettings(() => {
                 this.password.currentPassword = "";
                 this.$root.username = null;
                 this.$root.socket.token = "autoLogin";
@@ -219,8 +229,8 @@ export default {
          * @returns {void}
          */
         enableAuth() {
-            this.settingsComponent.settings.disableAuth = false;
-            this.settingsComponent.saveSettings();
+            this.settings.disableAuth = false;
+            this.saveSettings();
             this.$root.storage().removeItem("token");
             location.reload();
         },

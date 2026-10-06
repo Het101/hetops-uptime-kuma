@@ -2,24 +2,24 @@
     <div>
         <div class="my-4">
             <label for="keepDataPeriodDays" class="form-label">
-                {{ $t("clearDataOlderThan", [settingsComponent.settings.keepDataPeriodDays]) }}
+                {{ $t("clearDataOlderThan", [settings.keepDataPeriodDays]) }}
                 {{ $t("infiniteRetention") }}
             </label>
             <input
                 id="keepDataPeriodDays"
-                v-model="settingsComponent.settings.keepDataPeriodDays"
+                v-model="settings.keepDataPeriodDays"
                 type="number"
                 class="form-control"
                 required
                 min="0"
                 step="1"
             />
-            <div v-if="settingsComponent.settings.keepDataPeriodDays < 0" class="form-text">
+            <div v-if="settings.keepDataPeriodDays < 0" class="form-text">
                 {{ $t("dataRetentionTimeError") }}
             </div>
         </div>
         <div class="my-4">
-            <button class="btn btn-primary" type="button" @click="settingsComponent.saveSettings()">
+            <button class="btn btn-primary" type="button" @click="saveSettings()">
                 {{ $t("Save") }}
             </button>
         </div>
@@ -33,7 +33,7 @@
                         <code>VACUUM</code>
                     </template>
                     <template #auto_vacuum>
-                        <code>AUTO_VAC_UUM</code>
+                        <code>AUTO_VACUUM</code>
                     </template>
                 </i18n-t>
             </div>
@@ -62,8 +62,6 @@ export default {
         Confirm,
     },
 
-    inject: ["settingsComponent"],
-
     data() {
         return {
             databaseSize: 0,
@@ -71,6 +69,15 @@ export default {
     },
 
     computed: {
+        settings() {
+            return this.$parent.$parent.$parent.settings;
+        },
+        saveSettings() {
+            return this.$parent.$parent.$parent.saveSettings;
+        },
+        settingsLoaded() {
+            return this.$parent.$parent.$parent.settingsLoaded;
+        },
         databaseSizeDisplay() {
             return Math.round((this.databaseSize / 1024 / 1024) * 10) / 10 + " MB";
         },

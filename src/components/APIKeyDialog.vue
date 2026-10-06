@@ -1,5 +1,4 @@
 <template>
-    <teleport to="body">
     <form @submit.prevent="submit">
         <div ref="keyaddmodal" class="modal fade" tabindex="-1" data-bs-backdrop="static">
             <div class="modal-dialog">
@@ -83,7 +82,6 @@
             </div>
         </div>
     </form>
-    </teleport>
 </template>
 
 <script lang="ts">

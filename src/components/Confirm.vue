@@ -1,6 +1,5 @@
 <template>
-    <teleport to="body">
-<div ref="modal" class="modal fade" tabindex="-1">
+    <div ref="modal" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -23,7 +22,6 @@
             </div>
         </div>
     </div>
-    </teleport>
 </template>
 
 <script>
@@ -58,17 +56,6 @@ export default {
     }),
     mounted() {
         this.modal = new Modal(this.$refs.modal);
-    },
-    beforeUnmount() {
-        // When navigating away, Bootstrap can leave a modal-backdrop stuck in <body>,
-        // blocking all clicks and freezing the page. Force-hide and clean up.
-        if (this.modal) {
-            this.modal.hide();
-        }
-        document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
-        document.body.classList.remove("modal-open");
-        document.body.style.removeProperty("overflow");
-        document.body.style.removeProperty("padding-right");
     },
     methods: {
         /**

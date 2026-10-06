@@ -1,5 +1,4 @@
 <template>
-    <teleport to="body">
     <div ref="MonitorSettingDialog" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -66,7 +65,6 @@
             </div>
         </div>
     </div>
-    </teleport>
     <BadgeLinkGeneratorDialog ref="badgeLinkGeneratorDialog" />
 </template>
 
