@@ -995,15 +995,19 @@
 
 // Phones: each status change as a compact two-line row instead of a tall card.
 @media (max-width: 550px) {
-    #app .table-wrapper tbody tr.shadow-box {
+    #app .table-shadow-box tbody tr {
         display: grid;
         grid-template-columns: 1fr auto;
         gap: 4px 10px;
         padding: 10px 12px;
         margin-bottom: 8px;
         text-align: left;
+        border: 1px solid var(--ho-line);
+        border-radius: 12px;
+        background: var(--ho-panel-2);
         td {
             display: block;
+            justify-self: start;
             padding: 0;
             border: 0 !important;
             text-align: left;
@@ -1073,7 +1077,7 @@
     letter-spacing: -0.02em;
     color: var(--ho-text);
 }
-#app .table-wrapper {
+#app .table-shadow-box {
     .table {
         margin: 0;
         --bs-table-bg: transparent;
@@ -1193,6 +1197,62 @@
 @media (max-width: 520px) {
     #app .ho-footer-fresh {
         margin-left: 0;
+    }
+}
+
+// ── Monitor detail: heartbeat card and stats ────────────────────────
+// The insight strip above already states up/down, so the big badge goes and the bar takes the width.
+#app .ho-insight + .shadow-box > .row > .col-md-8 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+#app .ho-insight + .shadow-box > .row > .col-md-4 {
+    display: none;
+}
+body.dark #app .stats {
+    padding: 22px 12px !important;
+    > .row > [class*="col"] {
+        border-left: 1px solid var(--ho-line);
+    }
+    > .row > [class*="col"]:first-child {
+        border-left: 0;
+    }
+    // Values stay one colour; the theme's green link colour otherwise wins on the clickable ones.
+    .num,
+    .num a {
+        color: var(--ho-text) !important;
+        font-size: 1.4rem;
+        white-space: nowrap;
+    }
+    .num a {
+        font-size: inherit !important;
+    }
+    .num.text-danger,
+    .num.text-danger a {
+        color: var(--ho-down) !important;
+    }
+}
+@media (max-width: 575px) {
+    body.dark #app .stats {
+        padding: 6px 16px !important;
+        > .row > [class*="col"] {
+            border-left: 0;
+            border-top: 1px solid var(--ho-line);
+            padding: 10px 0;
+            margin: 0;
+        }
+        > .row > [class*="col"]:first-child {
+            border-top: 0;
+        }
+        h4,
+        p {
+            margin: 0 !important;
+            text-align: left;
+        }
+        span.num {
+            text-align: right;
+            font-size: 1rem;
+        }
     }
 }
 

@@ -19,7 +19,7 @@
                 <em>p95 · slowest {{ ms(max) }}</em>
             </div>
             <div>
-                <dt>Error budget · 99.9%</dt>
+                <dt title="99.9% availability target over 30 days">Error budget</dt>
                 <dd
                     :class="{
                         warn: budget.left !== null && budget.left < 50,
@@ -41,7 +41,7 @@
 
 <script>
 import dayjs from "dayjs";
-import { stateOf, stateFor, pct, percentile, incidentsFrom, human } from "./pulse.js";
+import { stateOf, stateFor, percentile, incidentsFrom, human } from "./pulse.js";
 
 // The numbers behind a single monitor: how it usually behaves, how bad the bad moments get,
 // how reliable it has been, and when it last broke.
@@ -76,21 +76,25 @@ export default {
             return this.ups.length ? Math.max(...this.ups) : null;
         },
         // A 99.9% target over 30 days allows 43.2 minutes down; show how much of that is left.
+        // Downtime is summed from recorded outages, not derived from the uptime ratio, which only
+        // covers the time the monitor has existed and would overstate a young monitor's downtime.
         budget() {
-            const up = this.$root.uptimeList[`${this.monitorId}_720`];
-            if (typeof up !== "number") {
-                return { left: null, text: "–", note: "no 30-day data yet" };
-            }
+            const since = dayjs().subtract(30, "day");
             const allowed = 0.001 * 30 * 24 * 60;
-            const used = (1 - up) * 30 * 24 * 60;
+            const used = this.incidents
+                .filter((r) => dayjs.utc(r.start).isAfter(since))
+                .reduce((a, r) => a + r.ms / 60000, 0);
             const left = Math.round((1 - used / allowed) * 100);
             return {
                 left,
                 text: left > 0 ? `${left}% left` : "spent",
+                // 43 min is what a 99.9% target allows in 30 days.
                 note:
-                    left > 0
-                        ? `${human(used * 60000)} of 43 min used · 30 d ${pct(up)}`
-                        : `43 min allowed · 30 d ${pct(up)}`,
+                    used < 1 / 60
+                        ? "none of 43 min used"
+                        : left > 0
+                          ? `${human(used * 60000)} of 43 min used`
+                          : `over by ${human((used - allowed) * 60000)}`,
             };
         },
         incidents() {
