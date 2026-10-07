@@ -39,6 +39,13 @@ const MONITORS = [
         url: "https://analytics.hetops.dev/api/heartbeat",
         ...json("ok", "==", "true"),
     },
+    // Restore Drill restores the newest backups every 6 h; "ok" is false if any restore fails.
+    {
+        group: "Sites and infrastructure",
+        name: "Backups (restore-tested)",
+        url: "https://drill.hetops.dev/api/health",
+        ...json("ok", "==", "true"),
+    },
     { group: null, name: "Hub (Coolify)", url: "https://hub.hetops.dev" },
     { group: null, name: "n8n", url: "https://n8n.hetops.dev/healthz", ...json("status", "==", "ok") },
     { group: null, name: "Tallybank", url: "https://tally.hetops.dev" },
