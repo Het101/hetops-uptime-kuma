@@ -7,6 +7,7 @@ permissions: {}
 
 jobs:
   close-incorrect-issue:
+    if: github.repository == 'louislam/uptime-kuma'
     runs-on: ${{ matrix.os }}
     permissions:
       issues: write

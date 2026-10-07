@@ -1,0 +1,74 @@
+# HetOps watchdog: checks status.hetops.dev and the products from outside the Oracle box.
+# Uptime Kuma runs on the same machine as everything it watches, so it can't report that machine dying.
+# Down: opens one "watchdog" issue (GitHub emails you); recovered: comments and closes it.
+# If issues are turned off on this repo, the run fails instead, and GitHub emails you about the failed run.
+name: HetOps watchdog
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: hetops-watchdog
+
+jobs:
+  probe:
+    if: github.repository == 'Het101/hetops-uptime-kuma'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe services
+        id: probe
+        run: |
+          down=""
+          # name, url, text the response must contain
+          check() {
+            # Read the whole response first: piping into grep -q cuts curl off and makes it retry.
+            if body=$(curl -fsSL -m 20 --retry 2 --retry-delay 15 --retry-all-errors "$2") && grep -qi -- "$3" <<<"$body"; then
+              echo "ok    $1"
+            else
+              echo "DOWN  $1  $2"
+              down="${down}- **$1**: $2"$'\n'
+            fi
+          }
+          check "Status page" "https://status.hetops.dev/api/status-page/deck" '"publicGroupList"'
+          check "DNS Intelligence" "https://dns.hetops.dev/api/health" '"status":"ok"'
+          check "Radar Cloud" "https://radar.hetops.dev/api/health" '"ok":true'
+          check "hetops.dev" "https://hetops.dev" '<html'
+          {
+            echo "down<<EOF"
+            printf "%s" "$down"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open, keep or close the outage issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DOWN: ${{ steps.probe.outputs.down }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          now=$(date -u '+%Y-%m-%d %H:%M UTC')
+          if ! open=$(gh issue list --repo "$GITHUB_REPOSITORY" --label watchdog --state open --json number -q '.[0].number' 2>/dev/null); then
+            if [ -n "$DOWN" ]; then
+              echo "::error::Down and issues are off on this repo, failing the run so GitHub sends an email."
+              printf "%s" "$DOWN"
+              exit 1
+            fi
+            exit 0
+          fi
+
+          if [ -n "$DOWN" ] && [ -z "$open" ]; then
+            gh label create watchdog --repo "$GITHUB_REPOSITORY" --color B60205 --description "Outage seen by the HetOps watchdog" --force >/dev/null
+            gh issue create --repo "$GITHUB_REPOSITORY" --label watchdog \
+              --title "Outage: HetOps services not answering ($now)" \
+              --body "$(printf 'Seen from GitHub Actions, outside the server:\n\n%s\nFirst failed check: %s\n\nThis issue closes by itself when everything answers again.' "$DOWN" "$RUN_URL")"
+          elif [ -z "$DOWN" ] && [ -n "$open" ]; then
+            gh issue close "$open" --repo "$GITHUB_REPOSITORY" --comment "Recovered: every check passed at $now. $RUN_URL"
+          elif [ -n "$DOWN" ]; then
+            echo "Still down; issue #$open stays open."
+          fi
