@@ -204,6 +204,10 @@ export default {
                         },
                         labels: {
                             color: this.$root.theme === "light" ? "rgba(12,12,18,1.0)" : "rgba(220,220,220,1.0)",
+                            usePointStyle: true,
+                            pointStyle: "line",
+                            boxWidth: 18,
+                            padding: 14,
                             // Filter to display only the lines in the legend
                             filter: function (legendItem, data) {
                                 const ds = data.datasets[legendItem.datasetIndex];
