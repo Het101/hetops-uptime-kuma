@@ -15,7 +15,7 @@
             <div>
                 <dt>Uptime · 24 h</dt>
                 <dd>{{ uptimeText }}</dd>
-                <span class="ho-gauge" aria-hidden="true"><i :style="{ width: gauge }"></i></span>
+                <dd class="ho-gauge" aria-hidden="true"><i :style="{ width: gauge }"></i></dd>
             </div>
             <div>
                 <dt>Services up</dt>
@@ -23,14 +23,14 @@
                     {{ counts.up }}
                     <small>/ {{ counts.total }}</small>
                 </dd>
-                <span class="ho-ticks" aria-hidden="true">
+                <dd class="ho-ticks" aria-hidden="true">
                     <i v-for="m in monitors" :key="m.id" :class="'t-' + keyOf(m)"></i>
-                </span>
+                </dd>
             </div>
             <div>
                 <dt>Next check</dt>
                 <dd>{{ refreshIn || "–" }}</dd>
-                <span class="ho-read-note">checked {{ agoText }}</span>
+                <dd class="ho-read-note">checked {{ agoText }}</dd>
             </div>
         </dl>
     </section>
