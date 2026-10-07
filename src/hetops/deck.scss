@@ -106,9 +106,15 @@
     dd {
         grid-area: d;
     }
-    > div > span {
+    // The gauge, ticks and note are dd's too (a dl allows only dt and dd), so they reset dd's type.
+    dd.ho-gauge,
+    dd.ho-ticks,
+    dd.ho-read-note {
         grid-area: x;
         max-width: 160px;
+        font: 500 0.68rem/1 var(--ho-mono);
+        letter-spacing: 0;
+        color: var(--ho-muted);
     }
     dt {
         font: 600 0.62rem/1 var(--ho-mono);
