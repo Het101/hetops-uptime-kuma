@@ -153,4 +153,63 @@ export function percentile(values, p) {
     return v[Math.min(v.length - 1, Math.max(0, Math.ceil((p / 100) * v.length) - 1))];
 }
 
+// ── Flight recorder ──
+export const WINDOW_MIN = 90;
+const BUCKET_MS = 60 * 1000;
+const WORST = { down: 4, pending: 3, maint: 2, up: 1 };
+
+/**
+ * Response time on one log scale shared by every row (10 ms = 0, 2 s = 1), so heights compare
+ * across services and a single slow check doesn't flatten the rest of its row.
+ * @param {number} ms Response time
+ * @returns {number} 0..1
+ */
+export function latencyScale(ms) {
+    return Math.min(1, Math.max(0, Math.log10(Math.max(ms, 10) / 10) / Math.log10(200)));
+}
+
+/**
+ * Buckets a monitor's heartbeats into one cell per minute of the window. A minute without a check
+ * holds the last known state (drawn low and dim), so hourly checks read as a steady line with a
+ * tick each hour rather than as gaps.
+ * @param {object[]} beats Heartbeats, oldest first
+ * @param {number} now Epoch ms
+ * @returns {{cells: object[], up: number, down: number}} Cells oldest first, and counts of checks
+ */
+export function recorderCells(beats, now) {
+    // The last cell ends at now, inclusive.
+    const start = now - WINDOW_MIN * BUCKET_MS + 1;
+    const timed = (beats || []).map((b) => ({ ...b, t: dayjs.utc(b.time).valueOf(), k: (STATE[b.status] || {}).key }));
+    let held = null;
+    for (const b of timed) {
+        if (b.t < start) {
+            held = b.k;
+        }
+    }
+    const cells = [];
+    let up = 0;
+    let down = 0;
+    for (let i = 0; i < WINDOW_MIN; i++) {
+        const from = start + i * BUCKET_MS;
+        const inside = timed.filter((b) => b.t >= from && b.t < from + BUCKET_MS && b.k);
+        if (!inside.length) {
+            cells.push(held ? { k: "held", h: "14%", title: "" } : { k: "empty", h: "14%", title: "" });
+            continue;
+        }
+        const worst = inside.reduce((a, b) => ((WORST[b.k] || 0) > (WORST[a.k] || 0) ? b : a));
+        const pings = inside.filter((b) => b.k === "up" && typeof b.ping === "number").map((b) => b.ping);
+        const ping = pings.length ? Math.max(...pings) : null;
+        held = worst.k;
+        up += inside.filter((b) => b.k === "up").length;
+        down += inside.filter((b) => b.k === "down").length;
+        const h = worst.k === "down" ? 100 : worst.k === "up" && ping !== null ? 24 + latencyScale(ping) * 76 : 70;
+        cells.push({
+            k: worst.k,
+            h: `${Math.round(h)}%`,
+            title: `${dayjs(from).format("HH:mm")} · ${(STATE[inside.find((b) => b.k === worst.k).status] || {}).label || worst.k}${ping !== null ? ` · ${Math.round(ping)} ms` : ""}`,
+        });
+    }
+    return { cells, up, down };
+}
+
 export const SERIES = ["#8bc34a", "#7aa7d9", "#e3a944", "#5fc4b8", "#e57a73", "#c8b88a", "#a0c4ff", "#d4a5e8"];

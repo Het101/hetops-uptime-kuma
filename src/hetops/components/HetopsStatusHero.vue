@@ -1,65 +1,38 @@
 <template>
-    <section class="ho-hero" :class="'is-' + tone" aria-live="polite">
-        <div class="ho-hero-main">
-            <div class="ho-beacon" aria-hidden="true">
-                <span class="ring r1"></span>
-                <span class="ring r2"></span>
-                <span class="ring r3"></span>
-                <span class="core">
-                    <font-awesome-icon :icon="icon" />
+    <section class="ho-master" :class="'is-' + tone" aria-live="polite">
+        <div class="ho-master-lamp" aria-hidden="true">
+            <span class="lamp"><font-awesome-icon :icon="icon" /></span>
+            <small>Master</small>
+        </div>
+
+        <div class="ho-master-say">
+            <p class="ho-kick">{{ eyebrow }}</p>
+            <h2>{{ headline }}</h2>
+            <p class="ho-master-sub">{{ subline }}</p>
+        </div>
+
+        <dl class="ho-master-read">
+            <div>
+                <dt>Uptime · 24 h</dt>
+                <dd>{{ uptimeText }}</dd>
+                <span class="ho-gauge" aria-hidden="true"><i :style="{ width: gauge }"></i></span>
+            </div>
+            <div>
+                <dt>Services up</dt>
+                <dd>
+                    {{ counts.up }}
+                    <small>/ {{ counts.total }}</small>
+                </dd>
+                <span class="ho-ticks" aria-hidden="true">
+                    <i v-for="m in monitors" :key="m.id" :class="'t-' + keyOf(m)"></i>
                 </span>
             </div>
             <div>
-                <p class="ho-eyebrow">{{ eyebrow }}</p>
-                <h2 class="ho-headline">{{ headline }}</h2>
-                <p class="ho-meta">
-                    <span>
-                        <b>{{ counts.total }}</b>
-                        services
-                    </span>
-                    <span v-if="counts.up">
-                        <b>{{ counts.up }}</b>
-                        operational
-                    </span>
-                    <span v-if="counts.down" class="bad">
-                        <b>{{ counts.down }}</b>
-                        down
-                    </span>
-                    <span v-if="counts.pending" class="warn">
-                        <b>{{ counts.pending }}</b>
-                        degraded
-                    </span>
-                    <span v-if="counts.maint">
-                        <b>{{ counts.maint }}</b>
-                        in maintenance
-                    </span>
-                </p>
+                <dt>Next check</dt>
+                <dd>{{ refreshIn || "–" }}</dd>
+                <span class="ho-read-note">checked {{ agoText }}</span>
             </div>
-        </div>
-
-        <div class="ho-hero-side">
-            <div class="ho-ring" role="img" :aria-label="'Average uptime over 24 hours: ' + uptimeText">
-                <svg viewBox="0 0 120 120">
-                    <circle class="track" cx="60" cy="60" r="52" />
-                    <circle
-                        class="fill"
-                        cx="60"
-                        cy="60"
-                        r="52"
-                        :style="{ strokeDasharray: circumference, strokeDashoffset: offset }"
-                    />
-                </svg>
-                <div class="ho-ring-label">
-                    <b>{{ uptimeText }}</b>
-                    <span>uptime · 24 h</span>
-                </div>
-            </div>
-            <p class="ho-fresh">
-                <span class="dot" aria-hidden="true"></span>
-                Checked {{ agoText }}
-                <template v-if="refreshIn">· next in {{ refreshIn }}</template>
-            </p>
-        </div>
+        </dl>
     </section>
 </template>
 
@@ -73,7 +46,9 @@ import {
 } from "../../util.ts";
 import { stateOf, pct } from "./pulse.js";
 
-// The answer comes first: one sentence, one colour, one icon, then the numbers behind it.
+// The master caution panel: one lamp and one sentence answer "is it working?", then three
+// readings (24 h uptime, services up, next check). The lamp is never colour alone: it carries an
+// icon, and the sentence says the same thing.
 export default {
     props: {
         state: { type: Number, default: null },
@@ -82,7 +57,7 @@ export default {
         refreshIn: { type: String, default: null },
     },
     data() {
-        return { now: Date.now(), timer: null, circumference: 2 * Math.PI * 52 };
+        return { now: Date.now(), timer: null };
     },
     computed: {
         monitors() {
@@ -91,7 +66,7 @@ export default {
         counts() {
             const c = { total: this.monitors.length, up: 0, down: 0, pending: 0, maint: 0 };
             for (const m of this.monitors) {
-                const k = stateOf(this.$root.heartbeatList[m.id]).key;
+                const k = this.keyOf(m);
                 if (k in c) {
                     c[k]++;
                 }
@@ -130,6 +105,14 @@ export default {
                 }[this.tone] || "Checking services"
             );
         },
+        subline() {
+            const trouble = this.monitors.filter((m) => !["up", "unknown"].includes(this.keyOf(m)));
+            if (trouble.length) {
+                const names = trouble.map((m) => m.name);
+                return `${names.slice(0, 3).join(", ")}${names.length > 3 ? ` and ${names.length - 3} more` : ""}: see the panel below.`;
+            }
+            return this.monitors.length ? "Every service answered its last check." : "Checks start within a minute.";
+        },
         eyebrow() {
             return (
                 { up: "Live status", warn: "Investigating", down: "Incident", maint: "Maintenance" }[this.tone] ||
@@ -145,8 +128,9 @@ export default {
         uptimeText() {
             return pct(this.uptime);
         },
-        offset() {
-            return this.circumference * (1 - (this.uptime ?? 0));
+        gauge() {
+            // The last 1% is where uptime lives, so the gauge spans 99 to 100.
+            return `${Math.max(2, Math.min(100, ((this.uptime ?? 0) - 0.99) * 10000))}%`;
         },
         agoText() {
             if (!this.lastUpdate) {
@@ -161,6 +145,11 @@ export default {
     },
     beforeUnmount() {
         clearInterval(this.timer);
+    },
+    methods: {
+        keyOf(m) {
+            return stateOf(this.$root.heartbeatList[m.id]).key;
+        },
     },
 };
 </script>

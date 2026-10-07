@@ -1,0 +1,549 @@
+// HetOps Status public page as a flight deck: the master caution panel (HetopsStatusHero), the
+// annunciator plates and the flight recorder (HetopsServiceBoard). Tones come from .is-* in
+// components.scss, so --tone / --tone-rgb colour every lamp, word and glow.
+
+// ── Master caution panel ────────────────────────────────────────────
+#app .ho-master {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 26px 30px;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 30px 34px;
+    border: 1px solid var(--ho-line);
+    border-radius: 18px;
+    overflow: hidden;
+    background:
+        radial-gradient(60% 140% at 0% 50%, rgba(var(--tone-rgb), 0.13), transparent 62%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 50%), var(--ho-panel);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+    // A tone-coloured rail along the top edge, like the strip above a caution light.
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 2px;
+        background: linear-gradient(90deg, var(--tone), rgba(var(--tone-rgb), 0.15) 55%, transparent);
+    }
+}
+#app .ho-master-lamp {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    .lamp {
+        display: grid;
+        place-items: center;
+        width: 78px;
+        height: 78px;
+        border-radius: 50%;
+        font-size: 30px;
+        color: #0e1309;
+        background: radial-gradient(
+            circle at 34% 30%,
+            rgba(255, 255, 255, 0.55),
+            var(--tone) 42%,
+            rgba(var(--tone-rgb), 0.7) 100%
+        );
+        box-shadow:
+            0 0 0 7px rgba(var(--tone-rgb), 0.1),
+            0 0 0 8px rgba(var(--tone-rgb), 0.22),
+            0 0 42px rgba(var(--tone-rgb), 0.42);
+    }
+    small {
+        font: 600 0.62rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--ho-muted);
+    }
+}
+#app .ho-master-say {
+    min-width: 0;
+    h2 {
+        margin: 6px 0 8px;
+        font: 800 clamp(1.8rem, 3.4vw, 2.55rem) / 1.04 var(--ho-sans);
+        letter-spacing: -0.035em;
+        color: var(--ho-text);
+    }
+}
+#app .ho-kick {
+    margin: 0;
+    font: 600 0.72rem/1 var(--ho-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--tone);
+}
+#app .ho-master-sub {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--ho-body);
+}
+// The readings: an instrument strip along the foot of the panel.
+#app .ho-master-read {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--ho-line);
+    > div {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas: "t t" "d x";
+        gap: 10px 16px;
+        align-items: center;
+        padding: 0 24px;
+        border-left: 1px solid var(--ho-line-2);
+    }
+    > div:first-child {
+        padding-left: 0;
+        border-left: 0;
+    }
+    dt {
+        grid-area: t;
+    }
+    dd {
+        grid-area: d;
+    }
+    > div > span {
+        grid-area: x;
+        max-width: 160px;
+    }
+    dt {
+        font: 600 0.62rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--ho-muted);
+    }
+    dd {
+        margin: 0;
+        font: 700 1.6rem/1 var(--ho-mono);
+        letter-spacing: -0.04em;
+        color: var(--ho-text);
+        white-space: nowrap;
+        small {
+            font-size: 0.55em;
+            font-weight: 500;
+            letter-spacing: 0;
+            color: var(--ho-muted);
+        }
+    }
+}
+#app .ho-gauge {
+    height: 4px;
+    border-radius: 4px;
+    background: var(--ho-line-2);
+    overflow: hidden;
+    i {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--tone);
+        transition: width 1.2s var(--ho-ease);
+    }
+}
+#app .ho-ticks {
+    display: flex;
+    gap: 3px;
+    i {
+        flex: 1;
+        max-width: 14px;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--ho-muted);
+    }
+    .t-up {
+        background: var(--ho-up);
+    }
+    .t-down {
+        background: var(--ho-down);
+    }
+    .t-pending {
+        background: var(--ho-pending);
+    }
+    .t-maint {
+        background: var(--ho-maint);
+    }
+}
+#app .ho-read-note {
+    font: 500 0.68rem/1 var(--ho-mono);
+    color: var(--ho-muted);
+    white-space: nowrap;
+}
+
+// ── Annunciator ─────────────────────────────────────────────────────
+#app .ho-annun {
+    margin-top: 34px;
+}
+#app .ho-annun-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    h2 {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        gap: 14px;
+        margin: 0;
+        font: 600 0.72rem/1 var(--ho-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--ho-muted);
+        &::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--ho-line);
+        }
+    }
+    span {
+        font: 500 0.72rem/1 var(--ho-mono);
+        color: var(--ho-up);
+    }
+    span.warn {
+        color: var(--ho-pending);
+    }
+}
+#app .ho-plates {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+    gap: 10px;
+}
+#app .ho-plate {
+    display: grid;
+    gap: 10px;
+    padding: 16px 18px 14px;
+    border: 1px solid var(--ho-line);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(var(--tone-rgb), 0.1), rgba(var(--tone-rgb), 0.015) 62%), var(--ho-bg-2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    transition:
+        border-color 0.3s var(--ho-ease),
+        transform 0.3s var(--ho-ease);
+    &:hover {
+        border-color: rgba(var(--tone-rgb), 0.45);
+        transform: translateY(-1px);
+    }
+    &.is-down {
+        border-color: rgba(var(--tone-rgb), 0.55);
+    }
+    h3 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        margin: 0;
+        font: 650 0.98rem/1.25 var(--ho-sans);
+        color: var(--ho-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .lamp {
+        flex: none;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--tone);
+        box-shadow:
+            0 0 0 3px rgba(var(--tone-rgb), 0.16),
+            0 0 12px rgba(var(--tone-rgb), 0.6);
+    }
+}
+#app .ho-plate-word {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font: 700 1.02rem/1 var(--ho-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--tone);
+    svg {
+        font-size: 0.85em;
+    }
+}
+#app .ho-plate-read {
+    display: flex;
+    gap: 18px;
+    margin: 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--ho-line);
+    font: 500 0.74rem/1 var(--ho-mono);
+    color: var(--ho-muted);
+    b {
+        font-size: 1.08rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ho-text);
+    }
+}
+#app .ho-plate-for {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0;
+    font: 500 0.68rem/1.3 var(--ho-mono);
+    color: var(--ho-muted);
+    .ho-cert {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+}
+
+// ── Flight recorder ─────────────────────────────────────────────────
+#app .ho-recorder {
+    margin-top: 40px;
+    padding: 26px 28px 20px;
+    border: 1px solid var(--ho-line);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 40%), var(--ho-panel);
+}
+#app .ho-rec-head {
+    margin-bottom: 20px;
+    h2 {
+        margin: 0 0 6px;
+        font: 700 1.15rem/1.2 var(--ho-sans);
+        letter-spacing: -0.02em;
+        color: var(--ho-text);
+    }
+    p {
+        max-width: 70ch;
+        margin: 0;
+        font-size: 0.86rem;
+        color: var(--ho-muted);
+    }
+}
+#app .ho-rec {
+    display: grid;
+    gap: 4px;
+}
+#app .ho-rec-row,
+#app .ho-rec-axis {
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1fr) 62px;
+    gap: 14px;
+    align-items: end;
+}
+#app .ho-rec-row {
+    padding: 3px 6px;
+    margin: 0 -6px;
+    border-radius: 6px;
+    &:hover {
+        background: rgba(255, 255, 255, 0.025);
+    }
+}
+#app .ho-rec-name {
+    align-self: center;
+    overflow: hidden;
+    font-size: 0.84rem;
+    color: var(--ho-body);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+#app .ho-rec-track {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 26px;
+    border-bottom: 1px solid var(--ho-line);
+    i {
+        flex: 1;
+        min-width: 1px;
+        border-radius: 2px 2px 0 0;
+        transition: filter 0.15s;
+        &:hover {
+            filter: brightness(1.5);
+        }
+    }
+}
+#app .c-up {
+    background: rgba(139, 195, 74, 0.82);
+}
+#app .c-pending {
+    background: var(--ho-pending);
+}
+#app .c-down {
+    background: var(--ho-down);
+}
+#app .c-maint {
+    background: var(--ho-maint);
+}
+#app .c-held {
+    background: rgba(239, 233, 221, 0.14);
+}
+#app .c-empty {
+    background: rgba(239, 233, 221, 0.05);
+}
+#app .ho-rec-now {
+    align-self: center;
+    font: 500 0.74rem/1 var(--ho-mono);
+    color: var(--ho-muted);
+    text-align: right;
+    white-space: nowrap;
+}
+#app .ho-rec-axis {
+    margin-top: 6px;
+    > div {
+        display: flex;
+        justify-content: space-between;
+    }
+    span {
+        font: 500 0.64rem/1 var(--ho-mono);
+        color: var(--ho-muted);
+    }
+}
+#app .ho-rec-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 16px 0 0;
+    padding: 14px 0 0;
+    border-top: 1px solid var(--ho-line);
+    list-style: none;
+    font: 500 0.68rem/1 var(--ho-mono);
+    color: var(--ho-muted);
+    li {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: none;
+        &::before {
+            content: "";
+            width: 8px;
+            height: 10px;
+            border-radius: 2px 2px 0 0;
+        }
+    }
+    .c-up::before {
+        background: rgba(139, 195, 74, 0.82);
+    }
+    .c-pending::before {
+        background: var(--ho-pending);
+    }
+    .c-down::before {
+        background: var(--ho-down);
+    }
+    .c-held::before {
+        background: rgba(239, 233, 221, 0.14);
+    }
+}
+
+// ── Motion ──────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: no-preference) {
+    #app .ho-master {
+        animation: ho-rise 0.7s var(--ho-ease) both;
+    }
+    #app .ho-master.is-up .lamp {
+        animation: ho-glow 3.2s ease-in-out infinite;
+    }
+    #app .ho-master.is-down .lamp,
+    #app .ho-master.is-warn .lamp,
+    #app .ho-plate.is-down .lamp,
+    #app .ho-plate.is-pending .lamp {
+        animation: ho-blink 1.1s steps(2, jump-none) infinite;
+    }
+    #app .ho-plate {
+        animation: ho-rise 0.6s var(--ho-ease) both;
+        animation-delay: calc(0.1s + var(--gi, 0) * 0.08s + var(--mi, 0) * 0.04s);
+    }
+    #app .ho-recorder {
+        animation: ho-rise 0.7s var(--ho-ease) 0.25s both;
+    }
+    @keyframes ho-glow {
+        50% {
+            box-shadow:
+                0 0 0 7px rgba(var(--tone-rgb), 0.06),
+                0 0 0 8px rgba(var(--tone-rgb), 0.14),
+                0 0 26px rgba(var(--tone-rgb), 0.26);
+        }
+    }
+    @keyframes ho-blink {
+        50% {
+            opacity: 0.35;
+        }
+    }
+}
+
+// ── Small screens ───────────────────────────────────────────────────
+@media (max-width: 860px) {
+    #app .ho-master {
+        gap: 20px 22px;
+        padding: 24px 22px;
+    }
+    #app .ho-master-read {
+        padding-top: 18px;
+        > div {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas: "t" "d" "x";
+            gap: 8px;
+            padding: 0 12px;
+        }
+        dd {
+            font-size: 1.25rem;
+        }
+    }
+    #app .ho-master-lamp .lamp {
+        width: 58px;
+        height: 58px;
+        font-size: 23px;
+    }
+    #app .ho-recorder {
+        padding: 20px 16px 16px;
+    }
+    #app .ho-rec-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: "name now" "track track";
+        gap: 4px 10px;
+        padding: 6px;
+    }
+    #app .ho-rec-name {
+        grid-area: name;
+    }
+    #app .ho-rec-now {
+        grid-area: now;
+    }
+    #app .ho-rec-track {
+        grid-area: track;
+        gap: 1px;
+        height: 22px;
+    }
+    #app .ho-rec-axis {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 0 6px;
+        > span {
+            display: none;
+        }
+    }
+}
+@media (max-width: 520px) {
+    #app .ho-master-lamp small {
+        display: none;
+    }
+    #app .ho-master-read dt {
+        letter-spacing: 0.08em;
+    }
+    #app .ho-plates {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    #app .ho-plate {
+        padding: 13px 13px 12px;
+    }
+    #app .ho-plate-read {
+        gap: 10px;
+    }
+    #app .ho-plate-word {
+        font-size: 0.86rem;
+        letter-spacing: 0.06em;
+    }
+    #app .ho-plate-for {
+        font-size: 0.64rem;
+        .ho-cert {
+            display: none;
+        }
+    }
+}
