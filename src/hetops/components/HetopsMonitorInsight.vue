@@ -11,12 +11,20 @@
             <div>
                 <dt>Typical response</dt>
                 <dd>{{ ms(p50) }}</dd>
-                <em>{{ ups.length ? `p50 of the last ${ups.length} checks` : "no successful checks yet" }}</em>
+                <em>
+                    {{
+                        ups.length
+                            ? `p50 of the last ${ups.length} checks`
+                            : noPing
+                              ? "push check-ins carry no response time"
+                              : "no successful checks yet"
+                    }}
+                </em>
             </div>
             <div>
                 <dt>Worst 5%</dt>
                 <dd :class="{ warn: p95 !== null && p50 !== null && p95 > p50 * 3 }">{{ ms(p95) }}</dd>
-                <em>p95 · slowest {{ ms(max) }}</em>
+                <em>{{ noPing ? "nothing to rank" : `p95 · slowest ${ms(max)}` }}</em>
             </div>
             <div>
                 <dt title="99.9% availability target over 30 days">Error budget</dt>
@@ -65,6 +73,11 @@ export default {
         },
         ups() {
             return this.beats.filter((b) => b.status === 1 && typeof b.ping === "number").map((b) => b.ping);
+        },
+        // A push monitor that reports up without a ping (a nightly job) has nothing to time: say so,
+        // rather than "no successful checks yet" under a monitor that is up.
+        noPing() {
+            return !this.ups.length && this.$root.monitorList[this.monitorId]?.type === "push";
         },
         p50() {
             return percentile(this.ups, 50);
